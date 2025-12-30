@@ -1,0 +1,6 @@
+[submodule "3rd/phoxo-core-lib"]
+	path = 3rd/phoxo-core-lib
+	url = git@github.com:atphoxo/phoxo-core-lib.git
+[submodule "3rd/UIStone"]
+	path = 3rd/UIStone
+	url = git@github.com:atphoxo/UIStone.git
