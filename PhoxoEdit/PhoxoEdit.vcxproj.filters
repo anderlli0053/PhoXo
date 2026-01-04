@@ -152,8 +152,12 @@
     <None Include="res\PhoxoEdit.rc2">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="res\top_toolbar_icons.svg" />
-    <None Include="res\right_tab_bar.svg" />
+    <None Include="res\right_tab_bar.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\top_toolbar_icons.svg">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\PhoxoEditDoc.ico">
