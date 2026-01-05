@@ -31,17 +31,19 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
     ChangeWindowMessageFilterEx(m_hWnd, WM_DROPFILES, MSGFLT_ALLOW, NULL);
     ChangeWindowMessageFilterEx(m_hWnd, 0x0049, MSGFLT_ALLOW, NULL); // WM_COPYGLOBALDATA, 当自己高权限，允许低限权explorer拖进来
     DragAcceptFiles(TRUE);
+
+    OnRightTab(ID_TAB_CROP_ROTATE);
     return ret;
 }
 
 void CMainFrame::OnRightTab(UINT id)
 {
-    m_current_tab = id;
+    m_func_panel_manager.OnClickTab(*this, id);
 }
 
 void CMainFrame::OnUpdateRightTab(CCmdUI* pCmdUI)
 {
-    pCmdUI->SetCheck(pCmdUI->m_nID == m_current_tab);
+    pCmdUI->SetCheck(pCmdUI->m_nID == m_func_panel_manager.CurrentTabID());
 }
 
 void CMainFrame::OnEnableIfCanvasValid(CCmdUI* pCmdUI)

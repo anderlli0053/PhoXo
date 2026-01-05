@@ -10,10 +10,10 @@
 
 #include "BCGCBProInc.h"
 
-#include "phoxo-core-lib/src/phoxo_core.h"
+#include "../3rd/phoxo-core-lib/src/phoxo_core.h"
 
 #define PHOXO_LANGUAGE_BASE_FOLDER LR"(language\edit\)";
-#include "UIStone/UIStone.h"
+#include "../3rd/UIStone/UIStone.h"
 
 using FCColor = phoxo::Color;
 using FCImage = phoxo::Image;

@@ -21,6 +21,9 @@
     <Filter Include="Source Files\canvas">
       <UniqueIdentifier>{4db081f6-fe06-45ea-9d24-02f647133935}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\function_panels">
+      <UniqueIdentifier>{cfbda83f-ba7f-4b55-9633-bbb668d1f3e8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -98,6 +101,12 @@
     <ClInclude Include="main_doc_manager.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="function_panels\wnd_panel_crop_rotate.h">
+      <Filter>Source Files\function_panels</Filter>
+    </ClInclude>
+    <ClInclude Include="function_panels\panel_manager.h">
+      <Filter>Source Files\function_panels</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PhoxoEdit.cpp">
@@ -141,6 +150,12 @@
     </ClCompile>
     <ClCompile Include="main_view_zoom.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="function_panels\wnd_panel_crop_rotate.cpp">
+      <Filter>Source Files\function_panels</Filter>
+    </ClCompile>
+    <ClCompile Include="function_panels\panel_manager.cpp">
+      <Filter>Source Files\function_panels</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

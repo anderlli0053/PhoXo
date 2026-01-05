@@ -49,12 +49,10 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>..\bin\</OutDir>
-    <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>..\bin\</OutDir>
-    <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -64,7 +62,7 @@
       <PreprocessorDefinitions>_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>.\;..\3rd\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <ConformanceMode>Default</ConformanceMode>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
@@ -99,7 +97,7 @@
       <PreprocessorDefinitions>_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>.\;..\3rd\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ConformanceMode>Default</ConformanceMode>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
       <DisableSpecificWarnings>4100</DisableSpecificWarnings>
@@ -138,6 +136,8 @@
     <ClInclude Include="canvas\mfc_scroll_view_draw_target.h" />
     <ClInclude Include="canvas\zoom_mapper.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="function_panels\panel_manager.h" />
+    <ClInclude Include="function_panels\wnd_panel_crop_rotate.h" />
     <ClInclude Include="main_doc.h" />
     <ClInclude Include="main_doc_manager.h" />
     <ClInclude Include="main_frame.h" />
@@ -157,6 +157,8 @@
     <ClCompile Include="canvas\canvas.cpp" />
     <ClCompile Include="canvas\canvas_viewport.cpp" />
     <ClCompile Include="canvas\layer.cpp" />
+    <ClCompile Include="function_panels\panel_manager.cpp" />
+    <ClCompile Include="function_panels\wnd_panel_crop_rotate.cpp" />
     <ClCompile Include="main_doc.cpp" />
     <ClCompile Include="main_doc_manager.cpp" />
     <ClCompile Include="main_frame.cpp" />
