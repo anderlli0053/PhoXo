@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "phoxo_app_define.h"
 #import <wiaaut.dll>
 #include "phoxo_utils.h"
 
@@ -57,8 +58,20 @@ void PhoxoUtils::WIAPopScanImageDialog(PCWSTR savefile)
     catch (_com_error&) { assert(false); }
 }
 
-FCImage PhoxoUtils::LoadSvgWithDpi(UINT res_id, CSize original_size, std::optional<FCColor> fill_color)
+FCImage PhoxoUtils::LoadSvgWithDpi(UINT res_id, std::optional<FCColor> fill_color)
 {
     FCResource   svg(res_id, L"SVG");
-    return svg.LoadSvgWithDpi(original_size, fill_color);
+    return svg.LoadSvgWithDpi(fill_color);
+}
+
+FCColor PhoxoUtils::GetIconColor(ThemeMode theme)
+{
+    using enum ThemeMode;
+#ifdef __BCGCBPRO_H
+    if (theme == FollowBCG)
+        theme = CBCGPVisualManager::GetInstance()->IsDarkTheme() ? Dark : Light;
+    else if (theme == InverseBCG)
+        theme = CBCGPVisualManager::GetInstance()->IsDarkTheme() ? Light : Dark;
+#endif
+    return FCColor{ (theme == Dark) ? 0xEEEEEE : 0x333333 };
 }

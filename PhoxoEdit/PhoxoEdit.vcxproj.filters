@@ -107,6 +107,9 @@
     <ClInclude Include="function_panels\panel_manager.h">
       <Filter>Source Files\function_panels</Filter>
     </ClInclude>
+    <ClInclude Include="function_panels\panel_crop_ext.h">
+      <Filter>Source Files\function_panels</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PhoxoEdit.cpp">
@@ -157,6 +160,9 @@
     <ClCompile Include="function_panels\panel_manager.cpp">
       <Filter>Source Files\function_panels</Filter>
     </ClCompile>
+    <ClCompile Include="function_panels\panel_crop_ext.cpp">
+      <Filter>Source Files\function_panels</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="PhoxoEdit.rc">
@@ -200,6 +206,10 @@
     <None Include="res\crop_apply.svg" />
     <None Include="res\crop_link.svg" />
     <None Include="res\crop_unlink.svg" />
+    <None Include="res\rotate_cw.svg" />
+    <None Include="res\rotate_ccw.svg" />
+    <None Include="res\flip_vert.svg" />
+    <None Include="res\flip_horz.svg" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\PhoxoEditDoc.ico">

@@ -136,6 +136,7 @@
     <ClInclude Include="canvas\mfc_scroll_view_draw_target.h" />
     <ClInclude Include="canvas\zoom_mapper.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="function_panels\panel_crop_ext.h" />
     <ClInclude Include="function_panels\panel_manager.h" />
     <ClInclude Include="function_panels\wnd_panel_crop_rotate.h" />
     <ClInclude Include="main_doc.h" />
@@ -157,6 +158,7 @@
     <ClCompile Include="canvas\canvas.cpp" />
     <ClCompile Include="canvas\canvas_viewport.cpp" />
     <ClCompile Include="canvas\layer.cpp" />
+    <ClCompile Include="function_panels\panel_crop_ext.cpp" />
     <ClCompile Include="function_panels\panel_manager.cpp" />
     <ClCompile Include="function_panels\wnd_panel_crop_rotate.cpp" />
     <ClCompile Include="main_doc.cpp" />
@@ -188,8 +190,12 @@
     <None Include="res\crop_link.svg" />
     <None Include="res\crop_original.svg" />
     <None Include="res\crop_unlink.svg" />
+    <None Include="res\flip_horz.svg" />
+    <None Include="res\flip_vert.svg" />
     <None Include="res\PhoxoEdit.rc2" />
     <None Include="res\right_tab_bar.svg" />
+    <None Include="res\rotate_ccw.svg" />
+    <None Include="res\rotate_cw.svg" />
     <None Include="res\top_toolbar_icons.svg" />
   </ItemGroup>
   <ItemGroup>

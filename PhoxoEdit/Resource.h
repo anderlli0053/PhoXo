@@ -17,7 +17,17 @@
 #define IDSVG_CROP_APPLY                515
 #define IDSVG_CROP_LINK                 516
 #define IDSVG_CROP_UNLINK               517
+#define IDSVG_ROTATE_CW                 518
+#define IDSVG_ROTATE_CCW                519
+#define IDSVG_FLIP_VERT                 520
+#define IDSVG_FLIP_HORZ                 521
+
+#define IDSVG_CROP_SHAPE_RECT           522
+#define IDSVG_CROP_SHAPE_ROUND_RECT     523
+#define IDSVG_CROP_SHAPE_CIRCLE         524
+
 #define IDD_PANEL_CROP_ROTATE           700
+#define IDD_PANEL_CROP_SHAPE_PAGE           701
 #define ID_NEW_FROM_CLIPBOARD           7000
 #define ID_CREATE_IMAGE                 7001
 #define ID_NEW_FROM_SCANNER             7002
@@ -31,6 +41,7 @@
 #define ID_TOP_ZOOM_FIT_WINDOW          9002
 #define ID_TOP_ZOOM_ACTUAL              9003
 #define ID_PANEL_CROP_ROTATE            9500
+#define ID_PANEL_CROP_SUB_EXT           9501
 #define ID_FREE_USE_IDS_END             9999
 #define ID_TAB_CROP_ROTATE              20000
 #define ID_TAB_ADJUST                   20001
@@ -46,7 +57,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        312
 #define _APS_NEXT_COMMAND_VALUE         32777
-#define _APS_NEXT_CONTROL_VALUE         1004
+#define _APS_NEXT_CONTROL_VALUE         1005
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
 #endif

@@ -25,6 +25,7 @@ private:
     afx_msg LRESULT OnPostLoadFirst(WPARAM wParam, LPARAM lParam);
     afx_msg void OnGetMinMaxInfo(MINMAXINFO* info);
     afx_msg void OnSize(UINT nType, int cx, int cy);
+    afx_msg LRESULT OnDPIChanged(WPARAM, LPARAM);
     DECLARE_MESSAGE_MAP()
     DECLARE_DYNCREATE(CMainFrame)
 

@@ -1,13 +1,6 @@
 #pragma once
 
-enum class ThemeMode
-{
-    Light,
-    Dark,
-    FollowBCG,
-    InverseBCG
-};
-
+#include "phoxo_app_define.h"
 #include "phoxo_utils.h"
 #include "phoxo_image_save_dialog.h"
 #include "phoxo_image_open_dialog.h"

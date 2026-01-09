@@ -29,6 +29,16 @@ public:
         m_Image.AddImage(img, TRUE);
     }
 
+    void SetTextAndTooltip(PCWSTR section, int key)
+    {
+        LanguageTextGroup   text(section, key);
+        SetWindowText(text[0]);
+        if (text.size() >= 2)
+        {
+            SetTooltip(text[1]);
+        }
+    }
+
 private:
     void CalculatePos(const CRect& rect, CSize text_size, CRect& text_rect, CRect& img_rect, UINT& uiDTFlags) const
     {

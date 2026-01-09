@@ -11,6 +11,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CBCGPFrameWnd)
     ON_WM_GETMINMAXINFO()
     ON_WM_SIZE()
     ON_WM_CLOSE()
+    ON_MESSAGE(WM_DPICHANGED, OnDPIChanged)
     ON_MESSAGE(MSG_POST_LOAD_FIRST, OnPostLoadFirst)
     // right tab group
     ON_COMMAND_RANGE(ID_TAB_CROP_ROTATE, ID_TAB_LAST_ID, OnRightTab)
@@ -83,4 +84,10 @@ void CMainFrame::OnClose()
 {
     theConfig.Save();
     __super::OnClose();
+}
+
+LRESULT CMainFrame::OnDPIChanged(WPARAM wParam, LPARAM lParam)
+{
+    DPICalculator::g_current_dpi() = GetDpiForWindow(m_hWnd);
+    return __super::OnDPIChanged(wParam, lParam);
 }

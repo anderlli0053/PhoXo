@@ -4,8 +4,8 @@ class WndTopToolbar : public CBCGPRibbonBar,
                       public IEventObserverBase
 {
 private:
-    CBCGPRibbonComboBox   * m_zoom_combobox{};
-    CBCGPRibbonSlider   * m_zoom_slider{};
+    CBCGPRibbonComboBox*   m_zoom_combobox{};
+    CBCGPRibbonSlider*   m_zoom_slider{};
 
 public:
     WndTopToolbar();

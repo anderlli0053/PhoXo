@@ -16,30 +16,39 @@ namespace
         ID_CROP_2_3 = 3007,
         ID_CROP_END = 3010,
 
-        ID_APPLY_CROP = 3050,
-        ID_KEEP_ASPECT = 3051,
-
         IDC_CROP_WIDTH = 3100,
         IDC_CROP_HEIGHT = 3101,
 
-        IDC_PRESETS_COMBO = 3200,
+        ID_APPLY_CROP = 3200,  // 应用裁剪
+        ID_KEEP_ASPECT = 3201, // 保持宽高比按钮
+
+        ID_ROTATE_CW = 3300,  // 顺时针 90°
+        ID_ROTATE_CCW = 3301, // 逆时针 90°
+        ID_FLIP_HORZ = 3302,  // 左右翻转
+        ID_FLIP_VERT = 3303,  // 上下翻转
 
         ID_POST_UPDATE_KEEP_ASPECT = 4000,
+        ID_CROP_EXPAND_HOLDER = 6000,
     };
 
-    CString LoadText(PCWSTR key)
+    constexpr std::pair<int, int>   ratio_buttons[] =
+    {
+        { ID_CROP_FREE, IDSVG_CROP_FREE }, { ID_CROP_ORIGINAL, IDSVG_CROP_ORIGINAL }, { ID_CROP_1_1, IDSVG_CROP_1_1 },
+        { ID_CROP_16_9, IDSVG_CROP_16_9 }, { ID_CROP_3_2,      IDSVG_CROP_3_2 },      { ID_CROP_4_3, IDSVG_CROP_4_3 },
+        { ID_CROP_9_16, IDSVG_CROP_9_16 }, { ID_CROP_2_3,      IDSVG_CROP_2_3 }
+    };
+
+    constexpr std::pair<int, int>   rotate_buttons[] =
+    {
+        { ID_ROTATE_CW,  IDSVG_ROTATE_CW },
+        { ID_ROTATE_CCW, IDSVG_ROTATE_CCW },
+        { ID_FLIP_VERT,  IDSVG_FLIP_VERT },
+        { ID_FLIP_HORZ,  IDSVG_FLIP_HORZ },
+    };
+
+    CString LoadText(int key)
     {
         return LanguageText::Get(L"panel_crop", key);
-    }
-
-    FCColor IconColor(ThemeMode theme = ThemeMode::FollowBCG)
-    {
-        using enum ThemeMode;
-        if (theme == FollowBCG)
-            theme = CBCGPVisualManager::GetInstance()->IsDarkTheme() ? Dark : Light;
-        else if (theme == InverseBCG)
-            theme = CBCGPVisualManager::GetInstance()->IsDarkTheme() ? Light : Dark;
-        return FCColor{ (theme == Dark) ? 0xEEEEEE : 0x333333 };
     }
 }
 
@@ -51,33 +60,25 @@ END_MESSAGE_MAP()
 
 WndPanelCropRotate::WndPanelCropRotate()
 {
-    std::pair<int, int>   buttons[] =
-    {
-        { ID_CROP_FREE,     IDSVG_CROP_FREE },
-        { ID_CROP_ORIGINAL, IDSVG_CROP_ORIGINAL },
-        { ID_CROP_1_1,      IDSVG_CROP_1_1 },
-        { ID_CROP_16_9,     IDSVG_CROP_16_9 },
-        { ID_CROP_3_2,      IDSVG_CROP_3_2 },
-        { ID_CROP_4_3,      IDSVG_CROP_4_3 },
-        { ID_CROP_9_16,     IDSVG_CROP_9_16 },
-        { ID_CROP_2_3,      IDSVG_CROP_2_3 },
-    };
+    EnableVisualManagerStyle();
 
-    for (auto [id, svg] : buttons)
+    for (auto [id, svg] : ratio_buttons)
     {
         auto&   btn = AddImageButton(id);
         btn.m_bTopImage = true;
-        btn.SetImageEx(PhoxoUtils::LoadSvgWithDpi(svg, { 32,32 }, IconColor()));
+        btn.SetIcon(PhoxoUtils::LoadSvgWithDpi(svg, PhoxoUtils::GetIconColor()));
+    }
+
+    for (auto [id, svg] : rotate_buttons)
+    {
+        AddImageButton(id).SetIcon(PhoxoUtils::LoadSvgWithDpi(svg, PhoxoUtils::GetIconColor()));
     }
 
     AddImageButton(ID_KEEP_ASPECT);
 
     auto&   btn = AddImageButton(ID_APPLY_CROP);
     btn.m_always_default_status = true;
-    btn.SetIcon(PhoxoUtils::LoadSvgWithDpi(IDSVG_CROP_APPLY, { 18,18 }, IconColor(ThemeMode::InverseBCG)));
-
-    m_width_edit.SetVerticalAlignment(TA_CENTER);
-    m_height_edit.SetVerticalAlignment(TA_CENTER);
+    btn.SetIcon(PhoxoUtils::LoadSvgWithDpi(IDSVG_CROP_APPLY, PhoxoUtils::GetIconColor(ThemeMode::InverseBCG)));
 }
 
 void WndPanelCropRotate::Create(CWnd* parent)
@@ -86,28 +87,43 @@ void WndPanelCropRotate::Create(CWnd* parent)
     CBCGPDialogBar::Create(NULL, parent,
         FALSE,                                  // bHasGripper，是否显示抓手
         MAKEINTRESOURCE(IDD_PANEL_CROP_ROTATE),   // 对话框资源 ID
-        WS_VISIBLE | WS_CHILD | dock | CBRS_HIDE_INPLACE, // right dock
+        WS_VISIBLE | WS_CHILD | dock | CBRS_HIDE_INPLACE, // left/right dock
         ID_PANEL_CROP_ROTATE,
         CBRS_BCGP_REGULAR_TABS,
         CBRS_BCGP_AUTOHIDE
     );
+    InitSetText();
     InitSizeEdit();
 
-    m_image_buttons[ID_CROP_FREE]->SetWindowText(LoadText(L"1"));
-    m_image_buttons[ID_CROP_ORIGINAL]->SetWindowText(LoadText(L"2"));
-    m_image_buttons[ID_APPLY_CROP]->SetWindowText(LoadText(L"3"));
+    m_shape_panel.CreateOnPlaceHolder(this, ID_CROP_EXPAND_HOLDER, ID_PANEL_CROP_SUB_EXT);
+    m_shape_panel.AddDelayedGroup(LoadText(10));
+
     UpdateKeepAspectButton();
-
-    m_presets_combo.SetItemHeight(-1, DPICalculator::Cast(20));
-    ResetPresetsCombo();
-
-    EnableVisualManagerStyle(TRUE);
 }
 
-BCGImageButton& WndPanelCropRotate::AddImageButton(UINT id)
+BCGImageButton& WndPanelCropRotate::AddImageButton(int id)
 {
     auto [it, _] = m_image_buttons.try_emplace(id, make_unique<BCGImageButton>());
     return *it->second;
+}
+
+void WndPanelCropRotate::InitSetText()
+{
+    std::pair<int, int>   button_texts[] =
+    {
+        { ID_CROP_FREE, 1 },
+        { ID_CROP_ORIGINAL, 2 },
+        { ID_APPLY_CROP, 3 },
+    };
+    for (auto [id, key] : button_texts)
+    {
+        m_image_buttons[id]->SetTextAndTooltip(L"panel_crop", key);
+    }
+
+    for (int key = 6; auto [id, _] : rotate_buttons)
+    {
+        m_image_buttons[id]->SetTooltip(LoadText(key++));
+    }
 }
 
 void WndPanelCropRotate::InitSizeEdit()
@@ -136,14 +152,9 @@ void WndPanelCropRotate::UpdateKeepAspectButton()
     UINT   svg = m_keep_aspect ? IDSVG_CROP_LINK : IDSVG_CROP_UNLINK;
 
     auto&   btn = *m_image_buttons[ID_KEEP_ASPECT];
-    btn.SetTooltip(m_keep_aspect ? stat[0] : stat[1], LoadText(L"4"), TRUE);
-    btn.SetImageEx(PhoxoUtils::LoadSvgWithDpi(svg, { 20,20 }, IconColor()));
+    btn.SetTooltip(m_keep_aspect ? stat[0] : stat[1], LoadText(4), TRUE);
+    btn.SetImageEx(PhoxoUtils::LoadSvgWithDpi(svg, PhoxoUtils::GetIconColor()));
     btn.Invalidate();
-}
-
-void WndPanelCropRotate::ResetPresetsCombo()
-{
-    m_presets_combo.SetPrompt(LoadText(L"preset"));
 }
 
 void WndPanelCropRotate::DoDataExchange(CDataExchange* pDX)
@@ -155,7 +166,6 @@ void WndPanelCropRotate::DoDataExchange(CDataExchange* pDX)
         DDX_Control(pDX, id, *btn);
     }
     DDX_Radio(pDX, ID_CROP_FREE, m_ratio_index);
-    DDX_Control(pDX, IDC_PRESETS_COMBO, m_presets_combo);
     DDX_Control(pDX, IDC_CROP_WIDTH, m_width_edit);
     DDX_Control(pDX, IDC_CROP_HEIGHT, m_height_edit);
     // keep aspect
