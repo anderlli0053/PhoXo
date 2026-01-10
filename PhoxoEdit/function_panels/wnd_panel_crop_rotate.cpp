@@ -38,14 +38,6 @@ namespace
         { ID_CROP_9_16, IDSVG_CROP_9_16 }, { ID_CROP_2_3,      IDSVG_CROP_2_3 }
     };
 
-    constexpr std::pair<int, int>   rotate_buttons[] =
-    {
-        { ID_ROTATE_CW,  IDSVG_ROTATE_CW },
-        { ID_ROTATE_CCW, IDSVG_ROTATE_CCW },
-        { ID_FLIP_VERT,  IDSVG_FLIP_VERT },
-        { ID_FLIP_HORZ,  IDSVG_FLIP_HORZ },
-    };
-
     CString LoadText(int key)
     {
         return LanguageText::Get(L"panel_crop", key);
@@ -66,19 +58,14 @@ WndPanelCropRotate::WndPanelCropRotate()
     {
         auto&   btn = AddImageButton(id);
         btn.m_bTopImage = true;
-        btn.SetIcon(PhoxoUtils::LoadSvgWithDpi(svg, PhoxoUtils::GetIconColor()));
-    }
-
-    for (auto [id, svg] : rotate_buttons)
-    {
-        AddImageButton(id).SetIcon(PhoxoUtils::LoadSvgWithDpi(svg, PhoxoUtils::GetIconColor()));
+        btn.LoadSvgWithDpi(svg);
     }
 
     AddImageButton(ID_KEEP_ASPECT);
 
     auto&   btn = AddImageButton(ID_APPLY_CROP);
     btn.m_always_default_status = true;
-    btn.SetIcon(PhoxoUtils::LoadSvgWithDpi(IDSVG_CROP_APPLY, PhoxoUtils::GetIconColor(ThemeMode::InverseBCG)));
+    btn.LoadSvgWithDpi(IDSVG_CROP_APPLY, ThemeMode::InverseBCG);
 }
 
 void WndPanelCropRotate::Create(CWnd* parent)
@@ -86,7 +73,7 @@ void WndPanelCropRotate::Create(CWnd* parent)
     DWORD   dock = (theConfig.m_panel_dock == PanelDock::Right) ? CBRS_RIGHT : CBRS_LEFT;
     CBCGPDialogBar::Create(NULL, parent,
         FALSE,                                  // bHasGripper，是否显示抓手
-        MAKEINTRESOURCE(IDD_PANEL_CROP_ROTATE),   // 对话框资源 ID
+        MAKEINTRESOURCE(IDD_PANEL_CROP),   // 对话框资源 ID
         WS_VISIBLE | WS_CHILD | dock | CBRS_HIDE_INPLACE, // left/right dock
         ID_PANEL_CROP_ROTATE,
         CBRS_BCGP_REGULAR_TABS,
@@ -95,8 +82,7 @@ void WndPanelCropRotate::Create(CWnd* parent)
     InitSetText();
     InitSizeEdit();
 
-    m_shape_panel.CreateOnPlaceHolder(this, ID_CROP_EXPAND_HOLDER, ID_PANEL_CROP_SUB_EXT);
-    m_shape_panel.AddDelayedGroup(LoadText(10));
+    m_shape_panel.Create(this, ID_CROP_EXPAND_HOLDER);
 
     UpdateKeepAspectButton();
 }
@@ -118,11 +104,6 @@ void WndPanelCropRotate::InitSetText()
     for (auto [id, key] : button_texts)
     {
         m_image_buttons[id]->SetTextAndTooltip(L"panel_crop", key);
-    }
-
-    for (int key = 6; auto [id, _] : rotate_buttons)
-    {
-        m_image_buttons[id]->SetTooltip(LoadText(key++));
     }
 }
 

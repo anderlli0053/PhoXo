@@ -26,8 +26,12 @@
 #define IDSVG_CROP_SHAPE_ROUND_RECT     523
 #define IDSVG_CROP_SHAPE_CIRCLE         524
 
-#define IDD_PANEL_CROP_ROTATE           700
-#define IDD_PANEL_CROP_SHAPE_PAGE           701
+#define IDSVG_GROUP_SHAPE               525
+#define IDSVG_GROUP_ROTATE               526
+
+#define IDD_PANEL_CROP                  700
+#define IDD_PANEL_CROP_SHAPE_PAGE       701
+#define IDD_PANEL_CROP_ROTATE_PAGE      702
 #define ID_NEW_FROM_CLIPBOARD           7000
 #define ID_CREATE_IMAGE                 7001
 #define ID_NEW_FROM_SCANNER             7002
@@ -41,7 +45,7 @@
 #define ID_TOP_ZOOM_FIT_WINDOW          9002
 #define ID_TOP_ZOOM_ACTUAL              9003
 #define ID_PANEL_CROP_ROTATE            9500
-#define ID_PANEL_CROP_SUB_EXT           9501
+#define ID_PANEL_CROP_EXT_PAGES         9501
 #define ID_FREE_USE_IDS_END             9999
 #define ID_TAB_CROP_ROTATE              20000
 #define ID_TAB_ADJUST                   20001

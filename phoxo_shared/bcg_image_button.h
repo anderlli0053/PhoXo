@@ -19,6 +19,11 @@ public:
         m_icon = std::move(icon);
     }
 
+    void LoadSvgWithDpi(UINT res_id, ThemeMode theme = ThemeMode::FollowBCG)
+    {
+        SetIcon(PhoxoUtils::LoadSvgWithDpi(res_id, PhoxoUtils::GetIconColor(theme)));
+    }
+
     // …Ë÷√bcgµƒimage
     void SetImageEx(const FCImage& img)
     {

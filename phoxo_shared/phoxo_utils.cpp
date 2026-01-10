@@ -61,7 +61,12 @@ void PhoxoUtils::WIAPopScanImageDialog(PCWSTR savefile)
 FCImage PhoxoUtils::LoadSvgWithDpi(UINT res_id, std::optional<FCColor> fill_color)
 {
     FCResource   svg(res_id, L"SVG");
-    return svg.LoadSvgWithDpi(fill_color);
+    FCImage   bmp = phoxo::ImageHandler::Make(svg.LoadSvgWithDpi(), WICPremultiplied32bpp);
+    if (fill_color)
+    {
+        phoxo::ImageFastPixel::FillRGBAndPremultiply(bmp, *fill_color);
+    }
+    return bmp;
 }
 
 FCColor PhoxoUtils::GetIconColor(ThemeMode theme)

@@ -24,6 +24,9 @@
     <Filter Include="Source Files\function_panels">
       <UniqueIdentifier>{cfbda83f-ba7f-4b55-9633-bbb668d1f3e8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\panel_crop">
+      <UniqueIdentifier>{8868a5cc-c726-44b6-9b00-cff48a1e0669}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -110,6 +113,9 @@
     <ClInclude Include="function_panels\panel_crop_ext.h">
       <Filter>Source Files\function_panels</Filter>
     </ClInclude>
+    <ClInclude Include="panel_crop\rotate_page.h">
+      <Filter>Source Files\panel_crop</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PhoxoEdit.cpp">
@@ -163,6 +169,9 @@
     <ClCompile Include="function_panels\panel_crop_ext.cpp">
       <Filter>Source Files\function_panels</Filter>
     </ClCompile>
+    <ClCompile Include="panel_crop\rotate_page.cpp">
+      <Filter>Source Files\panel_crop</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="PhoxoEdit.rc">
@@ -210,6 +219,11 @@
     <None Include="res\rotate_ccw.svg" />
     <None Include="res\flip_vert.svg" />
     <None Include="res\flip_horz.svg" />
+    <None Include="res\crop_shape_rect.svg" />
+    <None Include="res\crop_shape_round_rect.svg" />
+    <None Include="res\crop_shape_circle.svg" />
+    <None Include="res\group_shape.svg" />
+    <None Include="res\group_rotate.svg" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\PhoxoEditDoc.ico">

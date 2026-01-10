@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "PhoxoEdit.h"
 #include "panel_crop_ext.h"
+#include "../panel_crop/rotate_page.h"
 
 class WndPanelCropShapePage : public CBCGPDialog
 {
@@ -13,12 +14,13 @@ class WndPanelCropShapePage : public CBCGPDialog
 
     BCGImageButton   m_rect, m_round_rect, m_circle;
 
-public:
     DECLARE_DYNCREATE(WndPanelCropShapePage)
 
+public:
     WndPanelCropShapePage(CWnd* pParent = NULL) : CBCGPDialog(IDD_PANEL_CROP_SHAPE_PAGE, pParent)
     {
         EnableVisualManagerStyle();
+        EnableLayout();
     }
 
     BOOL OnInitDialog() override
@@ -36,7 +38,7 @@ public:
         for (auto [btn, svg] : buttons)
         {
             btn->SetTooltip(text.PopFront());
-            btn->SetIcon(PhoxoUtils::LoadSvgWithDpi(svg, PhoxoUtils::GetIconColor()));
+            btn->LoadSvgWithDpi(svg);
         }
         return TRUE;
     }
@@ -50,9 +52,37 @@ public:
     }
 };
 
+namespace
+{
+    HICON BuildGroupIcon(int svg_res_id)
+    {
+        FCResource   res(svg_res_id, L"SVG");
+        FCImage   img = phoxo::ImageHandler::Make(res.LoadSvgWithDpi(), WICNormal32bpp);
+        FCColor   cls = PhoxoUtils::GetIconColor();
+        phoxo::ImageFastPixel::FillRGBKeepAlpha(img, cls);
+        return FCIcon::CreateIcon(img);
+    }
+}
+
 IMPLEMENT_DYNCREATE(WndPanelCropShapePage, CBCGPDialog)
 
 _PHOXO_NAMESPACE(panel_crop)
+
+void CropShapePanel::Create(CWnd* parent, UINT placeholder_id)
+{
+    CreateOnPlaceHolder(parent, placeholder_id, ID_PANEL_CROP_EXT_PAGES);
+
+    AddRotatePage(LanguageText::Get(L"panel_crop", 12));
+
+    int   group = AddDelayedGroup(LanguageText::Get(L"panel_crop", 10));
+    SetGroupIcon(group, BuildGroupIcon(IDSVG_GROUP_SHAPE), TRUE);
+}
+
+void CropShapePanel::AddRotatePage(CStringRef caption)
+{
+    int   group = AddDialog(caption, IDD_PANEL_CROP_ROTATE_PAGE, RUNTIME_CLASS(RotatePage));
+    SetGroupIcon(group, BuildGroupIcon(IDSVG_GROUP_ROTATE), TRUE);
+}
 
 void CropShapePanel::OnSetupDelayedGroup(int nGroupIndex)
 {
