@@ -136,16 +136,19 @@
     <ClInclude Include="canvas\mfc_scroll_view_draw_target.h" />
     <ClInclude Include="canvas\zoom_mapper.h" />
     <ClInclude Include="framework.h" />
-    <ClInclude Include="function_panels\panel_crop_ext.h" />
-    <ClInclude Include="function_panels\panel_manager.h" />
-    <ClInclude Include="function_panels\wnd_panel_crop_rotate.h" />
+    <ClInclude Include="func_crop\panel\local.h" />
+    <ClInclude Include="func_crop\panel\page_expander.h" />
+    <ClInclude Include="func_crop\panel\rotate_page.h" />
+    <ClInclude Include="func_crop\panel\shape_page.h" />
+    <ClInclude Include="func_crop\panel\wnd_panel_crop_rotate.h" />
+    <ClInclude Include="func_crop\tool_crop.h" />
     <ClInclude Include="main_doc.h" />
     <ClInclude Include="main_doc_manager.h" />
     <ClInclude Include="main_frame.h" />
     <ClInclude Include="main_frame_utils.h" />
     <ClInclude Include="main_view.h" />
     <ClInclude Include="main_view_welcome.h" />
-    <ClInclude Include="panel_crop\rotate_page.h" />
+    <ClInclude Include="panel_manager.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PhoxoEdit.h" />
     <ClInclude Include="Resource.h" />
@@ -159,16 +162,17 @@
     <ClCompile Include="canvas\canvas.cpp" />
     <ClCompile Include="canvas\canvas_viewport.cpp" />
     <ClCompile Include="canvas\layer.cpp" />
-    <ClCompile Include="function_panels\panel_crop_ext.cpp" />
-    <ClCompile Include="function_panels\panel_manager.cpp" />
-    <ClCompile Include="function_panels\wnd_panel_crop_rotate.cpp" />
+    <ClCompile Include="func_crop\panel\page_expander.cpp" />
+    <ClCompile Include="func_crop\panel\rotate_page.cpp" />
+    <ClCompile Include="func_crop\panel\shape_page.cpp" />
+    <ClCompile Include="func_crop\panel\wnd_panel_crop_rotate.cpp" />
     <ClCompile Include="main_doc.cpp" />
     <ClCompile Include="main_doc_manager.cpp" />
     <ClCompile Include="main_frame.cpp" />
     <ClCompile Include="main_frame_utils.cpp" />
     <ClCompile Include="main_view.cpp" />
     <ClCompile Include="main_view_zoom.cpp" />
-    <ClCompile Include="panel_crop\rotate_page.cpp" />
+    <ClCompile Include="panel_manager.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>

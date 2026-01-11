@@ -1,14 +1,15 @@
 #pragma once
+#include "local.h"
 
-namespace panel_crop
+namespace crop
 {
-    class RotatePage : public CBCGPDialog
+    class ShapePage : public CBCGPDialog
     {
     private:
-        BCGImageButton   m_cw, m_ccw, m_mirror, m_flip;
+        BCGImageButton   m_rect, m_round_rect, m_circle;
 
     public:
-        RotatePage()
+        ShapePage()
         {
             EnableVisualManagerStyle();
         }
@@ -18,6 +19,6 @@ namespace panel_crop
         void DoDataExchange(CDataExchange* pDX) override;
 
         DECLARE_MESSAGE_MAP()
-        DECLARE_DYNCREATE(RotatePage)
+        DECLARE_DYNCREATE(ShapePage)
     };
 }

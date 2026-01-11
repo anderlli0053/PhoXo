@@ -21,11 +21,11 @@
     <Filter Include="Source Files\canvas">
       <UniqueIdentifier>{4db081f6-fe06-45ea-9d24-02f647133935}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\function_panels">
-      <UniqueIdentifier>{cfbda83f-ba7f-4b55-9633-bbb668d1f3e8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\panel_crop">
+    <Filter Include="Source Files\func_crop">
       <UniqueIdentifier>{8868a5cc-c726-44b6-9b00-cff48a1e0669}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\func_crop\panel">
+      <UniqueIdentifier>{fb28c62b-aea7-42d6-bc2e-3185c27a7b4a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -104,17 +104,26 @@
     <ClInclude Include="main_doc_manager.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="function_panels\wnd_panel_crop_rotate.h">
-      <Filter>Source Files\function_panels</Filter>
+    <ClInclude Include="panel_manager.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="function_panels\panel_manager.h">
-      <Filter>Source Files\function_panels</Filter>
+    <ClInclude Include="func_crop\panel\local.h">
+      <Filter>Source Files\func_crop\panel</Filter>
     </ClInclude>
-    <ClInclude Include="function_panels\panel_crop_ext.h">
-      <Filter>Source Files\function_panels</Filter>
+    <ClInclude Include="func_crop\panel\page_expander.h">
+      <Filter>Source Files\func_crop\panel</Filter>
     </ClInclude>
-    <ClInclude Include="panel_crop\rotate_page.h">
-      <Filter>Source Files\panel_crop</Filter>
+    <ClInclude Include="func_crop\panel\rotate_page.h">
+      <Filter>Source Files\func_crop\panel</Filter>
+    </ClInclude>
+    <ClInclude Include="func_crop\panel\shape_page.h">
+      <Filter>Source Files\func_crop\panel</Filter>
+    </ClInclude>
+    <ClInclude Include="func_crop\panel\wnd_panel_crop_rotate.h">
+      <Filter>Source Files\func_crop\panel</Filter>
+    </ClInclude>
+    <ClInclude Include="func_crop\tool_crop.h">
+      <Filter>Source Files\func_crop</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -160,17 +169,20 @@
     <ClCompile Include="main_view_zoom.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="function_panels\wnd_panel_crop_rotate.cpp">
-      <Filter>Source Files\function_panels</Filter>
+    <ClCompile Include="panel_manager.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="function_panels\panel_manager.cpp">
-      <Filter>Source Files\function_panels</Filter>
+    <ClCompile Include="func_crop\panel\page_expander.cpp">
+      <Filter>Source Files\func_crop\panel</Filter>
     </ClCompile>
-    <ClCompile Include="function_panels\panel_crop_ext.cpp">
-      <Filter>Source Files\function_panels</Filter>
+    <ClCompile Include="func_crop\panel\rotate_page.cpp">
+      <Filter>Source Files\func_crop\panel</Filter>
     </ClCompile>
-    <ClCompile Include="panel_crop\rotate_page.cpp">
-      <Filter>Source Files\panel_crop</Filter>
+    <ClCompile Include="func_crop\panel\shape_page.cpp">
+      <Filter>Source Files\func_crop\panel</Filter>
+    </ClCompile>
+    <ClCompile Include="func_crop\panel\wnd_panel_crop_rotate.cpp">
+      <Filter>Source Files\func_crop\panel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -212,18 +224,42 @@
     <None Include="res\crop_original.svg">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="res\crop_apply.svg" />
-    <None Include="res\crop_link.svg" />
-    <None Include="res\crop_unlink.svg" />
-    <None Include="res\rotate_cw.svg" />
-    <None Include="res\rotate_ccw.svg" />
-    <None Include="res\flip_vert.svg" />
-    <None Include="res\flip_horz.svg" />
-    <None Include="res\crop_shape_rect.svg" />
-    <None Include="res\crop_shape_round_rect.svg" />
-    <None Include="res\crop_shape_circle.svg" />
-    <None Include="res\group_shape.svg" />
-    <None Include="res\group_rotate.svg" />
+    <None Include="res\crop_apply.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\crop_link.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\crop_shape_circle.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\crop_shape_rect.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\crop_shape_round_rect.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\crop_unlink.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\flip_horz.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\flip_vert.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\group_rotate.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\group_shape.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\rotate_ccw.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\rotate_cw.svg">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\PhoxoEditDoc.ico">

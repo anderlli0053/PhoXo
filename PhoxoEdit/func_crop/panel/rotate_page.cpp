@@ -12,7 +12,7 @@ namespace
     };
 }
 
-_PHOXO_NAMESPACE(panel_crop)
+_PHOXO_NAMESPACE(crop)
 
 IMPLEMENT_DYNCREATE(RotatePage, CBCGPDialog)
 
@@ -21,28 +21,16 @@ END_MESSAGE_MAP()
 
 BOOL RotatePage::OnInitDialog()
 {
-    struct ButtonInfo
-    {
-        BCGImageButton*   btn;
-        int   svg_id;
-        int   tip_key;
-    };
+    __super::OnInitDialog();
 
-    ButtonInfo buttons[] =
+    BCGImageButton::ButtonInfo    buttons[] =
     {
         { &m_cw,     IDSVG_ROTATE_CW, 6 },
         { &m_ccw,    IDSVG_ROTATE_CCW, 7 },
         { &m_flip,   IDSVG_FLIP_VERT, 8 },
         { &m_mirror, IDSVG_FLIP_HORZ, 9 },
     };
-
-    __super::OnInitDialog();
-
-    for (auto [btn, svg, tip] : buttons)
-    {
-        btn->SetTooltip(LanguageText::Get(L"panel_crop", tip));
-        btn->LoadSvgWithDpi(svg);
-    }
+    InitButtons(buttons);
     return TRUE;
 }
 

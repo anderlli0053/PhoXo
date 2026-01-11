@@ -1,7 +1,7 @@
 #pragma once
 #include "top_toolbar/wnd_top_toolbar.h"
 #include "right_tab_bar/wnd_right_tab_bar.h"
-#include "function_panels/panel_manager.h"
+#include "panel_manager.h"
 
 class CMainFrame : public CBCGPFrameWnd
 {

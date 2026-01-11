@@ -1,12 +1,13 @@
 #pragma once
 
-namespace panel_crop
+namespace crop
 {
-    class CropShapePanel : public CBCGPExpanderCtrl
+    class PageExpander : public CBCGPExpanderCtrl
     {
     public:
         void Create(CWnd* parent, UINT placeholder_id);
-        void AddRotatePage(CStringRef caption);
+
+    private:
         void OnSetupDelayedGroup(int nGroupIndex) override;
     };
 }

@@ -40,6 +40,13 @@ enum class RenderPreference
     Speed = 1    // 高速：最近邻采样
 };
 
+enum class CropShape
+{
+    Rectangle = 0, // 跟界面一致
+    RoundedRect = 1,
+    Ellipse = 2
+};
+
 namespace AppDefine
 {
     inline constexpr PCWSTR  CONFIG_REGISTRY = LR"(Software\PhoXo\edit)";

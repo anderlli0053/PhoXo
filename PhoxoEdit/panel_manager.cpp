@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "panel_manager.h"
-#include "function_panels/wnd_panel_crop_rotate.h"
+#include "func_crop/panel/wnd_panel_crop_rotate.h"
 
 UINT PanelManager::CurrentTabID() const
 {

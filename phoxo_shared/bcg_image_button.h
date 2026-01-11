@@ -9,6 +9,14 @@ public:
     bool   m_always_default_status = false; // 一直保持按钮背景高亮状态
 
 public:
+    struct ButtonInfo
+    {
+        BCGImageButton*   button;
+        int   svg_res_id;
+        int   tip_key;
+    };
+
+public:
     BCGImageButton()
     {
         m_bDrawFocus = FALSE;
@@ -32,16 +40,6 @@ public:
         m_sizeImage = img.Size();
         m_Image.SetImageSize(m_sizeImage);
         m_Image.AddImage(img, TRUE);
-    }
-
-    void SetTextAndTooltip(PCWSTR section, int key)
-    {
-        LanguageTextGroup   text(section, key);
-        SetWindowText(text[0]);
-        if (text.size() >= 2)
-        {
-            SetTooltip(text[1]);
-        }
     }
 
 private:

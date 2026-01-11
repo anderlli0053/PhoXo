@@ -1,5 +1,5 @@
 #pragma once
-#include "panel_crop_ext.h"
+#include "page_expander.h"
 
 class WndPanelCropRotate : public CBCGPDialogBar
 {
@@ -11,7 +11,7 @@ private:
     CBCGPEdit   m_width_edit, m_height_edit;
 
     // 初始shape panel隐藏，点击按钮后展开
-    panel_crop::CropShapePanel   m_shape_panel;
+    crop::PageExpander   m_shape_panel;
 
 public:
     WndPanelCropRotate();
@@ -20,7 +20,6 @@ public:
 private:
     BCGImageButton& AddImageButton(int id);
 
-    void InitSetText();
     void InitSizeEdit();
     void ResetSizeEdit();
 

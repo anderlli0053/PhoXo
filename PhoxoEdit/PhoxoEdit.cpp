@@ -6,6 +6,7 @@
 #include "main_doc_manager.h"
 
 CPhoxoEditApp theApp;
+ToolBase* g_activeTool = nullptr;
 
 BEGIN_MESSAGE_MAP(CPhoxoEditApp, CBCGPWinApp)
  	ON_COMMAND(ID_CREATE_IMAGE, OnCreateImage)

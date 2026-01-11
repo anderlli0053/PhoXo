@@ -63,7 +63,7 @@ namespace
         btn->SetDefaultCommand();
 
         // Recent Files 子菜单
-        btn->AddSubItem(new CBCGPRibbonRecentFilesList(theConfig.AppText(L"recent")));
+        btn->AddSubItem(new CBCGPRibbonRecentFilesList(LanguageText::Get(L"file", L"recent")));
         btn->AddSubItem(new CBCGPRibbonSeparator());
         btn->AddSubItem(CreateButton(ID_CLEAR_RECENT_FILES, IMAGE_DELETE)); // 清除按钮
         return btn;
