@@ -9,6 +9,8 @@ IMPLEMENT_DYNCREATE(CMainView, PhoXoScrollViewBase)
 BEGIN_MESSAGE_MAP(CMainView, PhoXoScrollViewBase)
     ON_WM_CONTEXTMENU()
     ON_WM_MOUSEWHEEL()
+    ON_WM_LBUTTONDOWN()
+    ON_WM_SETCURSOR()
     // top toolbar zoom
     ON_COMMAND(ID_TOP_ZOOM_SLIDER, OnTopZoomSlider)
     ON_UPDATE_COMMAND_UI(ID_TOP_ZOOM_SLIDER, OnUpdateIfCanvasValid)
@@ -160,4 +162,26 @@ BOOL CMainView::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
     }
 
     return __super::OnMouseWheel(nFlags, zDelta, pt);
+}
+
+void CMainView::OnLButtonDown(UINT nFlags, CPoint point)
+{
+    if (g_activeTool)
+    {
+        g_activeTool->OnLButtonDown(*this, nFlags, point);
+    }
+    GetDocument()->UpdateAllViews(NULL);
+}
+
+BOOL CMainView::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
+{
+    if ((nHitTest == HTCLIENT) && g_activeTool)
+    {
+        if (HCURSOR cursor = g_activeTool->GetToolCursor(*this))
+        {
+            ::SetCursor(cursor);
+            return TRUE;
+        }
+    }
+    return __super::OnSetCursor(pWnd, nHitTest, message);
 }

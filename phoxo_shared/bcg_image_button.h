@@ -32,7 +32,7 @@ public:
         SetIcon(PhoxoUtils::LoadSvgWithDpi(res_id, PhoxoUtils::GetIconColor(theme)));
     }
 
-    // 设置bcg的image
+    // 设置bcg的image，设置完tooltip可以自动显示图标
     void SetImageEx(const FCImage& img)
     {
         ASSERT(img.IsPremultiplied());

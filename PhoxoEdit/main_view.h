@@ -25,6 +25,8 @@ private:
     afx_msg void OnUpdateIfCanvasValid(CCmdUI* ui);
     afx_msg void OnContextMenu(CWnd*, CPoint point);
     afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
+    afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+    afx_msg BOOL OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message);
 	DECLARE_MESSAGE_MAP()
 	DECLARE_DYNCREATE(CMainView)
 };

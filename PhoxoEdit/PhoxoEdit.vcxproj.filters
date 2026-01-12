@@ -27,6 +27,9 @@
     <Filter Include="Source Files\func_crop\panel">
       <UniqueIdentifier>{fb28c62b-aea7-42d6-bc2e-3185c27a7b4a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\framework">
+      <UniqueIdentifier>{971f0dc6-01a6-4e5b-b334-a53b37ddaedb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -101,9 +104,6 @@
     <ClInclude Include="main_view_welcome.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="main_doc_manager.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="panel_manager.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -124,6 +124,12 @@
     </ClInclude>
     <ClInclude Include="func_crop\tool_crop.h">
       <Filter>Source Files\func_crop</Filter>
+    </ClInclude>
+    <ClInclude Include="tool_base.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\main_doc_manager.h">
+      <Filter>Source Files\framework</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -162,9 +168,6 @@
     </ClCompile>
     <ClCompile Include="canvas\canvas_viewport.cpp">
       <Filter>Source Files\canvas</Filter>
-    </ClCompile>
-    <ClCompile Include="main_doc_manager.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="main_view_zoom.cpp">
       <Filter>Source Files</Filter>

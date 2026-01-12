@@ -42,18 +42,6 @@ namespace
         }
     }
 
-    void InitRatioButton(BCGImageButton& btn, int svg_id)
-    {
-        btn.m_bTopImage = true;
-        btn.LoadSvgWithDpi(svg_id);
-    }
-
-    void InitApplyButton(BCGImageButton& btn)
-    {
-        btn.m_always_default_status = true;
-        btn.LoadSvgWithDpi(IDSVG_CROP_APPLY, ThemeMode::InverseBCG);
-    }
-
     void SetTextAndTooltip(BCGImageButton& btn, int key)
     {
         LanguageTextGroup   text(PanelCropText(key));
@@ -77,12 +65,18 @@ WndPanelCropRotate::WndPanelCropRotate()
 {
     EnableVisualManagerStyle();
 
+    // 构造的时候不能设置text and tip
     for (int id = ID_CROP_FREE; id <= ID_CROP_2_3; id++)
     {
-        InitRatioButton(AddImageButton(id), RatioButtonSvgId(id));
+        auto&   btn = AddImageButton(id);
+        btn.m_bTopImage = true;
+        btn.LoadSvgWithDpi(RatioButtonSvgId(id));
     }
     AddImageButton(ID_KEEP_ASPECT);
-    InitApplyButton(AddImageButton(ID_APPLY_CROP));
+
+    auto&   btn = AddImageButton(ID_APPLY_CROP);
+    btn.m_always_default_status = true;
+    btn.LoadSvgWithDpi(IDSVG_CROP_APPLY, ThemeMode::InverseBCG);
 }
 
 void WndPanelCropRotate::Create(CWnd* parent)
@@ -99,7 +93,6 @@ void WndPanelCropRotate::Create(CWnd* parent)
     SetTextAndTooltip(*m_image_buttons[ID_CROP_FREE], 1);
     SetTextAndTooltip(*m_image_buttons[ID_CROP_ORIGINAL], 2);
     m_image_buttons[ID_APPLY_CROP]->SetWindowText(PanelCropText(3));
-
     InitSizeEdit();
     UpdateKeepAspectButton();
 

@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "rotate_page.h"
+#include "local.h"
 
 namespace
 {

@@ -22,7 +22,6 @@ private:
 
     void InitSizeEdit();
     void ResetSizeEdit();
-
     void UpdateKeepAspectButton();
 
     void DoDataExchange(CDataExchange* pDX) override;

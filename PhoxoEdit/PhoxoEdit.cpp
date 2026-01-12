@@ -3,7 +3,7 @@
 #include "main_frame.h"
 #include "main_doc.h"
 #include "main_view.h"
-#include "main_doc_manager.h"
+#include "framework/main_doc_manager.h"
 
 CPhoxoEditApp theApp;
 ToolBase* g_activeTool = nullptr;

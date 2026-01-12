@@ -2,6 +2,7 @@
 #include "page_expander.h"
 #include "rotate_page.h"
 #include "shape_page.h"
+#include "local.h"
 
 namespace
 {

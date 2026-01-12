@@ -1,17 +1,17 @@
 #pragma once
-
-class ToolContext
-{
-public:
-    virtual CPoint  GetCursorPos() const = 0;
-    virtual bool    IsZoomed() const = 0;
-    virtual HCURSOR LoadCursor(int id) const = 0;
-};
+class CMainView;
 
 class ToolBase
 {
 public:
     virtual ~ToolBase() = default;
+
+    virtual HCURSOR GetToolCursor(const CMainView& view)
+    {
+        return ::LoadCursor(NULL, IDC_ARROW);
+    }
+
+    virtual void OnLButtonDown(CMainView& view, UINT nFlags, CPoint point) {}
 };
 
 extern ToolBase*   g_activeTool;

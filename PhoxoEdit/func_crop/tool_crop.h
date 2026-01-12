@@ -7,5 +7,5 @@ private:
     CRect   m_crop_rect;
 
 public:
-    void OnSetCursor() override;
+//    static inline bool   m_keep_aspect = false;
 };
