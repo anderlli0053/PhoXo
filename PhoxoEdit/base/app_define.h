@@ -26,6 +26,7 @@ enum class ZoomChangedBy
     InitView,
     ZoomButton,
     MouseWheel,
+    Other
 };
 
 enum class ZoomDirection
@@ -38,13 +39,6 @@ enum class RenderPreference
 {
     Quality = 0, // 高质量：Box 平均
     Speed = 1    // 高速：最近邻采样
-};
-
-enum class CropShape
-{
-    Rectangle = 0, // 跟界面一致
-    RoundedRect = 1,
-    Ellipse = 2
 };
 
 namespace AppDefine

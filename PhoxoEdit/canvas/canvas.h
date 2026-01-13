@@ -40,7 +40,7 @@ public:
     void AddLayer(const shared_ptr<Layer>& layer, int index = -1);
     const auto& AllLayers() const { return m_layer_mgr.all(); }
 
-    void Draw(const CanvasDrawTarget& target);
+    void Draw(const CanvasDrawContext& target);
 
     // Render full canvas at original size (no zoom, no viewport)
     Image BuildCanvasImage() const;

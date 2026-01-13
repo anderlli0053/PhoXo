@@ -1,6 +1,24 @@
 #include "pch.h"
 #include "panel_manager.h"
 #include "func_crop/panel/wnd_panel_crop_rotate.h"
+#include "tool_manager.h"
+
+namespace
+{
+    ToolType ToolTypeFromTabId(UINT id)
+    {
+        switch (id)
+        {
+            case ID_TAB_CROP_ROTATE: return ToolType::Crop;
+            case ID_TAB_TEXT:        return ToolType::Text;
+            case ID_TAB_ADJUST:      return ToolType::Adjust;
+            case ID_TAB_EFFECT:      return ToolType::Effect;
+            case ID_TAB_WIDGET:      return ToolType::Widget;
+            case ID_TAB_FRAME:       return ToolType::Frame;
+            default:                 return ToolType::None;
+        }
+    }
+}
 
 UINT PanelManager::CurrentTabID() const
 {
@@ -52,6 +70,11 @@ void PanelManager::OnClickTab(CBCGPFrameWnd& main_wnd, UINT tab_id)
         m_func_panel[tab_id].reset(new_panel);
     }
     main_wnd.RecalcLayout();
+
+    ToolType   tool_type = ToolTypeFromTabId(tab_id);
+    if (!m_current_panel)
+        tool_type = ToolType::None;
+    theToolManager.ActivateTool(tool_type);
 }
 
 CBCGPDockingControlBar* PanelManager::CreatePanel(CWnd* parent, UINT tab_id)

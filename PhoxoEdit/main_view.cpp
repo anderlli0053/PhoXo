@@ -2,6 +2,7 @@
 #include "main_doc.h"
 #include "main_view.h"
 #include "canvas/mfc_scroll_view_anchor_restore.h"
+#include "tool_manager.h"
 
 static_assert(ID_TOP_ZOOM_OUT + 1 == ID_TOP_ZOOM_IN); // rangeÁ¬Ðø
 
@@ -9,7 +10,9 @@ IMPLEMENT_DYNCREATE(CMainView, PhoXoScrollViewBase)
 BEGIN_MESSAGE_MAP(CMainView, PhoXoScrollViewBase)
     ON_WM_CONTEXTMENU()
     ON_WM_MOUSEWHEEL()
+    ON_WM_MOUSEMOVE()
     ON_WM_LBUTTONDOWN()
+    ON_WM_LBUTTONUP()
     ON_WM_SETCURSOR()
     // top toolbar zoom
     ON_COMMAND(ID_TOP_ZOOM_SLIDER, OnTopZoomSlider)
@@ -61,6 +64,11 @@ void CMainView::OnDraw(CDC* paintdc)
         ScrollViewDrawTarget   info(*canvas, *this);
         info.SetHdcAndBrush(memdc, theConfig.m_runtime_canvas_back);
         canvas->Draw(info);
+
+        if (auto tool = theToolManager.GetActiveTool())
+        {
+            //tool->OnDrawToolOverlay(info);
+        }
     }
     else
     {
@@ -166,22 +174,36 @@ BOOL CMainView::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 
 void CMainView::OnLButtonDown(UINT nFlags, CPoint point)
 {
-    if (g_activeTool)
+    if (auto tool = theToolManager.GetActiveTool())
     {
-        g_activeTool->OnLButtonDown(*this, nFlags, point);
+        tool->OnLButtonDown(*this, nFlags, point);
+     }
+    GetDocument()->UpdateAllViews(NULL);
+}
+
+void CMainView::OnLButtonUp(UINT nFlags, CPoint point)
+{
+    if (auto tool = theToolManager.GetActiveTool())
+    {
+        tool->OnLButtonUp(*this, nFlags, point);
     }
     GetDocument()->UpdateAllViews(NULL);
 }
 
 BOOL CMainView::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 {
-    if ((nHitTest == HTCLIENT) && g_activeTool)
-    {
-        if (HCURSOR cursor = g_activeTool->GetToolCursor(*this))
-        {
-            ::SetCursor(cursor);
-            return TRUE;
-        }
-    }
+//     if ((nHitTest == HTCLIENT) && g_activeTool)
+//     {
+//         if (HCURSOR cursor = g_activeTool->GetToolCursor(*this))
+//         {
+//             ::SetCursor(cursor);
+//             return TRUE;
+//         }
+//     }
     return __super::OnSetCursor(pWnd, nHitTest, message);
+}
+
+void CMainView::OnMouseMove(UINT nFlags, CPoint point)
+{
+    __super::OnMouseMove(nFlags, point);
 }

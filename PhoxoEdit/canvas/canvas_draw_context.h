@@ -2,7 +2,7 @@
 
 _PHOXO_BEGIN
 
-struct CanvasDrawTarget
+struct CanvasDrawContext
 {
     HDC   dst_hdc{};
     HBRUSH   background_brush{};

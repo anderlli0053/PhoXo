@@ -19,11 +19,11 @@ private:
 public:
     CanvasViewport(const Canvas& canvas) : m_canvas(canvas) {}
 
-    void Draw(const CanvasDrawTarget& target);
+    void Draw(const CanvasDrawContext& target);
 
 private:
-    bool IsCacheValid(const CanvasDrawTarget& target) const;
-    void RebuildCache(const CanvasDrawTarget& target);
+    bool IsCacheValid(const CanvasDrawContext& target) const;
+    void RebuildCache(const CanvasDrawContext& target);
 };
 
 _PHOXO_NAMESPACE_END

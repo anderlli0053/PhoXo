@@ -22,7 +22,7 @@ void Canvas::AddLayer(const shared_ptr<Layer>& layer, int index)
     //layer->SetPosition(CPoint(200, 200));
 }
 
-void Canvas::Draw(const CanvasDrawTarget& target)
+void Canvas::Draw(const CanvasDrawContext& target)
 {
     m_viewport.Draw(target);
 }

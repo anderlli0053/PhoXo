@@ -6,11 +6,12 @@ class CMainView : public PhoXoScrollViewBase
 private:
     unique_ptr<main_view::WelcomeRender>   m_welcome;
 
-private:
+public:
     Canvas* GetCanvas() const;
     GPointF ViewToCanvas(CPoint view_pt) const;
     void UpdateZoomRatio(double new_ratio, ZoomChangedBy from, std::optional<CPoint> view_anchor = std::nullopt);
 
+private:
 	void OnDraw(CDC* pDC) override;
     void OnInitialUpdate() override;
     void OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint) override;
@@ -26,7 +27,9 @@ private:
     afx_msg void OnContextMenu(CWnd*, CPoint point);
     afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
     afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+    afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
     afx_msg BOOL OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message);
+    afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 	DECLARE_MESSAGE_MAP()
 	DECLARE_DYNCREATE(CMainView)
 };

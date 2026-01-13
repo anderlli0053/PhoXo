@@ -4,7 +4,7 @@
 
 _PHOXO_BEGIN
 
-void CanvasViewport::Draw(const CanvasDrawTarget& target)
+void CanvasViewport::Draw(const CanvasDrawContext& target)
 {
     if (!IsCacheValid(target))
     {
@@ -14,7 +14,7 @@ void CanvasViewport::Draw(const CanvasDrawTarget& target)
     target.DrawImage(m_cache);
 }
 
-bool CanvasViewport::IsCacheValid(const CanvasDrawTarget& target) const
+bool CanvasViewport::IsCacheValid(const CanvasDrawContext& target) const
 {
     return m_cache
         && (m_rect_on_zoomed_canvas == target.src_rect_on_zoomed_canvas) // zoom区域大小改变，或者滚动条位置改变
@@ -22,7 +22,7 @@ bool CanvasViewport::IsCacheValid(const CanvasDrawTarget& target) const
         && (m_canvas_content_ver == m_canvas.ContentVersion()); // canvas内容改变
 }
 
-void CanvasViewport::RebuildCache(const CanvasDrawTarget& target)
+void CanvasViewport::RebuildCache(const CanvasDrawContext& target)
 {
     // 更新缓存帧信息
     m_rect_on_zoomed_canvas = target.src_rect_on_zoomed_canvas;

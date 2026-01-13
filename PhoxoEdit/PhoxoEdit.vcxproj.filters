@@ -74,7 +74,7 @@
     <ClInclude Include="base\app_define.h">
       <Filter>Source Files\base</Filter>
     </ClInclude>
-    <ClInclude Include="canvas\canvas_draw_target.h">
+    <ClInclude Include="canvas\canvas_draw_context.h">
       <Filter>Source Files\canvas</Filter>
     </ClInclude>
     <ClInclude Include="canvas\viewport_composer.h">
@@ -131,6 +131,12 @@
     <ClInclude Include="framework\main_doc_manager.h">
       <Filter>Source Files\framework</Filter>
     </ClInclude>
+    <ClInclude Include="tool_manager.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="func_crop\mask_overlay.h">
+      <Filter>Source Files\func_crop</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PhoxoEdit.cpp">
@@ -186,6 +192,15 @@
     </ClCompile>
     <ClCompile Include="func_crop\panel\wnd_panel_crop_rotate.cpp">
       <Filter>Source Files\func_crop\panel</Filter>
+    </ClCompile>
+    <ClCompile Include="func_crop\tool_crop.cpp">
+      <Filter>Source Files\func_crop</Filter>
+    </ClCompile>
+    <ClCompile Include="tool_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="func_crop\mask_overlay.cpp">
+      <Filter>Source Files\func_crop</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

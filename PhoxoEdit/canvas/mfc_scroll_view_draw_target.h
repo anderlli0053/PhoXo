@@ -1,7 +1,7 @@
 #pragma once
 
 // 一共四种形态：NoSB , H-SB , V-SB , H+V-SB
-struct ScrollViewDrawTarget : public phoxo::CanvasDrawTarget
+struct ScrollViewDrawTarget : public phoxo::CanvasDrawContext
 {
     ScrollViewDrawTarget(const Canvas& canvas, const CScrollView& view)
     {

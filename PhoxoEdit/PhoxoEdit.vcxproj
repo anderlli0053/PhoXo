@@ -129,7 +129,7 @@
     <ClInclude Include="canvas\canvas.h" />
     <ClInclude Include="canvas\mfc_scroll_view_anchor_restore.h" />
     <ClInclude Include="canvas\viewport_composer.h" />
-    <ClInclude Include="canvas\canvas_draw_target.h" />
+    <ClInclude Include="canvas\canvas_draw_context.h" />
     <ClInclude Include="canvas\canvas_viewport.h" />
     <ClInclude Include="canvas\layer.h" />
     <ClInclude Include="canvas\layer_manager.h" />
@@ -137,6 +137,7 @@
     <ClInclude Include="canvas\zoom_mapper.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="framework\main_doc_manager.h" />
+    <ClInclude Include="func_crop\mask_overlay.h" />
     <ClInclude Include="func_crop\panel\local.h" />
     <ClInclude Include="func_crop\panel\page_expander.h" />
     <ClInclude Include="func_crop\panel\rotate_page.h" />
@@ -155,6 +156,7 @@
     <ClInclude Include="right_tab_bar\wnd_right_tab_bar.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="tool_base.h" />
+    <ClInclude Include="tool_manager.h" />
     <ClInclude Include="top_toolbar\wnd_top_toolbar.h" />
     <ClInclude Include="top_toolbar\zoom_slider_mapper.h" />
   </ItemGroup>
@@ -163,10 +165,12 @@
     <ClCompile Include="canvas\canvas.cpp" />
     <ClCompile Include="canvas\canvas_viewport.cpp" />
     <ClCompile Include="canvas\layer.cpp" />
+    <ClCompile Include="func_crop\mask_overlay.cpp" />
     <ClCompile Include="func_crop\panel\page_expander.cpp" />
     <ClCompile Include="func_crop\panel\rotate_page.cpp" />
     <ClCompile Include="func_crop\panel\shape_page.cpp" />
     <ClCompile Include="func_crop\panel\wnd_panel_crop_rotate.cpp" />
+    <ClCompile Include="func_crop\tool_crop.cpp" />
     <ClCompile Include="main_doc.cpp" />
     <ClCompile Include="main_frame.cpp" />
     <ClCompile Include="main_frame_utils.cpp" />
@@ -179,6 +183,7 @@
     </ClCompile>
     <ClCompile Include="PhoxoEdit.cpp" />
     <ClCompile Include="right_tab_bar\wnd_right_tab_bar.cpp" />
+    <ClCompile Include="tool_manager.cpp" />
     <ClCompile Include="top_toolbar\wnd_top_toolbar.cpp" />
   </ItemGroup>
   <ItemGroup>
