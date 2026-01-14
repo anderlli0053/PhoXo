@@ -35,8 +35,10 @@ void ToolCrop::OnLButtonDown(CMainView& view, UINT nFlags, CPoint point)
     }
 }
 
-void ToolCrop::OnDrawToolOverlay(CMainView& view)
+void ToolCrop::OnDrawToolOverlay(CMainView& view, const CanvasDrawContext& ctx)
 {
-    if (!m_crop_on_canvas)
-        return;
+    if (m_crop_on_canvas)
+    {
+        m_mask_overlay.Draw(ctx, *m_crop_on_canvas);
+    }
 }

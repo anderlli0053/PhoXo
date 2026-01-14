@@ -1,8 +1,7 @@
 #pragma once
-#include "canvas_draw_target.h"
+#include "canvas_draw_context.h"
 
 _PHOXO_BEGIN
-class Canvas; // forward declaration
 
 class CanvasViewport
 {
@@ -22,8 +21,8 @@ public:
     void Draw(const CanvasDrawContext& target);
 
 private:
-    bool IsCacheValid(const CanvasDrawContext& target) const;
-    void RebuildCache(const CanvasDrawContext& target);
+    bool IsCacheValid(const CanvasDrawContext& ctx) const;
+    void RebuildCache(const CanvasDrawContext& ctx);
 };
 
 _PHOXO_NAMESPACE_END

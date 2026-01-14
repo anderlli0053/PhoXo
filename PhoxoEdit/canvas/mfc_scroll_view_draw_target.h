@@ -3,12 +3,13 @@
 // 一共四种形态：NoSB , H-SB , V-SB , H+V-SB
 struct ScrollViewDrawTarget : public phoxo::CanvasDrawContext
 {
-    ScrollViewDrawTarget(const Canvas& canvas, const CScrollView& view)
+    ScrollViewDrawTarget(const Canvas& canvas, const CScrollView& view) : CanvasDrawContext{ canvas }
     {
         const CSize   view_size = FCWnd::GetClientSize(view);
         const CSize   zoomed_canvas_size = canvas.ZoomedSize();
 
         // 先充满整个区域再调整
+        dst_view_size = view_size;
         dst_rect_on_view = CRect({}, view_size);
         src_rect_on_zoomed_canvas = CRect({}, zoomed_canvas_size);
 
@@ -33,12 +34,6 @@ struct ScrollViewDrawTarget : public phoxo::CanvasDrawContext
             src_rect_on_zoomed_canvas.top = view.GetScrollPos(SB_VERT);
             src_rect_on_zoomed_canvas.bottom = src_rect_on_zoomed_canvas.top + view_size.cy;
         }
-    }
-
-    void SetHdcAndBrush(HDC hdc, HBRUSH brush)
-    {
-        dst_hdc = hdc;
-        background_brush = brush;
     }
 
     static GPointF ViewToCanvas(const CScrollView& view, CPoint view_pt, const Canvas& canvas)

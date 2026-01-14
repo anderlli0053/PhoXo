@@ -4,12 +4,15 @@ class MaskOverlay
 {
 private:
     ID2D1DCRenderTargetPtr   m_target;
+    ID2D1SolidColorBrushPtr   m_black_brush;
 
     FCImage   m_buffer;
 
 public:
-    void BuildMask(const phoxo::CanvasDrawTarget& target);
+    MaskOverlay();
+
+    void Draw(const CanvasDrawContext& ctx, const CRect& crop_on_view);
 
 private:
-    void EnsureRenderTarget();
+    void UpdateOverlayMask(const CRect& crop_rect);
 };

@@ -67,7 +67,7 @@ void CMainView::OnDraw(CDC* paintdc)
 
         if (auto tool = theToolManager.GetActiveTool())
         {
-            //tool->OnDrawToolOverlay(info);
+            tool->OnDrawToolOverlay(*this, info);
         }
     }
     else

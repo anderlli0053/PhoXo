@@ -8,26 +8,27 @@
 #define _AFX_NO_MFC_CONTROLS_IN_DIALOGS         // remove support for MFC controls in dialogs
 #define _AFX_ALL_WARNINGS       // turns off MFC's hiding of some common and often safely ignored warning messages
 
-#include "BCGCBProInc.h"
+#include "BCGCBProInc.h" // Lib BCG
 
-#include "../3rd/phoxo-core-lib/src/phoxo_core.h"
+#include "../3rd/phoxo-core-lib/src/phoxo_core.h" // Lib PhoXo Core
+#include "canvas/canvas.h"
 
 #define PHOXO_LANGUAGE_BASE_FOLDER LR"(language\edit\)";
-#include "../3rd/UIStone/UIStone.h"
+#include "../3rd/UIStone/UIStone.h" // Lib UIStone
 
 using FCColor = phoxo::Color;
 using FCImage = phoxo::Image;
 using CStringRef = const CString&;
 
-using phoxo::GPointF;
 using std::unique_ptr, std::make_unique;
 using std::shared_ptr, std::make_shared;
+using phoxo::GPointF;
+using phoxo::CanvasDrawContext;
 
 //-----------------------------------------------------------------------------
 #include "base/app_define.h"
 #include "app_config.h"
 
-#include "canvas/canvas.h"
 #include "tool_base.h"
 
 using phoxo::Canvas;

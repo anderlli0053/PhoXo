@@ -4,28 +4,39 @@
 
 _PHOXO_BEGIN
 
-void CanvasViewport::Draw(const CanvasDrawContext& target)
+namespace
 {
-    if (!IsCacheValid(target))
+    void FillImageCheckerboard(Image& img, const CanvasDrawContext& ctx)
     {
-        RebuildCache(target);
+        BitmapHDC   dc(img);
+        ::SetBrushOrgEx(dc, -ctx.src_rect_on_zoomed_canvas.left, -ctx.src_rect_on_zoomed_canvas.top, NULL); // 加入滚动条偏移
+        ::FillRect(dc, CRect({}, img.Size()), ctx.background_brush);
     }
-
-    target.DrawImage(m_cache);
 }
 
-bool CanvasViewport::IsCacheValid(const CanvasDrawContext& target) const
+void CanvasViewport::Draw(const CanvasDrawContext& ctx)
+{
+    if (!IsCacheValid(ctx))
+    {
+        RebuildCache(ctx);
+    }
+
+    POINT   pt = ctx.dst_rect_on_view.TopLeft();
+    ::BitBlt(ctx.dst_hdc, pt.x, pt.y, m_cache.Width(), m_cache.Height(), BitmapHDC(m_cache), 0, 0, SRCCOPY);
+}
+
+bool CanvasViewport::IsCacheValid(const CanvasDrawContext& ctx) const
 {
     return m_cache
-        && (m_rect_on_zoomed_canvas == target.src_rect_on_zoomed_canvas) // zoom区域大小改变，或者滚动条位置改变
+        && (m_rect_on_zoomed_canvas == ctx.src_rect_on_zoomed_canvas) // zoom区域大小改变，或者滚动条位置改变
         && (m_canvas_total_zoomed_size == m_canvas.ZoomedSize()) // zoom改变
         && (m_canvas_content_ver == m_canvas.ContentVersion()); // canvas内容改变
 }
 
-void CanvasViewport::RebuildCache(const CanvasDrawContext& target)
+void CanvasViewport::RebuildCache(const CanvasDrawContext& ctx)
 {
     // 更新缓存帧信息
-    m_rect_on_zoomed_canvas = target.src_rect_on_zoomed_canvas;
+    m_rect_on_zoomed_canvas = ctx.src_rect_on_zoomed_canvas;
     m_canvas_total_zoomed_size = m_canvas.ZoomedSize();
     m_canvas_content_ver = m_canvas.ContentVersion();
 
@@ -34,7 +45,7 @@ void CanvasViewport::RebuildCache(const CanvasDrawContext& target)
         m_cache.Create(sz);
 
     // 填充背景棋盘格
-    target.FillImageCheckerboard(m_cache);
+    FillImageCheckerboard(m_cache, ctx);
 
     // 渲染 Canvas 到缓存
     ViewportComposer   fx(m_canvas, m_rect_on_zoomed_canvas.TopLeft());

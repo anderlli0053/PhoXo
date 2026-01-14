@@ -1,30 +1,32 @@
 #pragma once
 
 _PHOXO_BEGIN
+class Canvas; // forward declaration
 
 struct CanvasDrawContext
 {
+public:
+    const Canvas&   canvas;
     HDC   dst_hdc{};
     HBRUSH   background_brush{};
 
     // canvas（全部或区域）显示在HDC上区域
+    CSize   dst_view_size;
     CRect   dst_rect_on_view;
 
     // 1. 如果小于view，居中显示 ({0,0} , zoomed_canvas)
     // 2. 大于view，此矩形表示 (scroll_pos , view_size)
     CRect   src_rect_on_zoomed_canvas;
 
-    void FillImageCheckerboard(Image& img) const
+public:
+    CanvasDrawContext(const Canvas& canvas) : canvas{ canvas }
     {
-        BitmapHDC   dc(img);
-        ::SetBrushOrgEx(dc, -src_rect_on_zoomed_canvas.left, -src_rect_on_zoomed_canvas.top, NULL); // 加入滚动条偏移
-        ::FillRect(dc, CRect({}, img.Size()), background_brush);
     }
 
-    void DrawImage(const Image& img) const
+    void SetHdcAndBrush(HDC hdc, HBRUSH brush)
     {
-        CPoint   pt = dst_rect_on_view.TopLeft();
-        ::BitBlt(dst_hdc, pt.x, pt.y, img.Width(), img.Height(), BitmapHDC(img), 0, 0, SRCCOPY);
+        dst_hdc = hdc;
+        background_brush = brush;
     }
 };
 

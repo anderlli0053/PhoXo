@@ -2,6 +2,7 @@
 #include "layer.h"
 
 _PHOXO_BEGIN
+using std::shared_ptr;
 
 class LayerManager
 {
