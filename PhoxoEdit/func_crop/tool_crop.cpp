@@ -4,12 +4,12 @@
 
 namespace
 {
-    void ZoomForCropMode(CMainView& view, Canvas& canvas)
+    void ZoomForCropMode(CMainView& view, CSize actual_size)
     {
         CSize   margin{ DPICalculator::Cast(10), DPICalculator::Cast(10) };
         CRect   rc = FCWnd::GetClientRect(view);
         rc.DeflateRect(margin);
-        float   ratio = phoxo::Utils::CalcFitZoomRatio(rc.Size(), canvas.OriginalSize());
+        float   ratio = phoxo::Utils::CalcFitZoomRatio(rc.Size(), actual_size);
         view.UpdateZoomRatio(ratio, ZoomChangedBy::Other);
     }
 }
@@ -30,15 +30,18 @@ void ToolCrop::OnLButtonDown(CMainView& view, UINT nFlags, CPoint point)
     }
     else
     {
-        ZoomForCropMode(view, *canvas);
-        m_crop_on_canvas.emplace(CPoint(), canvas->OriginalSize());
+        CSize   actual_size = canvas->OriginalSize();
+        ZoomForCropMode(view, actual_size);
+        m_crop_on_canvas.emplace(CPoint(), actual_size);
     }
 }
 
-void ToolCrop::OnDrawToolOverlay(CMainView& view, const CanvasDrawContext& ctx)
+void ToolCrop::OnDrawToolOverlay(const ScrollViewDrawContext& ctx)
 {
     if (m_crop_on_canvas)
     {
+        auto   tl = ctx.CanvasToView(m_crop_on_canvas->TopLeft());
+        auto   br = ctx.CanvasToView(m_crop_on_canvas->BottomRight());
         m_mask_overlay.Draw(ctx, *m_crop_on_canvas);
     }
 }

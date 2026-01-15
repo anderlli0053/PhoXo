@@ -19,7 +19,7 @@ public:
     CRect   src_rect_on_zoomed_canvas;
 
 public:
-    CanvasDrawContext(const Canvas& canvas) : canvas{ canvas }
+    CanvasDrawContext(const Canvas& src_canvas) : canvas{ src_canvas }
     {
     }
 

@@ -41,5 +41,5 @@ public:
     //----------------------------------------
     // 绘制 Tool 的覆盖层（辅助线 / 选框 / 高亮等）
     //----------------------------------------
-    virtual void OnDrawToolOverlay(CMainView& view, const CanvasDrawContext& ctx) {}
+    virtual void OnDrawToolOverlay(const ScrollViewDrawContext& ctx) {}
 };

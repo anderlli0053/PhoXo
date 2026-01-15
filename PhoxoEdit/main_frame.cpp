@@ -2,6 +2,7 @@
 #include "PhoxoEdit.h"
 #include "main_frame.h"
 #include "main_frame_utils.h"
+#include "tool_manager.h"
 
 static_assert(ID_TAB_CROP_ROTATE == 20000); // ID_TAB_CROP_ROTATE 必须是range第一个
 
@@ -82,6 +83,7 @@ void CMainFrame::OnSize(UINT nType, int cx, int cy)
 
 void CMainFrame::OnClose()
 {
+    theToolManager.ActivateTool(ToolType::None);
     theConfig.Save();
     __super::OnClose();
 }

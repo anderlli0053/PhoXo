@@ -1,9 +1,11 @@
 #pragma once
 
+_PHOXO_BEGIN
+
 // 一共四种形态：NoSB , H-SB , V-SB , H+V-SB
-struct ScrollViewDrawTarget : public phoxo::CanvasDrawContext
+struct ScrollViewDrawContext : public CanvasDrawContext
 {
-    ScrollViewDrawTarget(const Canvas& canvas, const CScrollView& view) : CanvasDrawContext{ canvas }
+    ScrollViewDrawContext(const Canvas& src_canvas, const CScrollView& view) : CanvasDrawContext{ src_canvas }
     {
         const CSize   view_size = FCWnd::GetClientSize(view);
         const CSize   zoomed_canvas_size = canvas.ZoomedSize();
@@ -38,9 +40,17 @@ struct ScrollViewDrawTarget : public phoxo::CanvasDrawContext
 
     static GPointF ViewToCanvas(const CScrollView& view, CPoint view_pt, const Canvas& canvas)
     {
-        ScrollViewDrawTarget   info(canvas, view); // 利用它来计算位置
+        ScrollViewDrawContext   info(canvas, view);
         CPoint   tmp = view_pt - info.dst_rect_on_view.TopLeft() + info.src_rect_on_zoomed_canvas.TopLeft();
         return canvas.ZoomMapper().ToOriginal(tmp);
+    }
+
+    GPointF CanvasToView(CPoint canvas_pt) const
+    {
+        GPointF   tmp = canvas.ZoomMapper().ToZoomed(canvas_pt);
+        float   x = tmp.X - src_rect_on_zoomed_canvas.left + dst_rect_on_view.left;
+        float   y = tmp.Y - src_rect_on_zoomed_canvas.top + dst_rect_on_view.top;
+        return { x,y };
     }
 
 private:
@@ -51,3 +61,5 @@ private:
         end = begin + canvas;
     }
 };
+
+_PHOXO_NAMESPACE_END

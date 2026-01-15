@@ -1,5 +1,6 @@
 #pragma once
 
+// Ö»»­ÕÚÕÖ²ã£¬ÍÚ¿ÕcropÇøÓò
 class MaskOverlay
 {
 private:

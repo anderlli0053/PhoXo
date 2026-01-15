@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "main_doc.h"
 #include "main_view.h"
-#include "canvas/mfc_scroll_view_anchor_restore.h"
 #include "tool_manager.h"
 
 static_assert(ID_TOP_ZOOM_OUT + 1 == ID_TOP_ZOOM_IN); // range连续
@@ -41,7 +40,7 @@ Canvas* CMainView::GetCanvas() const
 GPointF CMainView::ViewToCanvas(CPoint view_pt) const
 {
     if (auto canvas = GetCanvas())
-        return ScrollViewDrawTarget::ViewToCanvas(*this, view_pt, *canvas);
+        return ScrollViewDrawContext::ViewToCanvas(*this, view_pt, *canvas);
     return {};
 }
 
@@ -61,13 +60,13 @@ void CMainView::OnDraw(CDC* paintdc)
 
     if (auto canvas = GetCanvas())
     {
-        ScrollViewDrawTarget   info(*canvas, *this);
+        ScrollViewDrawContext   info(*canvas, *this);
         info.SetHdcAndBrush(memdc, theConfig.m_runtime_canvas_back);
         canvas->Draw(info);
 
         if (auto tool = theToolManager.GetActiveTool())
         {
-            tool->OnDrawToolOverlay(*this, info);
+            tool->OnDrawToolOverlay(info);
         }
     }
     else
@@ -146,30 +145,6 @@ void CMainView::OnContextMenu(CWnd*, CPoint point)
         return;
 
     //    theApp.ShowPopupMenu(IDR_CONTEXT_MENU, point, this);
-}
-
-BOOL CMainView::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
-{
-    auto   canvas = GetCanvas();
-    if (!canvas)
-        return 0;
-
-    if (nFlags & MK_CONTROL)
-    {
-        ScreenToClient(&pt); // screen -> view
-        double   newzoom = canvas->ZoomMapper().CalcRatioByMouseWheel(zDelta / WHEEL_DELTA, 1.25);
-        UpdateZoomRatio(newzoom, ZoomChangedBy::MouseWheel, pt);
-        return 0;
-    }
-
-    // 横向滚动
-    if (nFlags & MK_SHIFT)
-    {
-        ScrollHorizByWheel(zDelta);
-        return 0;
-    }
-
-    return __super::OnMouseWheel(nFlags, zDelta, pt);
 }
 
 void CMainView::OnLButtonDown(UINT nFlags, CPoint point)

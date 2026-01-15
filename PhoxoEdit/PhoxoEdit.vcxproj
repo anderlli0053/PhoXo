@@ -133,7 +133,7 @@
     <ClInclude Include="canvas\canvas_viewport.h" />
     <ClInclude Include="canvas\layer.h" />
     <ClInclude Include="canvas\layer_manager.h" />
-    <ClInclude Include="canvas\mfc_scroll_view_draw_target.h" />
+    <ClInclude Include="canvas\mfc_scroll_view_draw_context.h" />
     <ClInclude Include="canvas\zoom_mapper.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="framework\main_doc_manager.h" />

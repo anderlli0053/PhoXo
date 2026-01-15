@@ -13,7 +13,7 @@ public:
         : m_canvas(canvas)
         , m_scroll_pos(scroll_pos)
     {
-        EnableParallel(true);
+        EnableParallel();
     }
 
     void Process(CPoint pt, Color& px) const

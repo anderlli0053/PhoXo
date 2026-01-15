@@ -24,7 +24,7 @@ void MaskOverlay::UpdateOverlayMask(const CRect& crop_rect)
     BitmapHDC   memdc(m_buffer);
     m_target->BindDC(memdc, CRect({}, m_buffer.Size()));
 
-    // 裁剪区域draw，然后提取alpha
+    // 裁剪区域draw，然后处理alpha
     CD2DEllipse   ellipse{ CD2DRectF(crop_rect) };
     m_target->BeginDraw();
     m_target->Clear(D2D1::ColorF(0, 0, 0, 0.5f)); // mask透明度

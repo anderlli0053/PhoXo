@@ -95,7 +95,7 @@
     <ClInclude Include="canvas\canvas_viewport.h">
       <Filter>Source Files\canvas</Filter>
     </ClInclude>
-    <ClInclude Include="canvas\mfc_scroll_view_draw_target.h">
+    <ClInclude Include="canvas\mfc_scroll_view_draw_context.h">
       <Filter>Source Files\canvas</Filter>
     </ClInclude>
     <ClInclude Include="canvas\mfc_scroll_view_anchor_restore.h">

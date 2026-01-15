@@ -16,5 +16,5 @@ public:
     void OnEnterTool() override;
 
     void OnLButtonDown(CMainView& view, UINT nFlags, CPoint point) override;
-    void OnDrawToolOverlay(CMainView& view, const CanvasDrawContext& ctx) override;
+    void OnDrawToolOverlay(const ScrollViewDrawContext& ctx) override;
 };

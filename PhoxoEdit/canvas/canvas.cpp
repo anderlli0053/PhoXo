@@ -11,7 +11,7 @@ Canvas::Canvas(CSize canvas_size)
 
 CSize Canvas::ZoomedSize() const
 {
-    auto   pt = m_zoom.ToZoomed(m_canvas_size);
+    GPointF   pt = m_zoom.ToZoomed(m_canvas_size);
     return { (int)(std::max)(1.0f, pt.X), (int)(std::max)(1.0f, pt.Y) };
 }
 

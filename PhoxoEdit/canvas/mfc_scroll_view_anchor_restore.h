@@ -1,5 +1,7 @@
 #pragma once
-#include "mfc_scroll_view_draw_target.h"
+#include "mfc_scroll_view_draw_context.h"
+
+_PHOXO_BEGIN
 
 class ScrollViewAnchorRestore
 {
@@ -15,7 +17,7 @@ public:
         : m_view{ view }
         , m_canvas{ canvas }
         , m_old_view_pt{ old_view }
-        , m_old_canvas_pt{ ScrollViewDrawTarget::ViewToCanvas(view, old_view, canvas) }
+        , m_old_canvas_pt{ ScrollViewDrawContext::ViewToCanvas(view, old_view, canvas) }
     {
     }
 
@@ -32,3 +34,5 @@ public:
         m_view.Invalidate();
     }
 };
+
+_PHOXO_NAMESPACE_END

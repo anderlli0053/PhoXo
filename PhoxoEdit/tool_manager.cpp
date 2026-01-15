@@ -5,12 +5,15 @@
 void ToolManager::ActivateTool(ToolType type)
 {
     if (m_activeTool)
+    {
         m_activeTool->OnLeaveTool();
+        m_activeTool = nullptr;
+    }
 
     switch (type)
     {
     case ToolType::Crop:
-        m_activeTool = new ToolCrop();
+        m_activeTool = make_unique<ToolCrop>();
         break;
 
     case ToolType::None:

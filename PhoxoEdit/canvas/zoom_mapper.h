@@ -31,17 +31,6 @@ public:
         return { (float)(original.X * m_ratio), (float)(original.Y * m_ratio) };
     }
 
-    double CalcRatioByMouseWheel(int wheel_delta, double step) const
-    {
-        double   coef = 1;
-        if (wheel_delta >= 1)
-            coef = std::pow(step, wheel_delta);
-        else if (wheel_delta <= -1)
-            coef = std::pow(1 / step, -wheel_delta);
-
-        return std::clamp(m_ratio * coef, 0.05, s_max_ratio);
-    }
-
     friend class Canvas;
 };
 

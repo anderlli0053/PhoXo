@@ -10,12 +10,12 @@ public:
         return v;
     }
 
-    ToolBase* GetActiveTool() const { return m_activeTool; }
+    ToolBase* GetActiveTool() const { return m_activeTool.get(); }
 
     void ActivateTool(ToolType type);
 
 private:
-    ToolBase*   m_activeTool = nullptr;
+    unique_ptr<ToolBase>   m_activeTool;
 };
 
 #define theToolManager ToolManager::GetInstance()

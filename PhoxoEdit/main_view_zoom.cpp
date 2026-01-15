@@ -3,7 +3,20 @@
 #include "main_frame.h"
 #include "main_frame_utils.h"
 #include "top_toolbar/zoom_slider_mapper.h"
-#include "canvas/mfc_scroll_view_anchor_restore.h"
+
+namespace
+{
+    double CalcRatioByMouseWheel(double current, int wheel_delta, double step)
+    {
+        double   coef = 1;
+        if (wheel_delta >= 1)
+            coef = std::pow(step, wheel_delta);
+        else if (wheel_delta <= -1)
+            coef = std::pow(1 / step, -wheel_delta);
+
+        return std::clamp(current * coef, 0.05, phoxo::ZoomMapper::s_max_ratio);
+    }
+}
 
 void CMainView::UpdateZoomRatio(double new_ratio, ZoomChangedBy from, std::optional<CPoint> view_anchor)
 {
@@ -79,4 +92,28 @@ void CMainView::OnTopZoomSlider()
     auto&   top_toolbar = ((CMainFrame*)AfxGetMainWnd())->TopToolbar();
     CPoint   center = FCWnd::GetClientRect(m_hWnd).CenterPoint();
     UpdateZoomRatio(top_toolbar.GetRatioFromSlider(), ZoomChangedBy::TopSlider, center);
+}
+
+BOOL CMainView::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
+{
+    auto   canvas = GetCanvas();
+    if (!canvas)
+        return 0;
+
+    if (nFlags & MK_CONTROL)
+    {
+        ScreenToClient(&pt); // screen -> view
+        double   newzoom = CalcRatioByMouseWheel(canvas->ZoomRatio(), zDelta / WHEEL_DELTA, 1.25);
+        UpdateZoomRatio(newzoom, ZoomChangedBy::MouseWheel, pt);
+        return 0;
+    }
+
+    // ºáÏò¹ö¶¯
+    if (nFlags & MK_SHIFT)
+    {
+        ScrollHorizByWheel(zDelta);
+        return 0;
+    }
+
+    return __super::OnMouseWheel(nFlags, zDelta, pt);
 }
