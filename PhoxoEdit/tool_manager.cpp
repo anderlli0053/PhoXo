@@ -24,3 +24,18 @@ void ToolManager::ActivateTool(ToolType type)
     if (m_activeTool)
         m_activeTool->OnEnterTool();
 }
+
+void ToolManager::Shutdown()
+{
+    UnregisterObserver();
+    m_activeTool = nullptr;
+}
+
+void ToolManager::OnObserveEvent(ObservedEvent& event)
+{
+    if (event.m_type == (int)AppEvent::ImageChanged)
+    {
+        if (m_activeTool)
+            m_activeTool->OnResetForNewImage();
+    }
+}

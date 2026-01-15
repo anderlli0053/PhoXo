@@ -8,15 +8,15 @@ MaskOverlay::MaskOverlay()
     m_target->CreateSolidColorBrush(D2D1::ColorF(0, 0, 0), &m_black_brush);
 }
 
-void MaskOverlay::Draw(const CanvasDrawContext& ctx, const CRect& crop_on_view)
+void MaskOverlay::Draw(HDC dc, CSize view_size, const CRect& crop_on_view)
 {
-    if (m_buffer.Size() != ctx.dst_view_size)
+    if (m_buffer.Size() != view_size)
     {
-        m_buffer.Create(ctx.dst_view_size);
+        m_buffer.Create(view_size);
     }
 
     UpdateOverlayMask(crop_on_view);
-    ImageDrawer::Draw(ctx.dst_hdc, { 0,0 }, m_buffer);
+    ImageDrawer::Draw(dc, { 0,0 }, m_buffer);
 }
 
 void MaskOverlay::UpdateOverlayMask(const CRect& crop_rect)
@@ -28,7 +28,8 @@ void MaskOverlay::UpdateOverlayMask(const CRect& crop_rect)
     CD2DEllipse   ellipse{ CD2DRectF(crop_rect) };
     m_target->BeginDraw();
     m_target->Clear(D2D1::ColorF(0, 0, 0, 0.5f)); // mask透明度
-    m_target->FillEllipse(ellipse, m_black_brush);
+    //m_target->FillEllipse(ellipse, m_black_brush);
+    m_target->FillRectangle(CD2DRectF(crop_rect), m_black_brush);
     m_target->EndDraw();
 
     // 翻转alpha，让挖空的地方露出来

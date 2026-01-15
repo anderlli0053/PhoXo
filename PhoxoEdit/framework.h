@@ -18,7 +18,7 @@
 
 #include "canvas/canvas.h"
 #include "canvas/mfc_scroll_view_anchor_restore.h"
-using phoxo::CanvasDrawContext, phoxo::ScrollViewDrawContext, phoxo::ScrollViewAnchorRestore;
+using phoxo::ScrollViewDrawContext, phoxo::ScrollViewAnchorRestore;
 
 using FCColor = phoxo::Color;
 using FCImage = phoxo::Image;

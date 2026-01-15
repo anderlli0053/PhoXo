@@ -17,6 +17,7 @@ enum class PanelDock
 enum class AppEvent
 {
     ZoomRatioChanged,
+    ImageChanged
 };
 
 enum class ZoomChangedBy

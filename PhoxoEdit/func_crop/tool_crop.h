@@ -17,4 +17,5 @@ public:
 
     void OnLButtonDown(CMainView& view, UINT nFlags, CPoint point) override;
     void OnDrawToolOverlay(const ScrollViewDrawContext& ctx) override;
+    void OnResetForNewImage() override;
 };

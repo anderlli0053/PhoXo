@@ -12,7 +12,7 @@ private:
 public:
     MaskOverlay();
 
-    void Draw(const CanvasDrawContext& ctx, const CRect& crop_on_view);
+    void Draw(HDC dc, CSize view_size, const CRect& crop_on_view);
 
 private:
     void UpdateOverlayMask(const CRect& crop_rect);

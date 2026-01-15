@@ -23,6 +23,7 @@ BOOL CMainDoc::OnNewDocument()
         m_canvas->AddLayer(make_shared<Layer>(std::move(img)));
         SetModifiedFlag(TRUE); // 来自剪贴板等要保存
     }
+    IEventObserverBase::FireEvent(AppEvent::ImageChanged);
     return TRUE;
 }
 
@@ -35,6 +36,7 @@ BOOL CMainDoc::OnOpenDocument(LPCTSTR filepath)
         m_canvas = make_unique<Canvas>(img.Size());
         m_canvas->AddLayer(make_shared<Layer>(std::move(img)));
         SetPathName(filepath);
+        IEventObserverBase::FireEvent(AppEvent::ImageChanged);
         return TRUE;
     }
     else
@@ -42,6 +44,7 @@ BOOL CMainDoc::OnOpenDocument(LPCTSTR filepath)
         CString   key = PathFileExists(filepath) ? L"load_error" : L"not_exist";
         ::BCGPMessageLightBox(filepath, MB_OK | MB_ICONWARNING, NULL, NULL, LanguageText::Get(L"FILE", key));
         UpdateAllViews(NULL);
+        IEventObserverBase::FireEvent(AppEvent::ImageChanged);
         return FALSE;
     }
 }

@@ -8,7 +8,6 @@ private:
 
 public:
     Canvas* GetCanvas() const;
-    GPointF ViewToCanvas(CPoint view_pt) const;
     void UpdateZoomRatio(double new_ratio, ZoomChangedBy from, std::optional<CPoint> view_anchor = std::nullopt);
 
 private:

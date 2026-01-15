@@ -37,13 +37,6 @@ Canvas* CMainView::GetCanvas() const
     return doc ? doc->m_canvas.get() : nullptr;
 }
 
-GPointF CMainView::ViewToCanvas(CPoint view_pt) const
-{
-    if (auto canvas = GetCanvas())
-        return ScrollViewDrawContext::ViewToCanvas(*this, view_pt, *canvas);
-    return {};
-}
-
 void CMainView::OnDraw(CDC* paintdc)
 {
     const CRect   view_rect = FCWnd::GetClientRect(m_hWnd);

@@ -22,6 +22,7 @@ public:
     //----------------------------------------
     virtual void OnEnterTool() {}
     virtual void OnLeaveTool() {}
+    virtual void OnResetForNewImage() {}
 
     //----------------------------------------
     // 光标：Tool 决定当前光标
@@ -39,7 +40,7 @@ public:
     virtual void OnLButtonUp(CMainView& view, UINT nFlags, CPoint point) {}
 
     //----------------------------------------
-    // 绘制 Tool 的覆盖层（辅助线 / 选框 / 高亮等）
+    // 绘制 Tool 的覆盖层（辅助线 / 选框 / mask等）
     //----------------------------------------
     virtual void OnDrawToolOverlay(const ScrollViewDrawContext& ctx) {}
 };

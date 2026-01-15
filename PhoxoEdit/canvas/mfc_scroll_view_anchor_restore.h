@@ -17,7 +17,7 @@ public:
         : m_view{ view }
         , m_canvas{ canvas }
         , m_old_view_pt{ old_view }
-        , m_old_canvas_pt{ ScrollViewDrawContext::ViewToCanvas(view, old_view, canvas) }
+        , m_old_canvas_pt{ ScrollViewDrawContext(canvas, view).ViewToCanvas(old_view) }
     {
     }
 

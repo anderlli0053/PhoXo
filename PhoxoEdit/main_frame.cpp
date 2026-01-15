@@ -44,6 +44,9 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 void CMainFrame::OnRightTab(UINT id)
 {
     m_func_panel_manager.OnClickTab(*this, id);
+
+    if (auto doc = GetActiveDocument())
+        doc->UpdateAllViews(NULL);
 }
 
 void CMainFrame::OnUpdateRightTab(CCmdUI* pCmdUI)
@@ -83,7 +86,7 @@ void CMainFrame::OnSize(UINT nType, int cx, int cy)
 
 void CMainFrame::OnClose()
 {
-    theToolManager.ActivateTool(ToolType::None);
+    theToolManager.Shutdown();
     theConfig.Save();
     __super::OnClose();
 }

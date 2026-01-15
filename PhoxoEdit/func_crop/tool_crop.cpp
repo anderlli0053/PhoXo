@@ -40,8 +40,14 @@ void ToolCrop::OnDrawToolOverlay(const ScrollViewDrawContext& ctx)
 {
     if (m_crop_on_canvas)
     {
-        auto   tl = ctx.CanvasToView(m_crop_on_canvas->TopLeft());
-        auto   br = ctx.CanvasToView(m_crop_on_canvas->BottomRight());
-        m_mask_overlay.Draw(ctx, *m_crop_on_canvas);
+        GPointF   tl = ctx.CanvasToView(m_crop_on_canvas->TopLeft());
+        GPointF   br = ctx.CanvasToView(m_crop_on_canvas->BottomRight());
+        CRect   rc{ (int)ceil(tl.X), (int)ceil(tl.Y), (int)floor(br.X), (int)floor(br.Y) };
+        m_mask_overlay.Draw(ctx.dst_hdc, ctx.dst_view_size, rc);
     }
+}
+
+void ToolCrop::OnResetForNewImage()
+{
+    m_crop_on_canvas = std::nullopt;
 }
