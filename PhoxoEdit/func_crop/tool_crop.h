@@ -3,7 +3,8 @@
 #include "tool_base.h"
 #include "mask_overlay.h"
 
-class ToolCrop : public ToolBase
+class ToolCrop : public ToolBase,
+                 public IEventObserverBase
 {
 private:
     std::optional<CRect>   m_crop_on_canvas;
@@ -14,8 +15,11 @@ public:
     static inline bool   m_keep_aspect = false;
 
     void OnEnterTool() override;
-
     void OnLButtonDown(CMainView& view, UINT nFlags, CPoint point) override;
     void OnDrawToolOverlay(const ScrollViewDrawContext& ctx) override;
-    void OnResetForNewImage() override;
+
+    void OnObserveEvent(ObservedEvent& event) override;
+
+private:
+    void OnResetForNewImage();
 };

@@ -1,7 +1,7 @@
 #pragma once
 #include "tool_base.h"
 
-class ToolManager : public IEventObserverBase
+class ToolManager
 {
 public:
     static ToolManager& GetInstance()
@@ -14,9 +14,6 @@ public:
 
     void ActivateTool(ToolType type);
     void Shutdown();
-
-private:
-    void OnObserveEvent(ObservedEvent& event) override;
 
 private:
     unique_ptr<ToolBase>   m_activeTool;

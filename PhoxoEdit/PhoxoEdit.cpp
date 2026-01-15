@@ -56,10 +56,9 @@ BOOL CPhoxoEditApp::InitInstance()
 	CCommandLineInfo   cmd;
     ProcessShellCommand(cmd); // 先打开一个空的
     ParseCommandLine(cmd); // 解析cmd
-    if (cmd.m_strFileName.GetLength()) // PostMessage 延迟打开
-    {
-        m_pMainWnd->PostMessage(MSG_POST_LOAD_FIRST, (WPARAM)new CString(cmd.m_strFileName));
-    }
+
+    // 不管是否有文件都post消息，一些延迟初始化操作也在那里做
+    m_pMainWnd->PostMessage(MSG_POST_LOAD_FIRST, (WPARAM)new CString(cmd.m_strFileName));
 
 	// The one and only window has been initialized, so show and update it
 	m_pMainWnd->ShowWindow(SW_SHOW);
@@ -79,7 +78,16 @@ Canvas* CPhoxoEditApp::GetCurrentCanvas()
     if (auto main = (CFrameWnd*)m_pMainWnd)
     {
         if (auto doc = (CMainDoc*)main->GetActiveDocument())
-            return doc->m_canvas.get();
+            return doc->GetCanvas();
+    }
+    return nullptr;
+}
+
+CMainView* CPhoxoEditApp::GetActiveView()
+{
+    if (auto main = (CFrameWnd*)m_pMainWnd)
+    {
+        return (CMainView*)main->GetActiveView();
     }
     return nullptr;
 }

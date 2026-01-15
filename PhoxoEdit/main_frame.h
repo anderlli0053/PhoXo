@@ -22,7 +22,8 @@ private:
     afx_msg void OnUpdateRightTab(CCmdUI* pCmdUI);
     afx_msg void OnEnableIfCanvasValid(CCmdUI* pCmdUI);
 
-    afx_msg LRESULT OnPostLoadFirst(WPARAM wParam, LPARAM lParam);
+    afx_msg LRESULT OnPostImageChanged(WPARAM, LPARAM);
+    afx_msg LRESULT OnPostLoadFirst(WPARAM, LPARAM);
     afx_msg void OnGetMinMaxInfo(MINMAXINFO* info);
     afx_msg void OnSize(UINT nType, int cx, int cy);
     afx_msg LRESULT OnDPIChanged(WPARAM, LPARAM);

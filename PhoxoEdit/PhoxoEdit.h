@@ -1,4 +1,5 @@
 #pragma once
+class CMainView;
 
 class CPhoxoEditApp : public CBCGPWinApp
 {
@@ -7,6 +8,7 @@ public:
 
     CPhoxoEditApp();
     Canvas* GetCurrentCanvas();
+    CMainView* GetActiveView();
 
 private:
     BOOL InitInstance() override;

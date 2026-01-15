@@ -34,7 +34,7 @@ END_MESSAGE_MAP()
 Canvas* CMainView::GetCanvas() const
 {
     auto   doc = (CMainDoc*)m_pDocument;
-    return doc ? doc->m_canvas.get() : nullptr;
+    return doc ? doc->GetCanvas() : nullptr;
 }
 
 void CMainView::OnDraw(CDC* paintdc)

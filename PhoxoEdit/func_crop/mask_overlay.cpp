@@ -28,8 +28,8 @@ void MaskOverlay::UpdateOverlayMask(const CRect& crop_rect)
     CD2DEllipse   ellipse{ CD2DRectF(crop_rect) };
     m_target->BeginDraw();
     m_target->Clear(D2D1::ColorF(0, 0, 0, 0.5f)); // mask透明度
-    //m_target->FillEllipse(ellipse, m_black_brush);
-    m_target->FillRectangle(CD2DRectF(crop_rect), m_black_brush);
+    m_target->FillEllipse(ellipse, m_black_brush);
+    //m_target->FillRectangle(CD2DRectF(crop_rect), m_black_brush);
     m_target->EndDraw();
 
     // 翻转alpha，让挖空的地方露出来

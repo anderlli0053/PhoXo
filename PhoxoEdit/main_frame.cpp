@@ -14,21 +14,18 @@ BEGIN_MESSAGE_MAP(CMainFrame, CBCGPFrameWnd)
     ON_WM_CLOSE()
     ON_MESSAGE(WM_DPICHANGED, OnDPIChanged)
     ON_MESSAGE(MSG_POST_LOAD_FIRST, OnPostLoadFirst)
+    ON_MESSAGE(MSG_POST_IMAGE_CHANGED, OnPostImageChanged)
     // right tab group
     ON_COMMAND_RANGE(ID_TAB_CROP_ROTATE, ID_TAB_LAST_ID, OnRightTab)
     ON_UPDATE_COMMAND_UI_RANGE(ID_TAB_CROP_ROTATE, ID_TAB_LAST_ID, OnUpdateRightTab)
 END_MESSAGE_MAP()
-
-namespace
-{
-}
 
 // SetPersistantFrame(false); // 不要设置，否则不能保存位置了
 int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
     DPICalculator::g_current_dpi() = GetDpiForWindow(m_hWnd);
 
-    int   ret = __super::OnCreate(lpCreateStruct);
+    __super::OnCreate(lpCreateStruct);
 
     m_top_toolbar.Create(this);
     m_right_tab_bar.Create(this);
@@ -38,7 +35,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
     DragAcceptFiles(TRUE);
 
     OnRightTab(ID_TAB_CROP_ROTATE);
-    return ret;
+    return 0;
 }
 
 void CMainFrame::OnRightTab(UINT id)
@@ -59,10 +56,19 @@ void CMainFrame::OnEnableIfCanvasValid(CCmdUI* pCmdUI)
     pCmdUI->Enable(theApp.GetCurrentCanvas() != NULL);
 }
 
-LRESULT CMainFrame::OnPostLoadFirst(WPARAM wParam, LPARAM lParam)
+LRESULT CMainFrame::OnPostImageChanged(WPARAM, LPARAM)
+{
+    IEventObserverBase::FireEvent(AppEvent::ImageChanged);
+    return 0;
+}
+
+LRESULT CMainFrame::OnPostLoadFirst(WPARAM wParam, LPARAM)
 {
     unique_ptr<CString>   cmd{ (CString*)wParam };
-    theApp.OpenDocumentFile(*cmd);
+    if (cmd->GetLength())
+    {
+        theApp.OpenDocumentFile(*cmd);
+    }
     return 0;
 }
 

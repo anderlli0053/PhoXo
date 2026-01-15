@@ -1,21 +1,24 @@
 #include "pch.h"
+#include "PhoxoEdit.h"
 #include "tool_crop.h"
 #include "main_view.h"
 
 namespace
 {
-    void ZoomForCropMode(CMainView& view, CSize actual_size)
+    void ZoomForCropMode(const Canvas canvas)
     {
+        CMainView&   view = *theApp.GetActiveView();
         CSize   margin{ DPICalculator::Cast(10), DPICalculator::Cast(10) };
         CRect   rc = FCWnd::GetClientRect(view);
         rc.DeflateRect(margin);
-        float   ratio = phoxo::Utils::CalcFitZoomRatio(rc.Size(), actual_size);
+        float   ratio = phoxo::Utils::CalcFitZoomRatio(rc.Size(), canvas.OriginalSize());
         view.UpdateZoomRatio(ratio, ZoomChangedBy::Other);
     }
 }
 
 void ToolCrop::OnEnterTool()
 {
+    OnResetForNewImage();
 }
 
 void ToolCrop::OnLButtonDown(CMainView& view, UINT nFlags, CPoint point)
@@ -30,9 +33,8 @@ void ToolCrop::OnLButtonDown(CMainView& view, UINT nFlags, CPoint point)
     }
     else
     {
-        CSize   actual_size = canvas->OriginalSize();
-        ZoomForCropMode(view, actual_size);
-        m_crop_on_canvas.emplace(CPoint(), actual_size);
+        ZoomForCropMode(*canvas);
+        m_crop_on_canvas.emplace(CPoint(), canvas->OriginalSize());
     }
 }
 
@@ -42,12 +44,26 @@ void ToolCrop::OnDrawToolOverlay(const ScrollViewDrawContext& ctx)
     {
         GPointF   tl = ctx.CanvasToView(m_crop_on_canvas->TopLeft());
         GPointF   br = ctx.CanvasToView(m_crop_on_canvas->BottomRight());
-        CRect   rc{ (int)ceil(tl.X), (int)ceil(tl.Y), (int)floor(br.X), (int)floor(br.Y) };
+        CRect   rc{ (int)floor(tl.X), (int)floor(tl.Y), (int)floor(br.X), (int)floor(br.Y) };
         m_mask_overlay.Draw(ctx.dst_hdc, ctx.dst_view_size, rc);
+    }
+}
+
+void ToolCrop::OnObserveEvent(ObservedEvent& event)
+{
+    if (event.m_type == (int)AppEvent::ImageChanged)
+    {
+        OnResetForNewImage();
     }
 }
 
 void ToolCrop::OnResetForNewImage()
 {
     m_crop_on_canvas = std::nullopt;
+
+    if (auto canvas = theApp.GetCurrentCanvas())
+    {
+        ZoomForCropMode(*canvas);
+        m_crop_on_canvas.emplace(CPoint(), canvas->OriginalSize());
+    }
 }

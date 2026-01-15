@@ -6,6 +6,7 @@
 enum
 {
     MSG_POST_LOAD_FIRST = (WM_APP + 500),
+    MSG_POST_IMAGE_CHANGED = (WM_APP + 501),
 };
 
 enum class PanelDock

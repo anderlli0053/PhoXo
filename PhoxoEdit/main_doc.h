@@ -2,8 +2,11 @@
 
 class CMainDoc : public CDocument
 {
-public:
+private:
     unique_ptr<Canvas>   m_canvas;
+
+public:
+    Canvas* GetCanvas() const { return m_canvas.get(); }
 
 private:
     BOOL OnNewDocument() override;
