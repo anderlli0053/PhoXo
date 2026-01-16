@@ -36,3 +36,5 @@ public:
 };
 
 _PHOXO_NAMESPACE_END
+
+using phoxo::ScrollViewAnchorRestore;

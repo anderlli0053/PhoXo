@@ -62,3 +62,5 @@ private:
 };
 
 _PHOXO_NAMESPACE_END
+
+using phoxo::ScrollViewDrawContext;

@@ -1,12 +1,18 @@
 #pragma once
 
-struct GripHandle
+class GripHandle
 {
+public:
     enum Position
     {
-        TopLeft, Top, TopRight,
-        Left, Right,
-        BottomLeft, Bottom, BottomRight
+        TopLeft,
+        Top,
+        TopRight,
+        Left,
+        Right,
+        BottomLeft,
+        Bottom,
+        BottomRight
     };
 
     Position   m_pos;
@@ -16,6 +22,7 @@ struct GripHandle
     GripHandle(Position position) : m_pos(position)
     {
     }
+
 
     static int GripWidth()
     {
