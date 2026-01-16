@@ -20,6 +20,9 @@ private:
     bool   m_is_current_fitview = false; // 用于缩放时保持fit view
 
 public:
+    Canvas(const Canvas&) = delete;
+    Canvas& operator=(const Canvas&) = delete;
+
     explicit Canvas(CSize canvas_size);
 
     int ContentVersion() const { return m_content_version; }

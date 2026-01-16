@@ -1,5 +1,4 @@
 #include "pch.h"
-#include "PhoxoEdit.h"
 #include "app_config.h"
 
 namespace

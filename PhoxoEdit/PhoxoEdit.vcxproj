@@ -124,7 +124,7 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="app_config.h" />
+    <ClInclude Include="base\app_config.h" />
     <ClInclude Include="base\app_define.h" />
     <ClInclude Include="canvas\canvas.h" />
     <ClInclude Include="canvas\mfc_scroll_view_anchor_restore.h" />
@@ -146,7 +146,6 @@
     <ClInclude Include="func_crop\tool_crop.h" />
     <ClInclude Include="main_doc.h" />
     <ClInclude Include="main_frame.h" />
-    <ClInclude Include="main_frame_utils.h" />
     <ClInclude Include="main_view.h" />
     <ClInclude Include="main_view_welcome.h" />
     <ClInclude Include="panel_manager.h" />
@@ -161,7 +160,7 @@
     <ClInclude Include="top_toolbar\zoom_slider_mapper.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="app_config.cpp" />
+    <ClCompile Include="base\app_config.cpp" />
     <ClCompile Include="canvas\canvas.cpp" />
     <ClCompile Include="canvas\canvas_viewport.cpp" />
     <ClCompile Include="canvas\layer.cpp" />
@@ -173,7 +172,6 @@
     <ClCompile Include="func_crop\tool_crop.cpp" />
     <ClCompile Include="main_doc.cpp" />
     <ClCompile Include="main_frame.cpp" />
-    <ClCompile Include="main_frame_utils.cpp" />
     <ClCompile Include="main_view.cpp" />
     <ClCompile Include="main_view_zoom.cpp" />
     <ClCompile Include="panel_manager.cpp" />

@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "main_view.h"
 #include "main_frame.h"
-#include "main_frame_utils.h"
 #include "top_toolbar/zoom_slider_mapper.h"
 
 namespace

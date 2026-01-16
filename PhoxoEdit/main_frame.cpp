@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "PhoxoEdit.h"
 #include "main_frame.h"
-#include "main_frame_utils.h"
 #include "tool_manager.h"
 
 static_assert(ID_TAB_CROP_ROTATE == 20000); // ID_TAB_CROP_ROTATE 必须是range第一个
@@ -72,9 +71,23 @@ LRESULT CMainFrame::OnPostLoadFirst(WPARAM wParam, LPARAM)
     return 0;
 }
 
+namespace
+{
+    CPoint GetMinMainWndSize()
+    {
+        CRect   rc;
+        SystemParametersInfo(SPI_GETWORKAREA, sizeof(RECT), rc, 0);
+        rc.DeflateRect(200, 150);
+
+        int   x = (std::min)(DPICalculator::Cast(300), rc.Width()); // 如果屏幕很小的情况下做个保护
+        int   y = (std::min)(DPICalculator::Cast(400), rc.Height());
+        return { x, y };
+    }
+}
+
 void CMainFrame::OnGetMinMaxInfo(MINMAXINFO* info)
 {
-    info->ptMinTrackSize = CMainFrameUtils::GetMinMainWndSize();
+    info->ptMinTrackSize = GetMinMainWndSize();
     __super::OnGetMinMaxInfo(info);
 }
 

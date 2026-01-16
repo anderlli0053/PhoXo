@@ -5,7 +5,7 @@
 
 namespace
 {
-    void ZoomForCropMode(const Canvas canvas)
+    void ZoomForCropMode(const Canvas& canvas)
     {
         CMainView&   view = *theApp.GetActiveView();
         CSize   margin{ DPICalculator::Cast(10), DPICalculator::Cast(10) };
@@ -27,15 +27,6 @@ void ToolCrop::OnLButtonDown(CMainView& view, UINT nFlags, CPoint point)
     if (!canvas)
         return;
 
-    if (m_crop_on_canvas)
-    {
-        // ´¦Àí²Ã¼ô¾ØÐÎ
-    }
-    else
-    {
-        ZoomForCropMode(*canvas);
-        m_crop_on_canvas.emplace(CPoint(), canvas->OriginalSize());
-    }
 }
 
 void ToolCrop::OnDrawToolOverlay(const ScrollViewDrawContext& ctx)

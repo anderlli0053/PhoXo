@@ -18,6 +18,9 @@ private:
     bool   m_visible = true; // ÊÇ·ñÏÔÊ¾
 
 public:
+    Layer(const Layer&) = delete;
+    Layer& operator=(const Layer&) = delete;
+
     Layer(Image&& img)
         : m_image{ std::move(img) }
     {

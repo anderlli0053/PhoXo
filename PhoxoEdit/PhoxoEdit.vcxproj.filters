@@ -62,9 +62,6 @@
     <ClInclude Include="right_tab_bar\wnd_right_tab_bar.h">
       <Filter>Source Files\right_tab_bar</Filter>
     </ClInclude>
-    <ClInclude Include="app_config.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="canvas\canvas.h">
       <Filter>Source Files\canvas</Filter>
     </ClInclude>
@@ -82,9 +79,6 @@
     </ClInclude>
     <ClInclude Include="top_toolbar\zoom_slider_mapper.h">
       <Filter>Source Files\top_toolbar</Filter>
-    </ClInclude>
-    <ClInclude Include="main_frame_utils.h">
-      <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="canvas\zoom_mapper.h">
       <Filter>Source Files\canvas</Filter>
@@ -137,6 +131,9 @@
     <ClInclude Include="func_crop\mask_overlay.h">
       <Filter>Source Files\func_crop</Filter>
     </ClInclude>
+    <ClInclude Include="base\app_config.h">
+      <Filter>Source Files\base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PhoxoEdit.cpp">
@@ -160,17 +157,11 @@
     <ClCompile Include="right_tab_bar\wnd_right_tab_bar.cpp">
       <Filter>Source Files\right_tab_bar</Filter>
     </ClCompile>
-    <ClCompile Include="app_config.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="canvas\canvas.cpp">
       <Filter>Source Files\canvas</Filter>
     </ClCompile>
     <ClCompile Include="canvas\layer.cpp">
       <Filter>Source Files\canvas</Filter>
-    </ClCompile>
-    <ClCompile Include="main_frame_utils.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="canvas\canvas_viewport.cpp">
       <Filter>Source Files\canvas</Filter>
@@ -201,6 +192,9 @@
     </ClCompile>
     <ClCompile Include="func_crop\mask_overlay.cpp">
       <Filter>Source Files\func_crop</Filter>
+    </ClCompile>
+    <ClCompile Include="base\app_config.cpp">
+      <Filter>Source Files\base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
