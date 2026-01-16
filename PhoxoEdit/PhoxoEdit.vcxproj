@@ -135,7 +135,6 @@
     <ClInclude Include="canvas\layer_manager.h" />
     <ClInclude Include="canvas\mfc_scroll_view_draw_context.h" />
     <ClInclude Include="canvas\zoom_mapper.h" />
-    <ClInclude Include="framework.h" />
     <ClInclude Include="framework\main_doc_manager.h" />
     <ClInclude Include="func_crop\mask_overlay.h" />
     <ClInclude Include="func_crop\panel\local.h" />
@@ -153,7 +152,6 @@
     <ClInclude Include="PhoxoEdit.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="right_tab_bar\wnd_right_tab_bar.h" />
-    <ClInclude Include="targetver.h" />
     <ClInclude Include="tool_base.h" />
     <ClInclude Include="tool_manager.h" />
     <ClInclude Include="top_toolbar\wnd_top_toolbar.h" />

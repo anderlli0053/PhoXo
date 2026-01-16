@@ -160,14 +160,15 @@ void CMainView::OnLButtonUp(UINT nFlags, CPoint point)
 
 BOOL CMainView::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 {
-//     if ((nHitTest == HTCLIENT) && g_activeTool)
-//     {
-//         if (HCURSOR cursor = g_activeTool->GetToolCursor(*this))
-//         {
-//             ::SetCursor(cursor);
-//             return TRUE;
-//         }
-//     }
+    auto   active_tool = theToolManager.GetActiveTool();
+    if ((nHitTest == HTCLIENT) && active_tool)
+    {
+        if (HCURSOR cursor = active_tool->GetToolCursor(*this))
+        {
+            ::SetCursor(cursor);
+            return TRUE;
+        }
+    }
     return __super::OnSetCursor(pWnd, nHitTest, message);
 }
 

@@ -32,9 +32,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="framework.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="main_doc.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -51,9 +48,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Resource.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="top_toolbar\wnd_top_toolbar.h">
