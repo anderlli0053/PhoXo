@@ -37,6 +37,14 @@ enum class ZoomDirection
     ZoomOut
 };
 
+// index与界面按钮的顺序对应
+enum class CropShape
+{
+    Rectangle = 0,
+    RoundedRect = 1,
+    Ellipse = 2
+};
+
 enum class RenderPreference
 {
     Quality = 0, // 高质量：Box 平均

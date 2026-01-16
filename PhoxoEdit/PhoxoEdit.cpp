@@ -23,7 +23,7 @@ namespace
 
 CPhoxoEditApp::CPhoxoEditApp()
 {
-	theConfig.GetInstance(); // init load config
+    AppConfig::GetInstance(); // init load config
 	m_bSaveState = FALSE; // 不保存界面元素，一堆 BCG... 开头的键值
     m_bAfxStoreDockSate = FALSE; // 禁止保存 MFC 框架的停靠窗口状态 Settings\ControlBars-Summary
 

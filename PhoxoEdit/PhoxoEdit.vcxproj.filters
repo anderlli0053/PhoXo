@@ -128,6 +128,21 @@
     <ClInclude Include="base\app_config.h">
       <Filter>Source Files\base</Filter>
     </ClInclude>
+    <ClInclude Include="func_crop\handle_overlay.h">
+      <Filter>Source Files\func_crop</Filter>
+    </ClInclude>
+    <ClInclude Include="canvas\canvas_all.h">
+      <Filter>Source Files\canvas</Filter>
+    </ClInclude>
+    <ClInclude Include="func_crop\grip_handle.h">
+      <Filter>Source Files\func_crop</Filter>
+    </ClInclude>
+    <ClInclude Include="base\runtime_context.h">
+      <Filter>Source Files\base</Filter>
+    </ClInclude>
+    <ClInclude Include="func_crop\move_strategy.h">
+      <Filter>Source Files\func_crop</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PhoxoEdit.cpp">
@@ -189,6 +204,18 @@
     </ClCompile>
     <ClCompile Include="base\app_config.cpp">
       <Filter>Source Files\base</Filter>
+    </ClCompile>
+    <ClCompile Include="func_crop\handle_overlay.cpp">
+      <Filter>Source Files\func_crop</Filter>
+    </ClCompile>
+    <ClCompile Include="func_crop\grip_handle.cpp">
+      <Filter>Source Files\func_crop</Filter>
+    </ClCompile>
+    <ClCompile Include="base\runtime_context.cpp">
+      <Filter>Source Files\base</Filter>
+    </ClCompile>
+    <ClCompile Include="func_crop\move_strategy.cpp">
+      <Filter>Source Files\func_crop</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

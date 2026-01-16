@@ -1,19 +1,24 @@
 #pragma once
 
-// ÷ªª≠’⁄’÷≤„£¨Õ⁄ø’crop«¯”Ú
-class MaskOverlay
+namespace crop
 {
-private:
-    ID2D1DCRenderTargetPtr   m_target;
-    ID2D1SolidColorBrushPtr   m_black_brush;
+    // ÷ªª≠’⁄’÷≤„£¨Õ⁄ø’crop«¯”Ú
+    class MaskOverlay
+    {
+    private:
+        ID2D1DCRenderTargetPtr   m_target;
+        ID2D1SolidColorBrushPtr   m_black_brush;
+        ID2D1SolidColorBrushPtr   m_grid_brush;
 
-    FCImage   m_buffer;
+        FCImage   m_buffer;
 
-public:
-    MaskOverlay();
+    public:
+        MaskOverlay();
 
-    void Draw(HDC dc, CSize view_size, const CRect& crop_on_view);
+        void Draw(HDC dc, CSize view_size, const CRect& crop_on_view);
 
-private:
-    void UpdateOverlayMask(const CRect& crop_rect);
-};
+    private:
+        void UpdateOverlayMask(const CRect& crop_on_view);
+        void DrawGridLines(const CRect& crop_on_view);
+    };
+}

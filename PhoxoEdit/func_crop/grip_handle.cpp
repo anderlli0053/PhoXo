@@ -1,0 +1,182 @@
+#include "pch.h"
+#include "grip_handle.h"
+
+_PHOXO_NAMESPACE(crop)
+
+using enum GripType;
+
+namespace
+{
+    int GripLength() { return DPICalculator::Cast(30); }
+    int GripThickness() { return DPICalculator::Cast(3); }
+    int BorderGap() { return DPICalculator::Cast(2); }
+
+    void CenterSpan(LONG& begin, LONG& end, int center)
+    {
+        begin = center - GripLength();
+        end = begin + GripLength() * 2;
+    }
+
+    void CutH(CRect& rc, bool from_left)
+    {
+        from_left ? rc.right = rc.left + GripLength() : rc.left = rc.right - GripLength();
+    }
+
+    void CutV(CRect& rc, bool from_top)
+    {
+        from_top ? rc.bottom = rc.top + GripLength() : rc.top = rc.bottom - GripLength();
+    }
+
+    class GripBorder
+    {
+    private:
+        CRect   top, bottom, left, right;
+        CPoint   center;
+
+    public:
+        GripBorder(const CRect& crop_on_view) : center{ crop_on_view.CenterPoint() }
+        {
+            CRect   inner = crop_on_view;
+            inner.InflateRect(BorderGap(), BorderGap());
+
+            CRect   outer = inner;
+            outer.InflateRect(GripThickness(), GripThickness());
+
+            top = bottom = left = right = outer;
+            top.bottom = inner.top;
+            bottom.top = inner.bottom;
+            left.right = inner.left;
+            right.left = inner.right;
+        }
+
+        CRect CalcSideRect(GripType type) const
+        {
+            CRect   rc;
+            switch (type)
+            {
+                case ResizeTop:
+                case ResizeBottom:
+                    rc = (type == ResizeTop) ? top : bottom;
+                    CenterSpan(rc.left, rc.right, center.x);
+                    break;
+
+                case ResizeLeft:
+                case ResizeRight:
+                    rc = (type == ResizeLeft) ? left : right;
+                    CenterSpan(rc.top, rc.bottom, center.y);
+                    break;
+            }
+            return rc;
+        }
+
+        std::pair<CRect, CRect> CalcCornerRect(GripType type) const
+        {
+            CRect   r1, r2;
+            if (type == ResizeTopLeft)
+            {
+                CutH(r1 = top, true);
+                CutV(r2 = left, true);
+            }
+            else if (type == ResizeTopRight)
+            {
+                CutH(r1 = top, false);
+                CutV(r2 = right, true);
+            }
+            else if (type == ResizeBottomLeft)
+            {
+                CutH(r1 = bottom, true);
+                CutV(r2 = left, false);
+            }
+            else if (type == ResizeBottomRight)
+            {
+                CutH(r1 = bottom, false);
+                CutV(r2 = right, false);
+            }
+            return { r1,r2 };
+        }
+    };
+}
+
+void GripHandle::Draw(HDC hdc, const CRect& crop_on_view) const
+{
+    HBRUSH   paint = m_hovered ? theRuntime.GetAccentBrush() : (HBRUSH)GetStockObject(WHITE_BRUSH);
+    GripBorder   calc(crop_on_view);
+    switch (m_type)
+    {
+        case ResizeTop:
+        case ResizeBottom:
+        case ResizeLeft:
+        case ResizeRight:
+        {
+            CRect   rc = calc.CalcSideRect(m_type);
+            ::FillRect(hdc, rc, paint);
+        }
+        break;
+
+        case ResizeTopLeft:
+        case ResizeTopRight:
+        case ResizeBottomLeft:
+        case ResizeBottomRight:
+        {
+            auto [r1, r2] = calc.CalcCornerRect(m_type);
+            ::FillRect(hdc, r1, paint);
+            ::FillRect(hdc, r2, paint);
+        }
+        break;
+    }
+}
+
+namespace
+{
+    CRect CornerHitRect(CPoint pt)
+    {
+        CSize   sz(GripLength(), GripLength());
+        return { pt - sz, pt + sz };
+    }
+
+    CRect SideHitRect(CPoint pt1, CPoint pt2, bool vertical)
+    {
+        if (vertical)
+        {
+            CRect   r1 = CornerHitRect(pt1), r2 = CornerHitRect(pt2);
+            return { r1.left, r1.bottom, r1.right, r2.top };
+        }
+        else
+        {
+            CRect   r1 = CornerHitRect(pt1), r2 = CornerHitRect(pt2);
+            return { r1.right, r1.top, r2.left, r1.bottom };
+        }
+    }
+}
+
+CRect GripHandle::GetHitZone(const CRect& rc) const
+{
+    // rc is cropped rect on view
+    CPoint   tl{ rc.TopLeft() }, tr{ rc.right, rc.top };
+    CPoint   bl{ rc.left, rc.bottom }, br{ rc.BottomRight() };
+    switch (m_type)
+    {
+        case ResizeTop: return SideHitRect(tl, tr, false);
+        case ResizeBottom: return SideHitRect(bl, br, false);
+        case ResizeLeft: return SideHitRect(tl, bl, true);
+        case ResizeRight: return SideHitRect(tr, br, true);
+        case ResizeTopLeft: return CornerHitRect(tl);
+        case ResizeTopRight: return CornerHitRect(tr);
+        case ResizeBottomLeft: return CornerHitRect(bl);
+        case ResizeBottomRight: return CornerHitRect(br);
+    }
+    return {};
+}
+
+bool GripHandle::UpdateHoverState(CPoint cursor_on_view, const CRect& crop_on_view)
+{
+    bool   hovered = GetHitZone(crop_on_view).PtInRect(cursor_on_view);
+    if (hovered != m_hovered)
+    {
+        m_hovered = hovered;
+        return true;
+    }
+    return false;
+}
+
+_PHOXO_NAMESPACE_END

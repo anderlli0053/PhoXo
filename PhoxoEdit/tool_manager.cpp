@@ -4,11 +4,7 @@
 
 void ToolManager::ActivateTool(ToolType type)
 {
-    if (m_activeTool)
-    {
-        m_activeTool->OnLeaveTool();
-        m_activeTool = nullptr;
-    }
+    m_activeTool = nullptr;
 
     switch (type)
     {
@@ -20,9 +16,6 @@ void ToolManager::ActivateTool(ToolType type)
         m_activeTool = nullptr;
         break;
     }
-
-    if (m_activeTool)
-        m_activeTool->OnEnterTool();
 }
 
 void ToolManager::Shutdown()

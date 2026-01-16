@@ -24,12 +24,10 @@
 #define  PHOXO_LANGUAGE_BASE_FOLDER  LR"(language\edit\)"
 #include "../3rd/UIStone/UIStone.h"
 
-#include "canvas/canvas.h"
-#include "canvas/mfc_scroll_view_anchor_restore.h"
+#include "canvas/canvas_all.h"
 
 using FCColor = phoxo::Color;
 using FCImage = phoxo::Image;
-using CStringRef = const CString&;
 
 using std::unique_ptr, std::make_unique;
 using std::shared_ptr, std::make_shared;
@@ -41,6 +39,7 @@ using phoxo::Layer;
 #include "phoxo_shared.h"
 
 #include "base/app_define.h"
+#include "base/runtime_context.h"
 #include "base/app_config.h"
 #include "tool_base.h"
 

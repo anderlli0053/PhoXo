@@ -7,6 +7,8 @@ public:
     FCImage   m_pending_new;
 
     CPhoxoEditApp();
+
+    // canvas exists, doc/view must exist
     Canvas* GetCurrentCanvas();
     CMainView* GetActiveView();
 

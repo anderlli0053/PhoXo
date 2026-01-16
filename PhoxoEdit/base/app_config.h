@@ -1,6 +1,6 @@
 #pragma once
 
-class AppConfig
+class AppConfig : public FCSingleton<AppConfig>
 {
 public:
     // int   m_startup_page; // 启动页
@@ -11,16 +11,7 @@ public:
     //int  svg询问打开尺寸
     //int  undolevel,gimp是undo内存
 
-    // temporary variables for runtime
-    CBrush   m_runtime_canvas_back;
-
     AppConfig();
-
-    static AppConfig& GetInstance()
-    {
-        static AppConfig   v;
-        return v;
-    }
 
     void Save();
     CString AppText(PCWSTR key) { return LanguageText::Get(L"app", key); }

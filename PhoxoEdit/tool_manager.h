@@ -1,15 +1,9 @@
 #pragma once
 #include "tool_base.h"
 
-class ToolManager
+class ToolManager : public FCSingleton<ToolManager>
 {
 public:
-    static ToolManager& GetInstance()
-    {
-        static ToolManager   v;
-        return v;
-    }
-
     ToolBase* GetActiveTool() const { return m_activeTool.get(); }
 
     void ActivateTool(ToolType type);

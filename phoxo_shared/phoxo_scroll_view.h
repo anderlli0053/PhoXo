@@ -3,6 +3,9 @@
 #ifdef __BCGCBPRO_H
 class PhoXoScrollViewBase : public CBCGPScrollView
 {
+private:
+    BOOL   m_track = FALSE;
+
 protected:
     // ¿½±´mfc´úÂëÐÞ¸Ä
     void SetScrollSizes(int nMapMode, SIZE sizeTotal, const SIZE& sizePage = sizeDefault, const SIZE& sizeLine = sizeDefault);
@@ -17,6 +20,8 @@ protected:
     BOOL OnScroll(UINT nScrollCode, UINT nPos, BOOL bDoScroll) override;
     afx_msg int OnCreate(LPCREATESTRUCT lcs);
     afx_msg BOOL OnEraseBkgnd(CDC* pDC) { return FALSE; }
+    afx_msg void OnMouseMove(UINT nFlags, CPoint point);
+    afx_msg void OnMouseLeave();
 	DECLARE_MESSAGE_MAP()
     DECLARE_DYNAMIC(PhoXoScrollViewBase)
 };

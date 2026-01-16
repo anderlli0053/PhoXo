@@ -1,5 +1,5 @@
 #pragma once
-class CMainView;
+class CMainView; // forward declare
 
 enum class ToolType
 {
@@ -20,9 +20,8 @@ public:
     //----------------------------------------
     // Tool 生命周期
     //----------------------------------------
-    virtual void OnEnterTool() {}
-    virtual void OnLeaveTool() {}
-    virtual void OnResetForNewImage() {}
+//     virtual void OnEnterTool() {} 暂时没用上，以后需要时再加
+//     virtual void OnLeaveTool() {}
 
     //----------------------------------------
     // 光标：Tool 决定当前光标
@@ -36,8 +35,11 @@ public:
     // 鼠标事件
     //----------------------------------------
     virtual void OnLButtonDown(CMainView& view, UINT nFlags, CPoint point) {}
-    virtual void OnMouseMove(CMainView& view, UINT nFlags, CPoint point) {}
     virtual void OnLButtonUp(CMainView& view, UINT nFlags, CPoint point) {}
+    virtual void OnMouseMove(CMainView& view, UINT nFlags, CPoint point) {}
+
+    // capture 变化时调用
+    virtual void OnCaptureChanged(CMainView& view) {}
 
     //----------------------------------------
     // 绘制 Tool 的覆盖层（辅助线 / 选框 / mask等）

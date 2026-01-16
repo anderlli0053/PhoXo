@@ -126,7 +126,9 @@
   <ItemGroup>
     <ClInclude Include="base\app_config.h" />
     <ClInclude Include="base\app_define.h" />
+    <ClInclude Include="base\runtime_context.h" />
     <ClInclude Include="canvas\canvas.h" />
+    <ClInclude Include="canvas\canvas_all.h" />
     <ClInclude Include="canvas\mfc_scroll_view_anchor_restore.h" />
     <ClInclude Include="canvas\viewport_composer.h" />
     <ClInclude Include="canvas\canvas_draw_context.h" />
@@ -136,7 +138,10 @@
     <ClInclude Include="canvas\mfc_scroll_view_draw_context.h" />
     <ClInclude Include="canvas\zoom_mapper.h" />
     <ClInclude Include="framework\main_doc_manager.h" />
+    <ClInclude Include="func_crop\grip_handle.h" />
+    <ClInclude Include="func_crop\handle_overlay.h" />
     <ClInclude Include="func_crop\mask_overlay.h" />
+    <ClInclude Include="func_crop\move_strategy.h" />
     <ClInclude Include="func_crop\panel\local.h" />
     <ClInclude Include="func_crop\panel\page_expander.h" />
     <ClInclude Include="func_crop\panel\rotate_page.h" />
@@ -159,10 +164,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="base\app_config.cpp" />
+    <ClCompile Include="base\runtime_context.cpp" />
     <ClCompile Include="canvas\canvas.cpp" />
     <ClCompile Include="canvas\canvas_viewport.cpp" />
     <ClCompile Include="canvas\layer.cpp" />
+    <ClCompile Include="func_crop\grip_handle.cpp" />
+    <ClCompile Include="func_crop\handle_overlay.cpp" />
     <ClCompile Include="func_crop\mask_overlay.cpp" />
+    <ClCompile Include="func_crop\move_strategy.cpp" />
     <ClCompile Include="func_crop\panel\page_expander.cpp" />
     <ClCompile Include="func_crop\panel\rotate_page.cpp" />
     <ClCompile Include="func_crop\panel\shape_page.cpp" />

@@ -13,6 +13,8 @@ BEGIN_MESSAGE_MAP(CMainView, PhoXoScrollViewBase)
     ON_WM_LBUTTONDOWN()
     ON_WM_LBUTTONUP()
     ON_WM_SETCURSOR()
+    ON_WM_MOUSELEAVE()
+    ON_MESSAGE(WM_CAPTURECHANGED, OnCaptureChanged)
     // top toolbar zoom
     ON_COMMAND(ID_TOP_ZOOM_SLIDER, OnTopZoomSlider)
     ON_UPDATE_COMMAND_UI(ID_TOP_ZOOM_SLIDER, OnUpdateIfCanvasValid)
@@ -54,7 +56,7 @@ void CMainView::OnDraw(CDC* paintdc)
     if (auto canvas = GetCanvas())
     {
         ScrollViewDrawContext   info(*canvas, *this);
-        info.SetHdcAndBrush(memdc, theConfig.m_runtime_canvas_back);
+        info.SetHdcAndBrush(memdc, theRuntime.m_canvas_back);
         canvas->Draw(info);
 
         if (auto tool = theToolManager.GetActiveTool())
@@ -145,7 +147,7 @@ void CMainView::OnLButtonDown(UINT nFlags, CPoint point)
     if (auto tool = theToolManager.GetActiveTool())
     {
         tool->OnLButtonDown(*this, nFlags, point);
-     }
+    }
     GetDocument()->UpdateAllViews(NULL);
 }
 
@@ -156,14 +158,27 @@ void CMainView::OnLButtonUp(UINT nFlags, CPoint point)
         tool->OnLButtonUp(*this, nFlags, point);
     }
     GetDocument()->UpdateAllViews(NULL);
+
+    if (::GetCapture() == m_hWnd)
+    {
+        ::ReleaseCapture();
+    }
+}
+
+LRESULT CMainView::OnCaptureChanged(WPARAM, LPARAM lParam)
+{
+    if (auto tool = theToolManager.GetActiveTool())
+    {
+        tool->OnCaptureChanged(*this);
+    }
+    return 0;
 }
 
 BOOL CMainView::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 {
-    auto   active_tool = theToolManager.GetActiveTool();
-    if ((nHitTest == HTCLIENT) && active_tool)
+    if (auto tool = theToolManager.GetActiveTool())
     {
-        if (HCURSOR cursor = active_tool->GetToolCursor(*this))
+        if (HCURSOR cursor = tool->GetToolCursor(*this))
         {
             ::SetCursor(cursor);
             return TRUE;
@@ -174,5 +189,18 @@ BOOL CMainView::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 
 void CMainView::OnMouseMove(UINT nFlags, CPoint point)
 {
+    if (auto tool = theToolManager.GetActiveTool())
+    {
+        tool->OnMouseMove(*this, nFlags, point);
+    }
     __super::OnMouseMove(nFlags, point);
+}
+
+void CMainView::OnMouseLeave()
+{
+    if (auto tool = theToolManager.GetActiveTool())
+    {
+        tool->OnMouseMove(*this, 0, { -0xFFFFFF,-0xFFFFFF });
+    }
+    __super::OnMouseLeave();
 }

@@ -1,36 +1,31 @@
 #pragma once
 
-class GripHandle
+namespace crop
 {
-public:
-    enum Position
+    enum class GripType
     {
-        TopLeft,
-        Top,
-        TopRight,
-        Left,
-        Right,
-        BottomLeft,
-        Bottom,
-        BottomRight
+        None,
+        ResizeTopLeft,
+        ResizeTop,
+        ResizeTopRight,
+        ResizeLeft,
+        ResizeRight,
+        ResizeBottomLeft,
+        ResizeBottom,
+        ResizeBottomRight,
+        Move,   // 点击中心，移动整个裁剪框
     };
 
-    Position   m_pos;
-    CPoint   m_view_pos;
-    FCImage   m_image;
-
-    GripHandle(Position position) : m_pos(position)
+    class GripHandle
     {
-    }
+    public:
+        const GripType   m_type;
+        bool   m_hovered = false;
 
+        GripHandle(GripType type) : m_type(type) {}
 
-    static int GripWidth()
-    {
-        return DPICalculator::Cast(2);
-    }
-
-//     void Draw(CDC& dc) const
-//     {
-//         phoxo::ImageDrawer::Draw(dc, view_pos, image);
-//     }
-};
+        CRect GetHitZone(const CRect& crop_on_view) const;
+        void Draw(HDC hdc, const CRect& crop_on_view) const;
+        bool UpdateHoverState(CPoint cursor_on_view, const CRect& crop_on_view);
+    };
+}
