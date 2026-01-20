@@ -148,7 +148,7 @@ void CMainView::OnLButtonDown(UINT nFlags, CPoint point)
     {
         tool->OnLButtonDown(*this, nFlags, point);
     }
-    GetDocument()->UpdateAllViews(NULL);
+    Invalidate();
 }
 
 void CMainView::OnLButtonUp(UINT nFlags, CPoint point)
@@ -157,7 +157,7 @@ void CMainView::OnLButtonUp(UINT nFlags, CPoint point)
     {
         tool->OnLButtonUp(*this, nFlags, point);
     }
-    GetDocument()->UpdateAllViews(NULL);
+    Invalidate();
 
     if (::GetCapture() == m_hWnd)
     {

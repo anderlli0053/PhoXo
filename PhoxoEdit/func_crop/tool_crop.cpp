@@ -7,7 +7,7 @@ namespace
 {
     void ZoomForCropMode(const Canvas& canvas)
     {
-        CMainView&   view = *theApp.GetActiveView();
+        CMainView&   view = *theRuntime.GetActiveView();
         CSize   margin{ DPICalculator::Cast(10), DPICalculator::Cast(10) };
         CRect   rc = FCWnd::GetClientRect(view);
         rc.DeflateRect(margin);
@@ -15,7 +15,7 @@ namespace
         view.UpdateZoomRatio(ratio, ZoomChangedBy::Other);
     }
 
-    CRect GetCropRectOnView(const ScrollViewDrawContext& ctx)
+    CRect CropOnView(const ScrollViewDrawContext& ctx)
     {
         GPointF   tl = ctx.CanvasToView(ToolCrop::s_crop_on_canvas.TopLeft());
         GPointF   br = ctx.CanvasToView(ToolCrop::s_crop_on_canvas.BottomRight());
@@ -25,17 +25,18 @@ namespace
 
 ToolCrop::ToolCrop()
 {
-    OnResetForNewImage();
+    ResetForNewImage();
 }
 
 HCURSOR ToolCrop::GetToolCursor(const CMainView& view)
 {
-    if (auto crop_on_view = GetCropOnView(view))
+    if (auto canvas = view.GetCanvas())
     {
+        ScrollViewDrawContext   ctx(*canvas, view);
         POINT   pt{};
         ::GetCursorPos(&pt);
         view.ScreenToClient(&pt);
-        if (HCURSOR cursor = m_handle_overlay.GetCursor(pt, *crop_on_view))
+        if (HCURSOR cursor = m_handle_overlay.GetCursor(pt, CropOnView(ctx)))
             return cursor;
     }
     return __super::GetToolCursor(view);
@@ -48,13 +49,13 @@ void ToolCrop::OnLButtonDown(CMainView& view, UINT nFlags, CPoint point)
         return;
 
     ScrollViewDrawContext   ctx(*canvas, view);
-    CRect   crop_on_view = GetCropRectOnView(ctx);
+    CRect   crop_on_view = CropOnView(ctx);
 
     auto   type = m_handle_overlay.HitTest(point, crop_on_view);
     if (type == crop::GripType::None)
         return;
 
-    m_move_strategy.emplace(type, ctx.ViewToCanvas(point), s_crop_on_canvas, canvas->OriginalSize(), s_keep_aspect);
+    m_move_strategy.emplace(type, ctx.ViewToCanvas(point), s_crop_on_canvas, s_keep_aspect);
     view.SetCapture();
 }
 
@@ -63,7 +64,7 @@ void ToolCrop::OnLButtonUp(CMainView& view, UINT nFlags, CPoint point)
     m_move_strategy = std::nullopt;
 }
 
-void ToolCrop::OnMouseMove(CMainView& view, UINT nFlags, CPoint point)
+void ToolCrop::OnMouseMove(CMainView& view, UINT, CPoint point)
 {
     auto   canvas = view.GetCanvas();
     if (!canvas)
@@ -72,14 +73,12 @@ void ToolCrop::OnMouseMove(CMainView& view, UINT nFlags, CPoint point)
     ScrollViewDrawContext   ctx(*canvas, view);
     if (m_move_strategy)
     {
-        GPointF   pt_on_canvas = ctx.ViewToCanvas(point);
-        s_crop_on_canvas = m_move_strategy->HandleMouseMove(pt_on_canvas);
+        s_crop_on_canvas = m_move_strategy->HandleMouseMove(ctx.ViewToCanvas(point), *canvas);
         view.Invalidate();
     }
     else
     {
-        CRect   crop_on_view = GetCropRectOnView(ctx);
-        if (m_handle_overlay.OnMouseMove(point, *crop_on_view))
+        if (m_handle_overlay.OnMouseMove(point, CropOnView(ctx)))
         {
             view.Invalidate();
         }
@@ -94,20 +93,25 @@ void ToolCrop::OnCaptureChanged(CMainView& view)
 
 void ToolCrop::OnDrawToolOverlay(const ScrollViewDrawContext& ctx)
 {
-    CRect   rc = GetCropRectOnView(ctx);
-    m_mask_overlay.Draw(ctx.dst_hdc, ctx.dst_view_size, rc);
-    m_handle_overlay.Draw(ctx, rc);
+    crop::MaskOverlay::DrawParams   params{
+        .shape = s_crop_shape,
+        .draw_grid = m_move_strategy.has_value()
+    };
+
+    CRect   rc = CropOnView(ctx);
+    m_mask_overlay.Draw(ctx.dst_hdc, rc, ctx.dst_view_size, params);
+    m_handle_overlay.Draw(ctx.dst_hdc, rc);
 }
 
 void ToolCrop::OnObserveEvent(ObservedEvent& event)
 {
     if (event.m_type == (int)AppEvent::ImageChanged)
     {
-        OnResetForNewImage();
+        ResetForNewImage();
     }
 }
 
-void ToolCrop::OnResetForNewImage()
+void ToolCrop::ResetForNewImage()
 {
     s_crop_on_canvas = CRect();
 
@@ -116,13 +120,4 @@ void ToolCrop::OnResetForNewImage()
         ZoomForCropMode(*canvas);
         s_crop_on_canvas = CRect(CPoint(), canvas->OriginalSize());
     }
-}
-
-std::optional<CRect> ToolCrop::GetCropOnView(const CMainView& view) const
-{
-    if (auto canvas = view.GetCanvas())
-    {
-        return GetCropRectOnView(ScrollViewDrawContext(*canvas, view));
-    }
-    return std::nullopt;
 }

@@ -12,28 +12,56 @@ MaskOverlay::MaskOverlay()
     m_target->CreateSolidColorBrush(ColorF(ColorF::White, 0.5f), &m_grid_brush);
 }
 
-void MaskOverlay::Draw(HDC dc, CSize view_size, const CRect& crop_on_view)
+void MaskOverlay::Draw(HDC dc, const CRect& crop_on_view, CSize view_size, const DrawParams& params)
 {
     if (m_buffer.Size() != view_size)
     {
         m_buffer.Create(view_size);
     }
 
-    UpdateOverlayMask(crop_on_view);
+    UpdateOverlayMask(crop_on_view, params);
     ImageDrawer::Draw(dc, { 0,0 }, m_buffer);
 }
 
-void MaskOverlay::UpdateOverlayMask(const CRect& crop_on_view)
+namespace
+{
+    D2D1_ROUNDED_RECT MakeRoundedRectByPercent(const CD2DRectF& rc, float pct)
+    {
+        float   width = rc.right - rc.left;
+        float   height = rc.bottom - rc.top;
+        float   max_radius = (std::min)(width, height) / 2.0f;
+        float   r = pct * max_radius;
+        return { rc, r, r };
+    }
+}
+
+void MaskOverlay::FillShapeMask(CD2DRectF crop_on_view, const DrawParams& params)
+{
+    switch (params.shape)
+    {
+        case CropShape::Rectangle:
+            m_target->FillRectangle(crop_on_view, m_black_brush);
+            break;
+
+        case CropShape::RoundedRect:
+            m_target->FillRoundedRectangle(MakeRoundedRectByPercent(crop_on_view, params.rounded_rect_radius_percent), m_black_brush);
+            break;
+
+        case CropShape::Ellipse:
+            m_target->FillEllipse(CD2DEllipse(crop_on_view), m_black_brush);
+            break;
+    }
+}
+
+void MaskOverlay::UpdateOverlayMask(const CRect& crop_on_view, const DrawParams& params)
 {
     BitmapHDC   memdc(m_buffer);
     m_target->BindDC(memdc, CRect({}, m_buffer.Size()));
 
     // 裁剪区域draw，然后处理alpha
-    CD2DEllipse   ellipse{ CD2DRectF(crop_on_view) };
     m_target->BeginDraw();
     m_target->Clear(ColorF(ColorF::Black, 0.5f)); // mask透明度
-    m_target->FillEllipse(ellipse, m_black_brush);
-    //m_target->FillRectangle(CD2DRectF(crop_on_view), m_black_brush);
+    FillShapeMask(crop_on_view, params);
     m_target->EndDraw();
 
     // 翻转alpha，让挖空的地方露出来
@@ -42,7 +70,10 @@ void MaskOverlay::UpdateOverlayMask(const CRect& crop_on_view)
         pv.ForEachPixel([](auto& px) { px.a = 0xFF - px.a; });
     }
 
-    DrawGridLines(crop_on_view);
+    if (params.draw_grid)
+    {
+        DrawGridLines(crop_on_view);
+    }
 }
 
 void MaskOverlay::DrawGridLines(const CRect& crop_on_view)

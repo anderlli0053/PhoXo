@@ -18,9 +18,9 @@ namespace crop
 
     class GripHandle
     {
+        bool   m_hovered = false;
     public:
         const GripType   m_type;
-        bool   m_hovered = false;
 
         GripHandle(GripType type) : m_type(type) {}
 

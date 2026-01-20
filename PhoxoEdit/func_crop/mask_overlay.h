@@ -13,12 +13,20 @@ namespace crop
         FCImage   m_buffer;
 
     public:
+        struct DrawParams
+        {
+            CropShape   shape;
+            float   rounded_rect_radius_percent = 0.25f;
+            bool   draw_grid = true;
+        };
+
         MaskOverlay();
 
-        void Draw(HDC dc, CSize view_size, const CRect& crop_on_view);
+        void Draw(HDC dc, const CRect& crop_on_view, CSize view_size, const DrawParams& params);
 
     private:
-        void UpdateOverlayMask(const CRect& crop_on_view);
+        void UpdateOverlayMask(const CRect& crop_on_view, const DrawParams& params);
         void DrawGridLines(const CRect& crop_on_view);
+        void FillShapeMask(CD2DRectF crop_on_view, const DrawParams& params);
     };
 }

@@ -83,15 +83,6 @@ Canvas* CPhoxoEditApp::GetCurrentCanvas()
     return nullptr;
 }
 
-CMainView* CPhoxoEditApp::GetActiveView()
-{
-    if (auto main = (CFrameWnd*)m_pMainWnd)
-    {
-        return (CMainView*)main->GetActiveView();
-    }
-    return nullptr;
-}
-
 void CPhoxoEditApp::OnClearRecentFiles()
 {
     if (auto* obj = m_pRecentFileList)

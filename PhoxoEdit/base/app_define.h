@@ -15,12 +15,6 @@ enum class PanelDock
     Left = 1,
 };
 
-enum class AppEvent
-{
-    ZoomRatioChanged,
-    ImageChanged
-};
-
 enum class ZoomChangedBy
 {
     TopCombobox,
@@ -56,3 +50,9 @@ namespace AppDefine
     inline constexpr PCWSTR  CONFIG_REGISTRY = LR"(Software\PhoXo\edit)";
     inline constexpr PCWSTR  LANG_REPLACE = L"\u25A2";
 }
+
+enum class AppEvent
+{
+    ZoomRatioChanged,
+    ImageChanged,
+};

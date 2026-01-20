@@ -25,6 +25,23 @@ HBRUSH RuntimeContext::GetAccentBrush()
     return m_accent_brush;
 }
 
+CMainView* RuntimeContext::GetActiveView() const
+{
+    if (auto main = (CFrameWnd*)AfxGetMainWnd())
+    {
+        return (CMainView*)main->GetActiveView();
+    }
+    return nullptr;
+}
+
+void RuntimeContext::InvalidateView() const
+{
+    if (auto view = (CView*)GetActiveView())
+    {
+        view->Invalidate();
+    }
+}
+
 void RuntimeContext::UpdateAccentBrush()
 {
     COLORREF   new_color = CBCGPVisualManager::GetInstance()->GetDefaultAccentColor();

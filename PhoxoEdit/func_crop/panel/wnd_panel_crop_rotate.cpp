@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "local.h"
 #include "wnd_panel_crop_rotate.h"
+#include "../tool_crop.h"
 using namespace crop;
 
 namespace
@@ -173,5 +174,6 @@ void WndPanelCropRotate::OnKeepAspect()
         m_ratio_index = 0; // free
     UpdateData(FALSE);
 
+    ToolCrop::s_keep_aspect = m_keep_aspect;
     PostMessage(WM_COMMAND, ID_POST_UPDATE_KEEP_ASPECT); // 在这里更新tip会闪烁，post后处理
 }

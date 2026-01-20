@@ -15,7 +15,7 @@ namespace crop
         GripType HitTest(CPoint pt_on_view, const CRect& crop_on_view) const;
         HCURSOR GetCursor(CPoint cursor_on_view, const CRect& crop_on_view) const;
 
-        void Draw(const ScrollViewDrawContext& ctx, const CRect& crop_on_view) const;
+        void Draw(HDC hdc, const CRect& crop_on_view) const;
         bool OnMouseMove(CPoint pt_on_view, const CRect& crop_on_view);
     };
 }

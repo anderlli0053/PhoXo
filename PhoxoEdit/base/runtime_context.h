@@ -1,4 +1,5 @@
 #pragma once
+class CMainView; // forward declare
 
 class RuntimeContext : public FCSingleton<RuntimeContext>
 {
@@ -12,6 +13,9 @@ public:
     CBrush   m_canvas_back;
 
     HBRUSH GetAccentBrush();
+
+    CMainView* GetActiveView() const;
+    void InvalidateView() const;
 
 private:
     void UpdateAccentBrush();

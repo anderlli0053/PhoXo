@@ -59,17 +59,17 @@ HCURSOR HandleOverlay::GetCursor(CPoint cursor_on_view, const CRect& crop_on_vie
     return (type != GripType::None) ? GripCursorByType(type) : NULL;
 }
 
-void HandleOverlay::Draw(const ScrollViewDrawContext& ctx, const CRect& crop_on_view) const
+void HandleOverlay::Draw(HDC hdc, const CRect& crop_on_view) const
 {
     CRect   rc = crop_on_view;
     rc.InflateRect(1, 1);
-    ::FrameRect(ctx.dst_hdc, rc, (HBRUSH)GetStockObject(BLACK_BRUSH));
+    ::FrameRect(hdc, rc, (HBRUSH)GetStockObject(BLACK_BRUSH));
     rc.InflateRect(1, 1);
-    ::FrameRect(ctx.dst_hdc, rc, (HBRUSH)GetStockObject(WHITE_BRUSH));
+    ::FrameRect(hdc, rc, (HBRUSH)GetStockObject(WHITE_BRUSH));
 
     for (const auto& handle : m_grip_handles)
     {
-        handle.Draw(ctx.dst_hdc, crop_on_view);
+        handle.Draw(hdc, crop_on_view);
     }
 }
 

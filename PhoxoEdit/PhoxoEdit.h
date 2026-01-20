@@ -10,7 +10,6 @@ public:
 
     // canvas exists, doc/view must exist
     Canvas* GetCurrentCanvas();
-    CMainView* GetActiveView();
 
 private:
     BOOL InitInstance() override;

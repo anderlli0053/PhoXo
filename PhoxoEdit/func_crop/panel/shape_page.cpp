@@ -58,6 +58,7 @@ void ShapePage::OnSelectShape(UINT id)
     if (sel != ToolCrop::s_crop_shape)
     {
         ToolCrop::s_crop_shape = sel;
+        theRuntime.InvalidateView();
     }
 }
 

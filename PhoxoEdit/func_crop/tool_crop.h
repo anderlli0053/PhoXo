@@ -29,6 +29,5 @@ public:
     void OnObserveEvent(ObservedEvent& event) override;
 
 private:
-    void OnResetForNewImage();
-    std::optional<CRect> GetCropOnView(const CMainView& view) const;
+    void ResetForNewImage();
 };
