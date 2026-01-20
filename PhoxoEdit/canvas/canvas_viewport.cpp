@@ -6,26 +6,26 @@ _PHOXO_BEGIN
 
 namespace
 {
-    void FillImageCheckerboard(Image& img, const CanvasDrawContext& ctx)
+    void FillImageCheckerboard(Image& img, CPoint scroll, HBRUSH background)
     {
         BitmapHDC   dc(img);
-        ::SetBrushOrgEx(dc, -ctx.src_rect_on_zoomed_canvas.left, -ctx.src_rect_on_zoomed_canvas.top, NULL); // 加入滚动条偏移
-        ::FillRect(dc, CRect({}, img.Size()), ctx.background_brush);
+        ::SetBrushOrgEx(dc, -scroll.x, -scroll.y, NULL); // 加入滚动条偏移
+        ::FillRect(dc, CRect({}, img.Size()), background);
     }
 }
 
-void CanvasViewport::Draw(const CanvasDrawContext& ctx)
+void CanvasViewport::Draw(HDC hdc, HBRUSH background, const ViewportContext& ctx)
 {
     if (!IsCacheValid(ctx))
     {
-        RebuildCache(ctx);
+        RebuildCache(ctx, background);
     }
 
     POINT   pt = ctx.dst_rect_on_view.TopLeft();
-    ::BitBlt(ctx.dst_hdc, pt.x, pt.y, m_cache.Width(), m_cache.Height(), BitmapHDC(m_cache), 0, 0, SRCCOPY);
+    ::BitBlt(hdc, pt.x, pt.y, m_cache.Width(), m_cache.Height(), BitmapHDC(m_cache), 0, 0, SRCCOPY);
 }
 
-bool CanvasViewport::IsCacheValid(const CanvasDrawContext& ctx) const
+bool CanvasViewport::IsCacheValid(const ViewportContext& ctx) const
 {
     return m_cache
         && (m_rect_on_zoomed_canvas == ctx.src_rect_on_zoomed_canvas) // zoom区域大小改变，或者滚动条位置改变
@@ -33,7 +33,7 @@ bool CanvasViewport::IsCacheValid(const CanvasDrawContext& ctx) const
         && (m_canvas_content_ver == m_canvas.ContentVersion()); // canvas内容改变
 }
 
-void CanvasViewport::RebuildCache(const CanvasDrawContext& ctx)
+void CanvasViewport::RebuildCache(const ViewportContext& ctx, HBRUSH background)
 {
     // 更新缓存帧信息
     m_rect_on_zoomed_canvas = ctx.src_rect_on_zoomed_canvas;
@@ -45,7 +45,7 @@ void CanvasViewport::RebuildCache(const CanvasDrawContext& ctx)
         m_cache.Create(sz);
 
     // 填充背景棋盘格
-    FillImageCheckerboard(m_cache, ctx);
+    FillImageCheckerboard(m_cache, ctx.src_rect_on_zoomed_canvas.TopLeft(), background);
 
     // 渲染 Canvas 到缓存
     ViewportComposer   fx(m_canvas, m_rect_on_zoomed_canvas.TopLeft());

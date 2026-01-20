@@ -2,6 +2,7 @@
 #include "PhoxoEdit.h"
 #include "tool_crop.h"
 #include "main_view.h"
+using namespace crop;
 
 namespace
 {
@@ -15,7 +16,7 @@ namespace
         view.UpdateZoomRatio(ratio, ZoomChangedBy::Other);
     }
 
-    CRect CropOnView(const ScrollViewDrawContext& ctx)
+    CRect CropOnView(const ViewportContext& ctx)
     {
         GPointF   tl = ctx.CanvasToView(ToolCrop::s_crop_on_canvas.TopLeft());
         GPointF   br = ctx.CanvasToView(ToolCrop::s_crop_on_canvas.BottomRight());
@@ -28,18 +29,24 @@ ToolCrop::ToolCrop()
     ResetForNewImage();
 }
 
-HCURSOR ToolCrop::GetToolCursor(const CMainView& view)
+void ToolCrop::ResetCropToPresetRatio(int width, int height)
 {
-    if (auto canvas = view.GetCanvas())
+    if (auto canvas = theRuntime.GetCurrentCanvas())
     {
-        ScrollViewDrawContext   ctx(*canvas, view);
+        //s_keep_aspect = true;
+
+
+    }
+}
+
+HCURSOR ToolCrop::GetToolCursor(const ViewportContext& ctx)
+{
         POINT   pt{};
         ::GetCursorPos(&pt);
-        view.ScreenToClient(&pt);
+        ::ScreenToClient(ctx.m_view, &pt);
         if (HCURSOR cursor = m_handle_overlay.GetCursor(pt, CropOnView(ctx)))
             return cursor;
-    }
-    return __super::GetToolCursor(view);
+    return __super::GetToolCursor(ctx);
 }
 
 void ToolCrop::OnLButtonDown(CMainView& view, UINT nFlags, CPoint point)
@@ -48,15 +55,14 @@ void ToolCrop::OnLButtonDown(CMainView& view, UINT nFlags, CPoint point)
     if (!canvas)
         return;
 
-    ScrollViewDrawContext   ctx(*canvas, view);
+    ViewportContext   ctx(*canvas, view);
     CRect   crop_on_view = CropOnView(ctx);
 
     auto   type = m_handle_overlay.HitTest(point, crop_on_view);
-    if (type == crop::GripType::None)
+    if (type == GripType::None)
         return;
 
-    m_move_strategy.emplace(type, ctx.ViewToCanvas(point), s_crop_on_canvas, s_keep_aspect);
-    view.SetCapture();
+    m_move_strategy.emplace(type, ctx.ViewToCanvas(point), s_crop_on_canvas);
 }
 
 void ToolCrop::OnLButtonUp(CMainView& view, UINT nFlags, CPoint point)
@@ -70,54 +76,55 @@ void ToolCrop::OnMouseMove(CMainView& view, UINT, CPoint point)
     if (!canvas)
         return;
 
-    ScrollViewDrawContext   ctx(*canvas, view);
+    ViewportContext   ctx(*canvas, view);
     if (m_move_strategy)
     {
         s_crop_on_canvas = m_move_strategy->HandleMouseMove(ctx.ViewToCanvas(point), *canvas);
-        view.Invalidate();
+        ctx.InvalidateView();
+        IEventObserverBase::FireEvent(AppEvent::CropRectChanged);
     }
     else
     {
         if (m_handle_overlay.OnMouseMove(point, CropOnView(ctx)))
         {
-            view.Invalidate();
+            ctx.InvalidateView();
         }
     }
 }
 
-void ToolCrop::OnCaptureChanged(CMainView& view)
+void ToolCrop::OnCaptureChanged()
 {
     // ASSERT(!m_move_strategy.has_value());
     m_move_strategy = std::nullopt;
 }
 
-void ToolCrop::OnDrawToolOverlay(const ScrollViewDrawContext& ctx)
+void ToolCrop::OnDrawToolOverlay(HDC hdc, const ViewportContext& ctx)
 {
-    crop::MaskOverlay::DrawParams   params{
+    MaskOverlay::DrawParams   params{
         .shape = s_crop_shape,
         .draw_grid = m_move_strategy.has_value()
     };
 
     CRect   rc = CropOnView(ctx);
-    m_mask_overlay.Draw(ctx.dst_hdc, rc, ctx.dst_view_size, params);
-    m_handle_overlay.Draw(ctx.dst_hdc, rc);
+    m_mask_overlay.Draw(hdc, rc, FCWnd::GetClientSize(ctx.m_view), params);
+    m_handle_overlay.Draw(hdc, rc);
 }
 
-void ToolCrop::OnObserveEvent(ObservedEvent& event)
+void ToolCrop::OnCanvasReloaded()
 {
-    if (event.m_type == (int)AppEvent::ImageChanged)
-    {
-        ResetForNewImage();
-    }
+    ResetForNewImage();
 }
 
 void ToolCrop::ResetForNewImage()
 {
     s_crop_on_canvas = CRect();
+    s_crop_shape = CropShape::Rectangle;
+    s_keep_aspect = false;
 
-    if (auto canvas = theApp.GetCurrentCanvas())
+    if (auto canvas = theRuntime.GetCurrentCanvas())
     {
         ZoomForCropMode(*canvas);
-        s_crop_on_canvas = CRect(CPoint(), canvas->OriginalSize());
+        s_crop_on_canvas = CRect({}, canvas->OriginalSize());
+        IEventObserverBase::FireEvent(AppEvent::CanvasReloaded, canvas);
     }
 }

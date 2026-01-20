@@ -3,22 +3,15 @@ class CMainView; // forward declare
 
 class RuntimeContext : public FCSingleton<RuntimeContext>
 {
-private:
-    COLORREF   m_accent_color = CLR_NONE;
-    CBrush     m_accent_brush;
-
 public:
     RuntimeContext();
 
     CBrush   m_canvas_back;
-
-    HBRUSH GetAccentBrush();
+    CBrush   m_accent_brush;
 
     CMainView* GetActiveView() const;
     void InvalidateView() const;
-
-private:
-    void UpdateAccentBrush();
+    Canvas* GetCurrentCanvas() const; // If a canvas exists, an active view and document must exist
 };
 
 #define theRuntime RuntimeContext::GetInstance()

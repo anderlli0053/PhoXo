@@ -3,14 +3,10 @@
 
 _PHOXO_NAMESPACE(crop)
 
-CRect MoveStrategy::HandleMouseMove(GPointF curr, const Canvas& canvas)
+namespace
 {
-    const CSize     canvas_size = canvas.OriginalSize();
-    const GPointF   delta = curr - m_anchor;
-    CRect   rc = m_begin_rect;
-    if (m_type == GripType::Move)
+    void ClampToCanvas(CRect& rc, CSize canvas_size)
     {
-        rc.OffsetRect(lround(delta.X), lround(delta.Y));
         if (rc.left < 0)
             rc.OffsetRect(-rc.left, 0);
         if (rc.top < 0)
@@ -19,6 +15,18 @@ CRect MoveStrategy::HandleMouseMove(GPointF curr, const Canvas& canvas)
             rc.OffsetRect(canvas_size.cx - rc.right, 0);
         if (rc.bottom > canvas_size.cy)
             rc.OffsetRect(0, canvas_size.cy - rc.bottom);
+    }
+}
+
+CRect MoveStrategy::HandleMouseMove(GPointF curr, const Canvas& canvas)
+{
+    const CSize     canvas_size = canvas.OriginalSize();
+    const GPointF   delta = curr - m_anchor;
+    CRect   rc = m_begin_rect;
+    if (m_type == GripType::Move)
+    {
+        rc.OffsetRect(lround(delta.X), lround(delta.Y));
+        ClampToCanvas(rc, canvas_size);
     }
     if (m_type == GripType::ResizeTop || m_type == GripType::ResizeTopLeft || m_type == GripType::ResizeTopRight)
     {

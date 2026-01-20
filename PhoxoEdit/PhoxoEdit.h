@@ -8,9 +8,6 @@ public:
 
     CPhoxoEditApp();
 
-    // canvas exists, doc/view must exist
-    Canvas* GetCurrentCanvas();
-
 private:
     BOOL InitInstance() override;
     int ExitInstance() override;

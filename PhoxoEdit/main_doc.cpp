@@ -11,10 +11,10 @@ END_MESSAGE_MAP()
 namespace
 {
     // canvas 改变但是view还没准备好，不能直接用观察者广播，所以这里用 POST 消息通知
-    void PostImageChangedToMainWnd()
+    void PostCanvasReloadedToMainWnd()
     {
         if (auto w = AfxGetMainWnd())
-            w->PostMessageW(MSG_POST_IMAGE_CHANGED);
+            w->PostMessageW(MSG_POST_CANVAS_RELOADED);
     }
 }
 
@@ -37,7 +37,7 @@ BOOL CMainDoc::OnNewDocument()
         m_canvas->AddLayer(make_shared<Layer>(std::move(img)));
         SetModifiedFlag(TRUE); // 来自剪贴板等要保存
     }
-    PostImageChangedToMainWnd();
+    PostCanvasReloadedToMainWnd();
     return TRUE;
 }
 
@@ -50,7 +50,7 @@ BOOL CMainDoc::OnOpenDocument(LPCTSTR filepath)
         m_canvas = make_unique<Canvas>(img.Size());
         m_canvas->AddLayer(make_shared<Layer>(std::move(img)));
         SetPathName(filepath);
-        PostImageChangedToMainWnd();
+        PostCanvasReloadedToMainWnd();
         return TRUE;
     }
     else
@@ -58,7 +58,7 @@ BOOL CMainDoc::OnOpenDocument(LPCTSTR filepath)
         CString   key = PathFileExists(filepath) ? L"load_error" : L"not_exist";
         ::BCGPMessageLightBox(filepath, MB_OK | MB_ICONWARNING, NULL, NULL, LanguageText::Get(L"FILE", key));
         UpdateAllViews(NULL);
-        PostImageChangedToMainWnd();
+        PostCanvasReloadedToMainWnd();
         return FALSE;
     }
 }

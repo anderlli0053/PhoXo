@@ -10,14 +10,12 @@ namespace crop
         GripType  m_type;
         GPointF   m_anchor;
         CRect     m_begin_rect;
-        bool      m_keep_aspect;
 
     public:
-        MoveStrategy(GripType type, GPointF anchor, const CRect& begin_rect, bool keep_aspect)
+        MoveStrategy(GripType type, GPointF anchor, const CRect& begin_rect)
             : m_type(type)
             , m_anchor(anchor)
             , m_begin_rect(begin_rect)
-            , m_keep_aspect(keep_aspect)
         {
         }
 

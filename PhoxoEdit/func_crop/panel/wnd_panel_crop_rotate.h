@@ -1,7 +1,8 @@
 #pragma once
 #include "page_expander.h"
 
-class WndPanelCropRotate : public CBCGPDialogBar
+class WndPanelCropRotate : public CBCGPDialogBar,
+                           public IEventObserverBase
 {
 private:
     int   m_ratio_index = 0;
@@ -25,12 +26,10 @@ private:
     void UpdateKeepAspectButton();
 
     void DoDataExchange(CDataExchange* pDX) override;
+    void OnObserveEvent(ObservedEvent& event) override;
+    void OnEventCanvasReloaded();
 
-    void OnUpdateCmdUI(CFrameWnd* pTarget, BOOL bDisableIfNoHandler) override
-    {
-        __super::OnUpdateCmdUI(pTarget, FALSE); // enableÈ«²¿¿Ø¼þ
-    }
-
+    afx_msg void OnEnableIfCanvasValid(CCmdUI* pCmdUI);
     afx_msg void OnPostUpdateKeepAspect();
     afx_msg void OnRatioButton(UINT id);
     afx_msg void OnKeepAspect();

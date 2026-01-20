@@ -13,7 +13,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CBCGPFrameWnd)
     ON_WM_CLOSE()
     ON_MESSAGE(WM_DPICHANGED, OnDPIChanged)
     ON_MESSAGE(MSG_POST_LOAD_FIRST, OnPostLoadFirst)
-    ON_MESSAGE(MSG_POST_IMAGE_CHANGED, OnPostImageChanged)
+    ON_MESSAGE(MSG_POST_CANVAS_RELOADED, OnPostCanvasReloaded)
     // right tab group
     ON_COMMAND_RANGE(ID_TAB_CROP_ROTATE, ID_TAB_LAST_ID, OnRightTab)
     ON_UPDATE_COMMAND_UI_RANGE(ID_TAB_CROP_ROTATE, ID_TAB_LAST_ID, OnUpdateRightTab)
@@ -52,12 +52,15 @@ void CMainFrame::OnUpdateRightTab(CCmdUI* pCmdUI)
 
 void CMainFrame::OnEnableIfCanvasValid(CCmdUI* pCmdUI)
 {
-    pCmdUI->Enable(theApp.GetCurrentCanvas() != NULL);
+    pCmdUI->Enable(theRuntime.GetCurrentCanvas() != NULL);
 }
 
-LRESULT CMainFrame::OnPostImageChanged(WPARAM, LPARAM)
+LRESULT CMainFrame::OnPostCanvasReloaded(WPARAM, LPARAM)
 {
-    IEventObserverBase::FireEvent(AppEvent::ImageChanged);
+    if (auto tool = theToolManager.GetActiveTool())
+    {
+        tool->OnCanvasReloaded();
+    }
     return 0;
 }
 
@@ -97,7 +100,7 @@ void CMainFrame::OnSize(UINT nType, int cx, int cy)
     if (nType == SIZE_MINIMIZED)
         return;
 
-    if (auto canvas = theApp.GetCurrentCanvas(); canvas && canvas->IsCurrentFitView())
+    if (auto canvas = theRuntime.GetCurrentCanvas(); canvas && canvas->IsCurrentFitView())
     {
         SendMessage(WM_COMMAND, ID_TOP_ZOOM_FIT_WINDOW);
     }

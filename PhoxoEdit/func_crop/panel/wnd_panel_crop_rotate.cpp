@@ -60,6 +60,11 @@ BEGIN_MESSAGE_MAP(WndPanelCropRotate, CBCGPDialogBar)
     ON_COMMAND_RANGE(ID_CROP_FREE, ID_CROP_2_3, OnRatioButton)
     ON_COMMAND(ID_KEEP_ASPECT, OnKeepAspect)
     ON_COMMAND(ID_POST_UPDATE_KEEP_ASPECT, OnPostUpdateKeepAspect)
+    ON_UPDATE_COMMAND_UI(ID_KEEP_ASPECT, OnEnableIfCanvasValid)
+    ON_UPDATE_COMMAND_UI(IDC_CROP_WIDTH, OnEnableIfCanvasValid)
+    ON_UPDATE_COMMAND_UI(IDC_CROP_HEIGHT, OnEnableIfCanvasValid)
+    ON_UPDATE_COMMAND_UI(ID_APPLY_CROP, OnEnableIfCanvasValid)
+    ON_UPDATE_COMMAND_UI_RANGE(ID_CROP_FREE, ID_CROP_2_3, OnEnableIfCanvasValid)
 END_MESSAGE_MAP()
 
 WndPanelCropRotate::WndPanelCropRotate()
@@ -150,20 +155,69 @@ void WndPanelCropRotate::DoDataExchange(CDataExchange* pDX)
     DDX_Check(pDX, ID_KEEP_ASPECT, m_keep_aspect);
 }
 
+void WndPanelCropRotate::OnObserveEvent(ObservedEvent& event)
+{
+    if (event.m_type == (int)AppEvent::CropRectChanged)
+    {
+        CSize   sz = ToolCrop::s_crop_on_canvas.Size();
+        m_width_edit.SetWindowText(FCString::From(sz.cx));
+        m_height_edit.SetWindowText(FCString::From(sz.cy));
+    }
+    else if (event.m_type == (int)AppEvent::CanvasReloaded)
+    {
+        OnEventCanvasReloaded();
+    }
+}
+
+void WndPanelCropRotate::OnEventCanvasReloaded()
+{
+    CSize   sz = ToolCrop::s_crop_on_canvas.Size();
+    m_width_edit.SetWindowText(FCString::From(sz.cx));
+    m_height_edit.SetWindowText(FCString::From(sz.cy));
+
+    m_ratio_index = 0;
+    m_keep_aspect = FALSE;
+    UpdateKeepAspectButton();
+    UpdateData(FALSE);
+}
+
 void WndPanelCropRotate::OnPostUpdateKeepAspect()
 {
     UpdateKeepAspectButton();
 }
 
+void WndPanelCropRotate::OnEnableIfCanvasValid(CCmdUI* pCmdUI)
+{
+    pCmdUI->Enable(theRuntime.GetCurrentCanvas() != NULL);
+}
+
 void WndPanelCropRotate::OnRatioButton(UINT id)
 {
-    bool   want_keep_aspect = (id != ID_CROP_FREE);
-    if (want_keep_aspect != (bool)m_keep_aspect)
+    UpdateData();
+    m_keep_aspect = (id != ID_CROP_FREE);
+    UpdateKeepAspectButton();
+    UpdateData(FALSE);
+
+    CSize   sz;
+    switch (id)
     {
-        UpdateData();
-        m_keep_aspect = !m_keep_aspect;
-        UpdateKeepAspectButton();
-        UpdateData(FALSE);
+        case ID_CROP_ORIGINAL:
+            if (auto canvas = theRuntime.GetCurrentCanvas())
+            {
+                sz = canvas->OriginalSize();
+            }
+            break;
+        case ID_CROP_1_1: sz = { 1, 1 }; break;
+        case ID_CROP_16_9: sz = { 16, 9 }; break;
+        case ID_CROP_3_2: sz = { 3, 2 }; break;
+        case ID_CROP_4_3: sz = { 4, 3 }; break;
+        case ID_CROP_9_16: sz = { 9, 16 }; break;
+        case ID_CROP_2_3: sz = { 2, 3 }; break;
+    }
+
+    if (sz.cx && sz.cy)
+    {
+        ToolCrop::ResetCropToPresetRatio(sz.cx, sz.cy);
     }
 }
 

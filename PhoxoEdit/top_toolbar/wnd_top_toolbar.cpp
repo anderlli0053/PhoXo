@@ -169,7 +169,7 @@ void WndTopToolbar::AddUndoGroup(CBCGPRibbonPanel& panel)
 
 void WndTopToolbar::OnZoomRatioChanged(ZoomChangedBy sender)
 {
-    auto   canvas = theApp.GetCurrentCanvas();
+    auto   canvas = theRuntime.GetCurrentCanvas();
     if (!canvas)
         return;
 

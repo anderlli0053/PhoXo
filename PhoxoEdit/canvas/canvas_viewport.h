@@ -1,5 +1,5 @@
 #pragma once
-#include "canvas_draw_context.h"
+#include "viewport_context.h"
 
 _PHOXO_BEGIN
 
@@ -18,11 +18,11 @@ private:
 public:
     CanvasViewport(const Canvas& canvas) : m_canvas(canvas) {}
 
-    void Draw(const CanvasDrawContext& target);
+    void Draw(HDC hdc, HBRUSH background, const ViewportContext& ctx);
 
 private:
-    bool IsCacheValid(const CanvasDrawContext& ctx) const;
-    void RebuildCache(const CanvasDrawContext& ctx);
+    bool IsCacheValid(const ViewportContext& ctx) const;
+    void RebuildCache(const ViewportContext& ctx, HBRUSH background);
 };
 
 _PHOXO_NAMESPACE_END

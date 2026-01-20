@@ -23,10 +23,13 @@ public:
 //     virtual void OnEnterTool() {} 暂时没用上，以后需要时再加
 //     virtual void OnLeaveTool() {}
 
+    virtual std::wstring_view GetToolName() const = 0;
+    virtual void OnCanvasReloaded() {} // 画布变化
+
     //----------------------------------------
     // 光标：Tool 决定当前光标
     //----------------------------------------
-    virtual HCURSOR GetToolCursor(const CMainView& view)
+    virtual HCURSOR GetToolCursor(const ViewportContext& ctx)
     {
         return ::LoadCursor(NULL, IDC_ARROW);
     }
@@ -39,10 +42,10 @@ public:
     virtual void OnMouseMove(CMainView& view, UINT nFlags, CPoint point) {}
 
     // capture 变化时调用
-    virtual void OnCaptureChanged(CMainView& view) {}
+    virtual void OnCaptureChanged() {}
 
     //----------------------------------------
     // 绘制 Tool 的覆盖层（辅助线 / 选框 / mask等）
     //----------------------------------------
-    virtual void OnDrawToolOverlay(const ScrollViewDrawContext& ctx) {}
+    virtual void OnDrawToolOverlay(HDC hdc, const ViewportContext& ctx) {}
 };

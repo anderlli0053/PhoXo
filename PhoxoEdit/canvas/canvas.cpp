@@ -22,9 +22,9 @@ void Canvas::AddLayer(const shared_ptr<Layer>& layer, int index)
     //layer->SetPosition(CPoint(200, 200));
 }
 
-void Canvas::Draw(const CanvasDrawContext& target)
+void Canvas::Draw(HDC hdc, HBRUSH background, const ViewportContext& ctx)
 {
-    m_viewport.Draw(target);
+    m_viewport.Draw(hdc, background, ctx);
 }
 
 Image Canvas::BuildCanvasImage() const

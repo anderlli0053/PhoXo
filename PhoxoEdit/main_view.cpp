@@ -55,13 +55,12 @@ void CMainView::OnDraw(CDC* paintdc)
 
     if (auto canvas = GetCanvas())
     {
-        ScrollViewDrawContext   info(*canvas, *this);
-        info.SetHdcAndBrush(memdc, theRuntime.m_canvas_back);
-        canvas->Draw(info);
+        ViewportContext   ctx(*canvas, *this);
+        canvas->Draw(memdc, theRuntime.m_canvas_back, ctx);
 
         if (auto tool = theToolManager.GetActiveTool())
         {
-            tool->OnDrawToolOverlay(info);
+            tool->OnDrawToolOverlay(memdc, ctx);
         }
     }
     else
@@ -149,6 +148,7 @@ void CMainView::OnLButtonDown(UINT nFlags, CPoint point)
         tool->OnLButtonDown(*this, nFlags, point);
     }
     Invalidate();
+    SetCapture();
 }
 
 void CMainView::OnLButtonUp(UINT nFlags, CPoint point)
@@ -169,16 +169,19 @@ LRESULT CMainView::OnCaptureChanged(WPARAM, LPARAM lParam)
 {
     if (auto tool = theToolManager.GetActiveTool())
     {
-        tool->OnCaptureChanged(*this);
+        tool->OnCaptureChanged();
     }
     return 0;
 }
 
 BOOL CMainView::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 {
-    if (auto tool = theToolManager.GetActiveTool())
+    auto   canvas = GetCanvas();
+    auto   tool = theToolManager.GetActiveTool();
+    if (tool && canvas && (nHitTest == HTCLIENT))
     {
-        if (HCURSOR cursor = tool->GetToolCursor(*this))
+        ViewportContext   ctx(*canvas, *this);
+        if (HCURSOR cursor = tool->GetToolCursor(ctx))
         {
             ::SetCursor(cursor);
             return TRUE;

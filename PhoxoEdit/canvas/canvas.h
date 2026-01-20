@@ -43,7 +43,7 @@ public:
     void AddLayer(const shared_ptr<Layer>& layer, int index = -1);
     const auto& AllLayers() const { return m_layer_mgr.all(); }
 
-    void Draw(const CanvasDrawContext& target);
+    void Draw(HDC hdc, HBRUSH background, const ViewportContext& ctx);
 
     // Render full canvas at original size (no zoom, no viewport)
     Image BuildCanvasImage() const;

@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "runtime_context.h"
+#include "../main_view.h"
 
 namespace
 {
@@ -17,12 +18,7 @@ namespace
 RuntimeContext::RuntimeContext()
 {
     CreateCanvasGridBack(m_canvas_back);
-}
-
-HBRUSH RuntimeContext::GetAccentBrush()
-{
-    UpdateAccentBrush();
-    return m_accent_brush;
+    m_accent_brush.CreateSolidBrush(CBCGPVisualManager::GetInstance()->GetDefaultAccentColor());
 }
 
 CMainView* RuntimeContext::GetActiveView() const
@@ -36,19 +32,14 @@ CMainView* RuntimeContext::GetActiveView() const
 
 void RuntimeContext::InvalidateView() const
 {
-    if (auto view = (CView*)GetActiveView())
+    if (auto view = GetActiveView())
     {
         view->Invalidate();
     }
 }
 
-void RuntimeContext::UpdateAccentBrush()
+Canvas* RuntimeContext::GetCurrentCanvas() const
 {
-    COLORREF   new_color = CBCGPVisualManager::GetInstance()->GetDefaultAccentColor();
-    if (new_color != m_accent_color)
-    {
-        m_accent_color = new_color;
-        m_accent_brush.DeleteObject();
-        m_accent_brush.CreateSolidBrush(m_accent_color);
-    }
+    auto   view = GetActiveView();
+    return view ? view->GetCanvas() : nullptr;
 }

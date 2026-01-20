@@ -4,8 +4,7 @@
 #include "handle_overlay.h"
 #include "move_strategy.h"
 
-class ToolCrop : public ToolBase,
-                 public IEventObserverBase
+class ToolCrop : public ToolBase
 {
 private:
     crop::MaskOverlay   m_mask_overlay;
@@ -13,20 +12,25 @@ private:
     std::optional<crop::MoveStrategy>   m_move_strategy;
 
 public:
+    static inline bool   s_is_cropping = false;
     static inline CRect   s_crop_on_canvas;
     static inline CropShape   s_crop_shape = CropShape::Rectangle;
-    static inline bool   s_keep_aspect = false;
+    static inline bool   s_keep_aspect = false; // width / height
+
+    static constexpr std::wstring_view   TOOL_NAME = L"crop";
 
     ToolCrop();
 
-    HCURSOR GetToolCursor(const CMainView& view) override;
+    static void ResetCropToPresetRatio(int width, int height);
+
+    std::wstring_view GetToolName() const override { return TOOL_NAME; }
+    HCURSOR GetToolCursor(const ViewportContext& ctx) override;
     void OnLButtonDown(CMainView& view, UINT nFlags, CPoint point) override;
     void OnLButtonUp(CMainView& view, UINT nFlags, CPoint point) override;
     void OnMouseMove(CMainView& view, UINT nFlags, CPoint point) override;
-    void OnCaptureChanged(CMainView& view) override;
-    void OnDrawToolOverlay(const ScrollViewDrawContext& ctx) override;
-
-    void OnObserveEvent(ObservedEvent& event) override;
+    void OnCaptureChanged() override;
+    void OnDrawToolOverlay(HDC hdc, const ViewportContext& ctx) override;
+    void OnCanvasReloaded() override;
 
 private:
     void ResetForNewImage();

@@ -65,7 +65,7 @@
     <ClInclude Include="base\app_define.h">
       <Filter>Source Files\base</Filter>
     </ClInclude>
-    <ClInclude Include="canvas\canvas_draw_context.h">
+    <ClInclude Include="canvas\viewport_context.h">
       <Filter>Source Files\canvas</Filter>
     </ClInclude>
     <ClInclude Include="canvas\viewport_composer.h">
@@ -81,9 +81,6 @@
       <Filter>Source Files\canvas</Filter>
     </ClInclude>
     <ClInclude Include="canvas\canvas_viewport.h">
-      <Filter>Source Files\canvas</Filter>
-    </ClInclude>
-    <ClInclude Include="canvas\mfc_scroll_view_draw_context.h">
       <Filter>Source Files\canvas</Filter>
     </ClInclude>
     <ClInclude Include="canvas\mfc_scroll_view_anchor_restore.h">
@@ -216,6 +213,9 @@
     </ClCompile>
     <ClCompile Include="func_crop\move_strategy.cpp">
       <Filter>Source Files\func_crop</Filter>
+    </ClCompile>
+    <ClCompile Include="canvas\viewport_context.cpp">
+      <Filter>Source Files\canvas</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

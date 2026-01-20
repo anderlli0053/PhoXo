@@ -6,7 +6,7 @@ class ToolManager : public FCSingleton<ToolManager>
 public:
     ToolBase* GetActiveTool() const { return m_activeTool.get(); }
 
-    void ActivateTool(ToolType type);
+    void ActivateTool(std::wstring_view tool_name);
     void Shutdown();
 
 private:

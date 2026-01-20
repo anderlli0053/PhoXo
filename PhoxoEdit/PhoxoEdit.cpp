@@ -73,16 +73,6 @@ int CPhoxoEditApp::ExitInstance()
     return __super::ExitInstance();
 }
 
-Canvas* CPhoxoEditApp::GetCurrentCanvas()
-{
-    if (auto main = (CFrameWnd*)m_pMainWnd)
-    {
-        if (auto doc = (CMainDoc*)main->GetActiveDocument())
-            return doc->GetCanvas();
-    }
-    return nullptr;
-}
-
 void CPhoxoEditApp::OnClearRecentFiles()
 {
     if (auto* obj = m_pRecentFileList)

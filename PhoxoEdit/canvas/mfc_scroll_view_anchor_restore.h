@@ -1,5 +1,4 @@
 #pragma once
-#include "mfc_scroll_view_draw_context.h"
 
 _PHOXO_BEGIN
 
@@ -17,7 +16,7 @@ public:
         : m_view{ view }
         , m_canvas{ canvas }
         , m_old_view_pt{ old_view }
-        , m_old_canvas_pt{ ScrollViewDrawContext(canvas, view).ViewToCanvas(old_view) }
+        , m_old_canvas_pt{ ViewportContext(canvas, view).ViewToCanvas(old_view) }
     {
     }
 
