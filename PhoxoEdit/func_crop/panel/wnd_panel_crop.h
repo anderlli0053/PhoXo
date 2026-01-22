@@ -1,8 +1,8 @@
 #pragma once
 #include "page_expander.h"
 
-class WndPanelCropRotate : public CBCGPDialogBar,
-                           public IEventObserverBase
+class WndPanelCrop : public CBCGPDialogBar,
+                     public IEventObserverBase
 {
 private:
     int   m_ratio_index = 0;
@@ -15,7 +15,7 @@ private:
     crop::PageExpander   m_shape_panel;
 
 public:
-    WndPanelCropRotate();
+    WndPanelCrop();
     void Create(CWnd* parent);
 
 private:
@@ -29,6 +29,7 @@ private:
     void OnObserveEvent(ObservedEvent& event) override;
     void OnEventCanvasReloaded();
 
+    afx_msg void OnSizeEditKillFocus();
     afx_msg void OnEnableIfCanvasValid(CCmdUI* pCmdUI);
     afx_msg void OnPostUpdateKeepAspect();
     afx_msg void OnRatioButton(UINT id);

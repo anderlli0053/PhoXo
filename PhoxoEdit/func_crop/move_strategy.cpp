@@ -27,8 +27,16 @@ CRect MoveStrategy::HandleMouseMove(GPointF curr, const Canvas& canvas)
     {
         rc.OffsetRect(lround(delta.X), lround(delta.Y));
         ClampToCanvas(rc, canvas_size);
+        return rc;
     }
-    if (m_type == GripType::ResizeTop || m_type == GripType::ResizeTopLeft || m_type == GripType::ResizeTopRight)
+
+    if (m_type == GripType::ResizeTop)
+    {
+        rc.top = std::clamp(rc.top + lround(delta.Y), 0L, rc.bottom - 1);
+
+    }
+
+    if (m_type == GripType::ResizeTopLeft || m_type == GripType::ResizeTopRight)
     {
         rc.top = std::clamp(rc.top + lround(delta.Y), 0L, rc.bottom - 1);
     }

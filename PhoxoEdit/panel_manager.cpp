@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "panel_manager.h"
-#include "func_crop/panel/wnd_panel_crop_rotate.h"
+#include "func_crop/panel/wnd_panel_crop.h"
 #include "func_crop/tool_crop.h"
 #include "tool_manager.h"
 
@@ -79,7 +79,7 @@ CBCGPDockingControlBar* PanelManager::CreatePanel(CWnd* parent, UINT tab_id)
 {
     if (tab_id == ID_TAB_CROP_ROTATE)
     {
-        auto   dlg = new WndPanelCropRotate;
+        auto   dlg = new WndPanelCrop;
         dlg->Create(parent);
         m_panel_tab_map[dlg->GetDlgCtrlID()] = tab_id;
         return dlg;

@@ -22,6 +22,11 @@ namespace
         GPointF   br = ctx.CanvasToView(ToolCrop::s_crop_on_canvas.BottomRight());
         return { (int)floor(tl.X), (int)floor(tl.Y), (int)floor(br.X), (int)floor(br.Y) };
     }
+
+    bool IsCropping()
+    {
+        return !ToolCrop::s_crop_on_canvas.IsRectEmpty();
+    }
 }
 
 ToolCrop::ToolCrop()
@@ -36,13 +41,14 @@ void ToolCrop::SetCropOnCanvas(const CRect& rc)
     IEventObserverBase::FireEvent(AppEvent::CropRectChanged);
 }
 
-void ToolCrop::ResetCropToPresetRatio(int width, int height)
+void ToolCrop::ApplyCropAspectRatio(int width, int height)
 {
-    if (auto canvas = theRuntime.GetCurrentCanvas())
+    if (auto canvas = theRuntime.GetCurrentCanvas(); canvas && width && height)
     {
-        //s_keep_aspect = true;
-
-
+        s_aspect_ratio.Lock(width, height);
+        s_crop_on_canvas = s_aspect_ratio.FitCanvas(canvas->OriginalSize());
+        theRuntime.InvalidateView();
+        IEventObserverBase::FireEvent(AppEvent::CropRectChanged);
     }
 }
 
@@ -117,7 +123,6 @@ void ToolCrop::ResetForNewImage()
 {
     s_crop_on_canvas = CRect();
     s_crop_shape = CropShape::Rectangle;
-    s_keep_aspect = false;
 
     if (auto canvas = theRuntime.GetCurrentCanvas())
     {

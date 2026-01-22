@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "local.h"
-#include "wnd_panel_crop_rotate.h"
+#include "wnd_panel_crop.h"
 #include "../tool_crop.h"
 using namespace crop;
 
@@ -57,11 +57,13 @@ namespace
     }
 }
 
-BEGIN_MESSAGE_MAP(WndPanelCropRotate, CBCGPDialogBar)
+BEGIN_MESSAGE_MAP(WndPanelCrop, CBCGPDialogBar)
     ON_COMMAND_RANGE(ID_CROP_FREE, ID_CROP_2_3, OnRatioButton)
     ON_COMMAND(ID_KEEP_ASPECT, OnKeepAspect)
     ON_COMMAND(ID_CANCEL_CROP, OnCancelCrop)
     ON_COMMAND(ID_POST_UPDATE_KEEP_ASPECT, OnPostUpdateKeepAspect)
+    ON_EN_KILLFOCUS(IDC_CROP_WIDTH, OnSizeEditKillFocus)
+    ON_EN_KILLFOCUS(IDC_CROP_HEIGHT, OnSizeEditKillFocus)
     ON_UPDATE_COMMAND_UI(ID_KEEP_ASPECT, OnEnableIfCanvasValid)
     ON_UPDATE_COMMAND_UI(IDC_CROP_WIDTH, OnEnableIfCanvasValid)
     ON_UPDATE_COMMAND_UI(IDC_CROP_HEIGHT, OnEnableIfCanvasValid)
@@ -70,7 +72,7 @@ BEGIN_MESSAGE_MAP(WndPanelCropRotate, CBCGPDialogBar)
     ON_UPDATE_COMMAND_UI_RANGE(ID_CROP_FREE, ID_CROP_2_3, OnEnableIfCanvasValid)
 END_MESSAGE_MAP()
 
-WndPanelCropRotate::WndPanelCropRotate()
+WndPanelCrop::WndPanelCrop()
 {
     EnableVisualManagerStyle();
 
@@ -89,7 +91,7 @@ WndPanelCropRotate::WndPanelCropRotate()
     btn.LoadSvgWithDpi(IDSVG_CROP_APPLY, ThemeMode::InverseBCG);
 }
 
-void WndPanelCropRotate::Create(CWnd* parent)
+void WndPanelCrop::Create(CWnd* parent)
 {
     CBCGPDialogBar::Create(NULL, parent,
         FALSE,                             // bHasGripper，是否显示抓手
@@ -109,13 +111,13 @@ void WndPanelCropRotate::Create(CWnd* parent)
     m_shape_panel.Create(this, ID_CROP_EXPAND_HOLDER);
 }
 
-BCGImageButton& WndPanelCropRotate::AddImageButton(int id)
+BCGImageButton& WndPanelCrop::AddImageButton(int id)
 {
     auto [it, _] = m_image_buttons.try_emplace(id, make_unique<BCGImageButton>());
     return *it->second;
 }
 
-void WndPanelCropRotate::InitSizeEdit()
+void WndPanelCrop::InitSizeEdit()
 {
     for (auto ctrl : { &m_width_edit, &m_height_edit })
     {
@@ -125,7 +127,7 @@ void WndPanelCropRotate::InitSizeEdit()
     ResetSizeEdit();
 }
 
-void WndPanelCropRotate::ResetSizeEdit()
+void WndPanelCrop::ResetSizeEdit()
 {
     if (CSize sz = ToolCrop::s_crop_on_canvas.Size(); sz.cx && sz.cy)
     {
@@ -143,7 +145,7 @@ void WndPanelCropRotate::ResetSizeEdit()
     }
 }
 
-void WndPanelCropRotate::UpdateKeepAspectButton()
+void WndPanelCrop::UpdateKeepAspectButton()
 {
     LanguageTextGroup   stat(PanelCropText(5));
     auto&   btn = *m_image_buttons[ID_KEEP_ASPECT];
@@ -152,7 +154,7 @@ void WndPanelCropRotate::UpdateKeepAspectButton()
     btn.Invalidate();
 }
 
-void WndPanelCropRotate::DoDataExchange(CDataExchange* pDX)
+void WndPanelCrop::DoDataExchange(CDataExchange* pDX)
 {
     __super::DoDataExchange(pDX);
 
@@ -167,7 +169,7 @@ void WndPanelCropRotate::DoDataExchange(CDataExchange* pDX)
     DDX_Check(pDX, ID_KEEP_ASPECT, m_keep_aspect);
 }
 
-void WndPanelCropRotate::OnObserveEvent(ObservedEvent& event)
+void WndPanelCrop::OnObserveEvent(ObservedEvent& event)
 {
     if (event.m_type == (int)AppEvent::CropRectChanged)
     {
@@ -179,7 +181,7 @@ void WndPanelCropRotate::OnObserveEvent(ObservedEvent& event)
     }
 }
 
-void WndPanelCropRotate::OnEventCanvasReloaded()
+void WndPanelCrop::OnEventCanvasReloaded()
 {
     ResetSizeEdit();
 
@@ -189,17 +191,29 @@ void WndPanelCropRotate::OnEventCanvasReloaded()
     UpdateData(FALSE);
 }
 
-void WndPanelCropRotate::OnPostUpdateKeepAspect()
+void WndPanelCrop::OnPostUpdateKeepAspect()
 {
     UpdateKeepAspectButton();
 }
 
-void WndPanelCropRotate::OnEnableIfCanvasValid(CCmdUI* pCmdUI)
+void WndPanelCrop::OnSizeEditKillFocus()
+{
+    CString   width, height;
+    m_width_edit.GetWindowText(width);
+    m_height_edit.GetWindowText(height);
+
+    int w = StrToInt(width);
+    int h = StrToInt(height);
+
+    //ToolCrop::ApplyCropAspectRatio(w, h);
+}
+
+void WndPanelCrop::OnEnableIfCanvasValid(CCmdUI* pCmdUI)
 {
     pCmdUI->Enable(theRuntime.GetCurrentCanvas() != NULL);
 }
 
-void WndPanelCropRotate::OnRatioButton(UINT id)
+void WndPanelCrop::OnRatioButton(UINT id)
 {
     UpdateData();
     m_keep_aspect = (id != ID_CROP_FREE);
@@ -223,24 +237,23 @@ void WndPanelCropRotate::OnRatioButton(UINT id)
         case ID_CROP_2_3: sz = { 2, 3 }; break;
     }
 
-    if (sz.cx && sz.cy)
-    {
-        ToolCrop::ResetCropToPresetRatio(sz.cx, sz.cy);
-    }
+    ToolCrop::ApplyCropAspectRatio(sz.cx, sz.cy);
 }
 
-void WndPanelCropRotate::OnKeepAspect()
+void WndPanelCrop::OnKeepAspect()
 {
     UpdateData();
     if (!m_keep_aspect)
         m_ratio_index = 0; // free
     UpdateData(FALSE);
 
-    ToolCrop::s_keep_aspect = m_keep_aspect;
+    if (!m_keep_aspect)
+        ToolCrop::s_aspect_ratio.Unlock();
+
     PostMessage(WM_COMMAND, ID_POST_UPDATE_KEEP_ASPECT); // 在这里更新tip会闪烁，post后处理
 }
 
-void WndPanelCropRotate::OnCancelCrop()
+void WndPanelCrop::OnCancelCrop()
 {
     ToolCrop::SetCropOnCanvas(CRect());
 }

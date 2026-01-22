@@ -3,6 +3,7 @@
 #include "mask_overlay.h"
 #include "handle_overlay.h"
 #include "move_strategy.h"
+#include "crop_aspect_ratio.h"
 
 class ToolCrop : public ToolBase
 {
@@ -15,14 +16,14 @@ public:
     static inline bool   s_is_cropping = false;
     static inline CRect   s_crop_on_canvas;
     static inline CropShape   s_crop_shape = CropShape::Rectangle;
-    static inline bool   s_keep_aspect = false; // width / height
+    static inline crop::CropAspectRatio   s_aspect_ratio;
 
     static constexpr std::wstring_view   TOOL_NAME = L"crop";
 
     ToolCrop();
 
     static void SetCropOnCanvas(const CRect& rc);
-    static void ResetCropToPresetRatio(int width, int height);
+    static void ApplyCropAspectRatio(int width, int height);
 
     std::wstring_view GetToolName() const override { return TOOL_NAME; }
     HCURSOR GetToolCursor(const ViewportContext& ctx) override;

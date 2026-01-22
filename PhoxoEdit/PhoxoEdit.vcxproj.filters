@@ -104,7 +104,7 @@
     <ClInclude Include="func_crop\panel\shape_page.h">
       <Filter>Source Files\func_crop\panel</Filter>
     </ClInclude>
-    <ClInclude Include="func_crop\panel\wnd_panel_crop_rotate.h">
+    <ClInclude Include="func_crop\panel\wnd_panel_crop.h">
       <Filter>Source Files\func_crop\panel</Filter>
     </ClInclude>
     <ClInclude Include="func_crop\tool_crop.h">
@@ -138,6 +138,9 @@
       <Filter>Source Files\base</Filter>
     </ClInclude>
     <ClInclude Include="func_crop\move_strategy.h">
+      <Filter>Source Files\func_crop</Filter>
+    </ClInclude>
+    <ClInclude Include="func_crop\crop_aspect_ratio.h">
       <Filter>Source Files\func_crop</Filter>
     </ClInclude>
   </ItemGroup>
@@ -187,7 +190,7 @@
     <ClCompile Include="func_crop\panel\shape_page.cpp">
       <Filter>Source Files\func_crop\panel</Filter>
     </ClCompile>
-    <ClCompile Include="func_crop\panel\wnd_panel_crop_rotate.cpp">
+    <ClCompile Include="func_crop\panel\wnd_panel_crop.cpp">
       <Filter>Source Files\func_crop\panel</Filter>
     </ClCompile>
     <ClCompile Include="func_crop\tool_crop.cpp">

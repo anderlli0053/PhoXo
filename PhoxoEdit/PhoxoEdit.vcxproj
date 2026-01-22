@@ -137,6 +137,7 @@
     <ClInclude Include="canvas\layer_manager.h" />
     <ClInclude Include="canvas\zoom_mapper.h" />
     <ClInclude Include="framework\main_doc_manager.h" />
+    <ClInclude Include="func_crop\crop_aspect_ratio.h" />
     <ClInclude Include="func_crop\grip_handle.h" />
     <ClInclude Include="func_crop\handle_overlay.h" />
     <ClInclude Include="func_crop\mask_overlay.h" />
@@ -145,7 +146,7 @@
     <ClInclude Include="func_crop\panel\page_expander.h" />
     <ClInclude Include="func_crop\panel\rotate_page.h" />
     <ClInclude Include="func_crop\panel\shape_page.h" />
-    <ClInclude Include="func_crop\panel\wnd_panel_crop_rotate.h" />
+    <ClInclude Include="func_crop\panel\wnd_panel_crop.h" />
     <ClInclude Include="func_crop\tool_crop.h" />
     <ClInclude Include="main_doc.h" />
     <ClInclude Include="main_frame.h" />
@@ -175,7 +176,7 @@
     <ClCompile Include="func_crop\panel\page_expander.cpp" />
     <ClCompile Include="func_crop\panel\rotate_page.cpp" />
     <ClCompile Include="func_crop\panel\shape_page.cpp" />
-    <ClCompile Include="func_crop\panel\wnd_panel_crop_rotate.cpp" />
+    <ClCompile Include="func_crop\panel\wnd_panel_crop.cpp" />
     <ClCompile Include="func_crop\tool_crop.cpp" />
     <ClCompile Include="main_doc.cpp" />
     <ClCompile Include="main_frame.cpp" />

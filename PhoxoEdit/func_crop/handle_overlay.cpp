@@ -55,7 +55,7 @@ GripType HandleOverlay::HitTest(CPoint pt_on_view, const CRect& crop_on_view) co
 
 HCURSOR HandleOverlay::GetCursor(CPoint cursor_on_view, const CRect& crop_on_view) const
 {
-    GripType   type = HitTest(cursor_on_view, crop_on_view);
+    auto   type = HitTest(cursor_on_view, crop_on_view);
     return (type != GripType::None) ? GripCursorByType(type) : NULL;
 }
 
