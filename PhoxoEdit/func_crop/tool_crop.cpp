@@ -29,6 +29,13 @@ ToolCrop::ToolCrop()
     ResetForNewImage();
 }
 
+void ToolCrop::SetCropOnCanvas(const CRect& rc)
+{
+    s_crop_on_canvas = rc;
+    theRuntime.InvalidateView();
+    IEventObserverBase::FireEvent(AppEvent::CropRectChanged);
+}
+
 void ToolCrop::ResetCropToPresetRatio(int width, int height)
 {
     if (auto canvas = theRuntime.GetCurrentCanvas())
@@ -41,53 +48,41 @@ void ToolCrop::ResetCropToPresetRatio(int width, int height)
 
 HCURSOR ToolCrop::GetToolCursor(const ViewportContext& ctx)
 {
-        POINT   pt{};
-        ::GetCursorPos(&pt);
-        ::ScreenToClient(ctx.m_view, &pt);
-        if (HCURSOR cursor = m_handle_overlay.GetCursor(pt, CropOnView(ctx)))
-            return cursor;
+    CPoint   pt;
+    ::GetCursorPos(&pt);
+    ::ScreenToClient(ctx.m_view, &pt);
+    if (HCURSOR cursor = m_handle_overlay.GetCursor(pt, CropOnView(ctx)))
+        return cursor;
     return __super::GetToolCursor(ctx);
 }
 
-void ToolCrop::OnLButtonDown(CMainView& view, UINT nFlags, CPoint point)
+void ToolCrop::OnLButtonDown(const ViewportContext& ctx, UINT nFlags, CPoint point)
 {
-    auto   canvas = view.GetCanvas();
-    if (!canvas)
-        return;
-
-    ViewportContext   ctx(*canvas, view);
-    CRect   crop_on_view = CropOnView(ctx);
-
-    auto   type = m_handle_overlay.HitTest(point, crop_on_view);
+    auto   type = m_handle_overlay.HitTest(point, CropOnView(ctx));
     if (type == GripType::None)
         return;
 
     m_move_strategy.emplace(type, ctx.ViewToCanvas(point), s_crop_on_canvas);
 }
 
-void ToolCrop::OnLButtonUp(CMainView& view, UINT nFlags, CPoint point)
+void ToolCrop::OnLButtonUp(const ViewportContext& ctx, UINT nFlags, CPoint point)
 {
     m_move_strategy = std::nullopt;
 }
 
-void ToolCrop::OnMouseMove(CMainView& view, UINT, CPoint point)
+void ToolCrop::OnMouseMove(const ViewportContext& ctx, UINT, CPoint point)
 {
-    auto   canvas = view.GetCanvas();
-    if (!canvas)
-        return;
-
-    ViewportContext   ctx(*canvas, view);
     if (m_move_strategy)
     {
-        s_crop_on_canvas = m_move_strategy->HandleMouseMove(ctx.ViewToCanvas(point), *canvas);
-        ctx.InvalidateView();
+        s_crop_on_canvas = m_move_strategy->HandleMouseMove(ctx.ViewToCanvas(point), ctx.m_canvas);
+        theRuntime.InvalidateView();
         IEventObserverBase::FireEvent(AppEvent::CropRectChanged);
     }
     else
     {
         if (m_handle_overlay.OnMouseMove(point, CropOnView(ctx)))
         {
-            ctx.InvalidateView();
+            theRuntime.InvalidateView();
         }
     }
 }
@@ -100,6 +95,9 @@ void ToolCrop::OnCaptureChanged()
 
 void ToolCrop::OnDrawToolOverlay(HDC hdc, const ViewportContext& ctx)
 {
+    if (s_crop_on_canvas.IsRectEmpty())
+        return;
+
     MaskOverlay::DrawParams   params{
         .shape = s_crop_shape,
         .draw_grid = m_move_strategy.has_value()

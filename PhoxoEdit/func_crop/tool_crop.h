@@ -21,13 +21,14 @@ public:
 
     ToolCrop();
 
+    static void SetCropOnCanvas(const CRect& rc);
     static void ResetCropToPresetRatio(int width, int height);
 
     std::wstring_view GetToolName() const override { return TOOL_NAME; }
     HCURSOR GetToolCursor(const ViewportContext& ctx) override;
-    void OnLButtonDown(CMainView& view, UINT nFlags, CPoint point) override;
-    void OnLButtonUp(CMainView& view, UINT nFlags, CPoint point) override;
-    void OnMouseMove(CMainView& view, UINT nFlags, CPoint point) override;
+    void OnLButtonDown(const ViewportContext& ctx, UINT nFlags, CPoint point) override;
+    void OnLButtonUp(const ViewportContext& ctx, UINT nFlags, CPoint point) override;
+    void OnMouseMove(const ViewportContext& ctx, UINT nFlags, CPoint point) override;
     void OnCaptureChanged() override;
     void OnDrawToolOverlay(HDC hdc, const ViewportContext& ctx) override;
     void OnCanvasReloaded() override;

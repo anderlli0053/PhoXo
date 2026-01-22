@@ -33,5 +33,6 @@ private:
     afx_msg void OnPostUpdateKeepAspect();
     afx_msg void OnRatioButton(UINT id);
     afx_msg void OnKeepAspect();
+    afx_msg void OnCancelCrop();
     DECLARE_MESSAGE_MAP()
 };

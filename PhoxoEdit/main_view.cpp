@@ -39,6 +39,13 @@ Canvas* CMainView::GetCanvas() const
     return doc ? doc->GetCanvas() : nullptr;
 }
 
+std::optional<ViewportContext> CMainView::CreateViewportContext() const
+{
+    if (auto canvas = GetCanvas())
+        return ViewportContext(*canvas, *this);
+    return std::nullopt;
+}
+
 void CMainView::OnDraw(CDC* paintdc)
 {
     const CRect   view_rect = FCWnd::GetClientRect(m_hWnd);
@@ -53,14 +60,13 @@ void CMainView::OnDraw(CDC* paintdc)
     // 画布区域外颜色
     CBCGPVisualManager::GetInstance()->OnFillPopupWindowBackground(&memdc, view_rect);
 
-    if (auto canvas = GetCanvas())
+    if (auto ctx = CreateViewportContext())
     {
-        ViewportContext   ctx(*canvas, *this);
-        canvas->Draw(memdc, theRuntime.m_canvas_back, ctx);
+        GetCanvas()->Draw(memdc, theRuntime.m_canvas_back, *ctx);
 
         if (auto tool = theToolManager.GetActiveTool())
         {
-            tool->OnDrawToolOverlay(memdc, ctx);
+            tool->OnDrawToolOverlay(memdc, *ctx);
         }
     }
     else
@@ -143,9 +149,11 @@ void CMainView::OnContextMenu(CWnd*, CPoint point)
 
 void CMainView::OnLButtonDown(UINT nFlags, CPoint point)
 {
-    if (auto tool = theToolManager.GetActiveTool())
+    auto   ctx = CreateViewportContext();
+    auto   tool = theToolManager.GetActiveTool();
+    if (ctx && tool)
     {
-        tool->OnLButtonDown(*this, nFlags, point);
+        tool->OnLButtonDown(*ctx, nFlags, point);
     }
     Invalidate();
     SetCapture();
@@ -153,9 +161,11 @@ void CMainView::OnLButtonDown(UINT nFlags, CPoint point)
 
 void CMainView::OnLButtonUp(UINT nFlags, CPoint point)
 {
-    if (auto tool = theToolManager.GetActiveTool())
+    auto   ctx = CreateViewportContext();
+    auto   tool = theToolManager.GetActiveTool();
+    if (ctx && tool)
     {
-        tool->OnLButtonUp(*this, nFlags, point);
+        tool->OnLButtonUp(*ctx, nFlags, point);
     }
     Invalidate();
 
@@ -176,34 +186,34 @@ LRESULT CMainView::OnCaptureChanged(WPARAM, LPARAM lParam)
 
 BOOL CMainView::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 {
-    auto   canvas = GetCanvas();
+    auto   ctx = CreateViewportContext();
     auto   tool = theToolManager.GetActiveTool();
-    if (tool && canvas && (nHitTest == HTCLIENT))
+    if (tool && ctx && (nHitTest == HTCLIENT))
     {
-        ViewportContext   ctx(*canvas, *this);
-        if (HCURSOR cursor = tool->GetToolCursor(ctx))
-        {
-            ::SetCursor(cursor);
-            return TRUE;
-        }
+        ::SetCursor(tool->GetToolCursor(*ctx));
+        return TRUE;
     }
     return __super::OnSetCursor(pWnd, nHitTest, message);
 }
 
 void CMainView::OnMouseMove(UINT nFlags, CPoint point)
 {
-    if (auto tool = theToolManager.GetActiveTool())
+    auto   ctx = CreateViewportContext();
+    auto   tool = theToolManager.GetActiveTool();
+    if (ctx && tool)
     {
-        tool->OnMouseMove(*this, nFlags, point);
+        tool->OnMouseMove(*ctx, nFlags, point);
     }
     __super::OnMouseMove(nFlags, point);
 }
 
 void CMainView::OnMouseLeave()
 {
-    if (auto tool = theToolManager.GetActiveTool())
+    auto   ctx = CreateViewportContext();
+    auto   tool = theToolManager.GetActiveTool();
+    if (ctx && tool)
     {
-        tool->OnMouseMove(*this, 0, { -0xFFFFFF,-0xFFFFFF });
+        tool->OnMouseMove(*ctx, 0, { -0xFFFFFF,-0xFFFFFF });
     }
     __super::OnMouseLeave();
 }

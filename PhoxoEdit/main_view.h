@@ -11,6 +11,8 @@ public:
     void UpdateZoomRatio(double new_ratio, ZoomChangedBy from, std::optional<CPoint> view_anchor = std::nullopt);
 
 private:
+    std::optional<ViewportContext> CreateViewportContext() const;
+
 	void OnDraw(CDC* pDC) override;
     void OnInitialUpdate() override;
     void OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint) override;

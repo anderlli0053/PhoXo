@@ -1,16 +1,4 @@
 #pragma once
-class CMainView; // forward declare
-
-enum class ToolType
-{
-    None,
-    Crop,
-    Text,
-    Adjust,
-    Effect,
-    Widget,
-    Frame
-};
 
 class ToolBase
 {
@@ -27,7 +15,7 @@ public:
     virtual void OnCanvasReloaded() {} // 画布变化
 
     //----------------------------------------
-    // 光标：Tool 决定当前光标
+    // 光标：不能返回NULL
     //----------------------------------------
     virtual HCURSOR GetToolCursor(const ViewportContext& ctx)
     {
@@ -37,9 +25,9 @@ public:
     //----------------------------------------
     // 鼠标事件
     //----------------------------------------
-    virtual void OnLButtonDown(CMainView& view, UINT nFlags, CPoint point) {}
-    virtual void OnLButtonUp(CMainView& view, UINT nFlags, CPoint point) {}
-    virtual void OnMouseMove(CMainView& view, UINT nFlags, CPoint point) {}
+    virtual void OnLButtonDown(const ViewportContext& ctx, UINT nFlags, CPoint point) {}
+    virtual void OnLButtonUp(const ViewportContext& ctx, UINT nFlags, CPoint point) {}
+    virtual void OnMouseMove(const ViewportContext& ctx, UINT nFlags, CPoint point) {}
 
     // capture 变化时调用
     virtual void OnCaptureChanged() {}

@@ -29,6 +29,8 @@
 #define IDSVG_GROUP_SHAPE               525
 #define IDSVG_GROUP_ROTATE               526
 
+#define IDSVG_CROP_CANCEL               527
+
 #define IDD_PANEL_CROP                  700
 #define IDD_PANEL_CROP_SHAPE_PAGE       701
 #define IDD_PANEL_CROP_ROTATE_PAGE      702

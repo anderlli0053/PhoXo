@@ -22,8 +22,6 @@ public:
 
     GPointF ViewToCanvas(CPoint view_pos) const;
     GPointF CanvasToView(CPoint canvas_pos) const;
-
-    void InvalidateView() const { ::InvalidateRect(m_view, NULL, TRUE); }
 };
 
 _PHOXO_NAMESPACE_END

@@ -69,9 +69,10 @@ void PanelManager::OnClickTab(CBCGPFrameWnd& main_wnd, UINT tab_id)
     main_wnd.RecalcLayout();
 
     auto   tool_name = ToolNameFromTabId(tab_id);
-    if (!m_current_panel)
-        tool_name = {};
-    theToolManager.ActivateTool(tool_name);
+    if (m_current_panel)
+    {
+        theToolManager.ActivateTool(tool_name);
+    }
 }
 
 CBCGPDockingControlBar* PanelManager::CreatePanel(CWnd* parent, UINT tab_id)

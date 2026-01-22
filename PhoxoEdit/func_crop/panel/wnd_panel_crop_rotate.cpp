@@ -22,6 +22,7 @@ namespace
         ID_KEEP_ASPECT = 3201, // 保持宽高比按钮
 
         ID_APPLY_CROP = 3200,  // 应用裁剪
+        ID_CANCEL_CROP = 3300, // 取消裁剪
 
         ID_POST_UPDATE_KEEP_ASPECT = 4000,
         ID_CROP_EXPAND_HOLDER = 6000,
@@ -59,11 +60,13 @@ namespace
 BEGIN_MESSAGE_MAP(WndPanelCropRotate, CBCGPDialogBar)
     ON_COMMAND_RANGE(ID_CROP_FREE, ID_CROP_2_3, OnRatioButton)
     ON_COMMAND(ID_KEEP_ASPECT, OnKeepAspect)
+    ON_COMMAND(ID_CANCEL_CROP, OnCancelCrop)
     ON_COMMAND(ID_POST_UPDATE_KEEP_ASPECT, OnPostUpdateKeepAspect)
     ON_UPDATE_COMMAND_UI(ID_KEEP_ASPECT, OnEnableIfCanvasValid)
     ON_UPDATE_COMMAND_UI(IDC_CROP_WIDTH, OnEnableIfCanvasValid)
     ON_UPDATE_COMMAND_UI(IDC_CROP_HEIGHT, OnEnableIfCanvasValid)
     ON_UPDATE_COMMAND_UI(ID_APPLY_CROP, OnEnableIfCanvasValid)
+    ON_UPDATE_COMMAND_UI(ID_CANCEL_CROP, OnEnableIfCanvasValid)
     ON_UPDATE_COMMAND_UI_RANGE(ID_CROP_FREE, ID_CROP_2_3, OnEnableIfCanvasValid)
 END_MESSAGE_MAP()
 
@@ -79,6 +82,7 @@ WndPanelCropRotate::WndPanelCropRotate()
         btn.LoadSvgWithDpi(RatioButtonSvgId(id));
     }
     AddImageButton(ID_KEEP_ASPECT);
+    AddImageButton(ID_CANCEL_CROP).LoadSvgWithDpi(IDSVG_CROP_CANCEL);
 
     auto&   btn = AddImageButton(ID_APPLY_CROP);
     btn.m_always_default_status = true;
@@ -123,11 +127,19 @@ void WndPanelCropRotate::InitSizeEdit()
 
 void WndPanelCropRotate::ResetSizeEdit()
 {
-    LanguageTextGroup   text(PanelCropText(0));
-    for (auto ctrl : { &m_width_edit, &m_height_edit })
+    if (CSize sz = ToolCrop::s_crop_on_canvas.Size(); sz.cx && sz.cy)
     {
-        ctrl->SetWindowText(L"");
-        ctrl->SetPrompt(text.PopFront());
+        m_width_edit.SetWindowText(FCString::From(sz.cx));
+        m_height_edit.SetWindowText(FCString::From(sz.cy));
+    }
+    else
+    {
+        LanguageTextGroup   text(PanelCropText(0));
+        for (auto ctrl : { &m_width_edit, &m_height_edit })
+        {
+            ctrl->SetWindowText(L"");
+            ctrl->SetPrompt(text.PopFront());
+        }
     }
 }
 
@@ -159,9 +171,7 @@ void WndPanelCropRotate::OnObserveEvent(ObservedEvent& event)
 {
     if (event.m_type == (int)AppEvent::CropRectChanged)
     {
-        CSize   sz = ToolCrop::s_crop_on_canvas.Size();
-        m_width_edit.SetWindowText(FCString::From(sz.cx));
-        m_height_edit.SetWindowText(FCString::From(sz.cy));
+        ResetSizeEdit();
     }
     else if (event.m_type == (int)AppEvent::CanvasReloaded)
     {
@@ -171,9 +181,7 @@ void WndPanelCropRotate::OnObserveEvent(ObservedEvent& event)
 
 void WndPanelCropRotate::OnEventCanvasReloaded()
 {
-    CSize   sz = ToolCrop::s_crop_on_canvas.Size();
-    m_width_edit.SetWindowText(FCString::From(sz.cx));
-    m_height_edit.SetWindowText(FCString::From(sz.cy));
+    ResetSizeEdit();
 
     m_ratio_index = 0;
     m_keep_aspect = FALSE;
@@ -230,4 +238,9 @@ void WndPanelCropRotate::OnKeepAspect()
 
     ToolCrop::s_keep_aspect = m_keep_aspect;
     PostMessage(WM_COMMAND, ID_POST_UPDATE_KEEP_ASPECT); // 在这里更新tip会闪烁，post后处理
+}
+
+void WndPanelCropRotate::OnCancelCrop()
+{
+    ToolCrop::SetCropOnCanvas(CRect());
 }
