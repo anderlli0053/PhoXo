@@ -62,8 +62,8 @@ BEGIN_MESSAGE_MAP(WndPanelCrop, CBCGPDialogBar)
     ON_COMMAND(ID_KEEP_ASPECT, OnKeepAspect)
     ON_COMMAND(ID_CANCEL_CROP, OnCancelCrop)
     ON_COMMAND(ID_POST_UPDATE_KEEP_ASPECT, OnPostUpdateKeepAspect)
-    ON_EN_KILLFOCUS(IDC_CROP_WIDTH, OnSizeEditKillFocus)
-    ON_EN_KILLFOCUS(IDC_CROP_HEIGHT, OnSizeEditKillFocus)
+    ON_EN_KILLFOCUS(IDC_CROP_WIDTH, OnWidthEditKillFocus)
+    //ON_EN_KILLFOCUS(IDC_CROP_HEIGHT, OnSizeEditKillFocus)
     ON_UPDATE_COMMAND_UI(ID_KEEP_ASPECT, OnEnableIfCanvasValid)
     ON_UPDATE_COMMAND_UI(IDC_CROP_WIDTH, OnEnableIfCanvasValid)
     ON_UPDATE_COMMAND_UI(IDC_CROP_HEIGHT, OnEnableIfCanvasValid)
@@ -196,14 +196,25 @@ void WndPanelCrop::OnPostUpdateKeepAspect()
     UpdateKeepAspectButton();
 }
 
-void WndPanelCrop::OnSizeEditKillFocus()
+void WndPanelCrop::OnWidthEditKillFocus()
 {
-    CString   width, height;
-    m_width_edit.GetWindowText(width);
-    m_height_edit.GetWindowText(height);
+    CRect   rc = ToolCrop::s_crop_on_canvas;
+    CString   str;
+    m_width_edit.GetWindowText(str);
+    if (int width = StrToInt(str))
+    {
+        if (auto ratio = ToolCrop::s_aspect_ratio; ratio.IsLocked())
+        {
+            //int newheight = width / ratio.Value();
 
-    int w = StrToInt(width);
-    int h = StrToInt(height);
+        }
+        else
+        {
+            rc.right = rc.left + width;
+            ToolCrop::SetCropOnCanvas(rc);
+
+        }
+    }
 
     //ToolCrop::ApplyCropAspectRatio(w, h);
 }

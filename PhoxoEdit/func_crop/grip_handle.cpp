@@ -54,15 +54,15 @@ namespace
             CRect   rc;
             switch (type)
             {
-                case ResizeTop:
-                case ResizeBottom:
-                    rc = (type == ResizeTop) ? top : bottom;
+                case Top:
+                case Bottom:
+                    rc = (type == Top) ? top : bottom;
                     CenterSpan(rc.left, rc.right, center.x);
                     break;
 
-                case ResizeLeft:
-                case ResizeRight:
-                    rc = (type == ResizeLeft) ? left : right;
+                case Left:
+                case Right:
+                    rc = (type == Left) ? left : right;
                     CenterSpan(rc.top, rc.bottom, center.y);
                     break;
             }
@@ -72,22 +72,22 @@ namespace
         std::pair<CRect, CRect> CalcCornerRect(GripType type) const
         {
             CRect   r1, r2;
-            if (type == ResizeTopLeft)
+            if (type == TopLeft)
             {
                 CutH(r1 = top, true);
                 CutV(r2 = left, true);
             }
-            else if (type == ResizeTopRight)
+            else if (type == TopRight)
             {
                 CutH(r1 = top, false);
                 CutV(r2 = right, true);
             }
-            else if (type == ResizeBottomLeft)
+            else if (type == BottomLeft)
             {
                 CutH(r1 = bottom, true);
                 CutV(r2 = left, false);
             }
-            else if (type == ResizeBottomRight)
+            else if (type == BottomRight)
             {
                 CutH(r1 = bottom, false);
                 CutV(r2 = right, false);
@@ -103,20 +103,20 @@ void GripHandle::Draw(HDC hdc, const CRect& crop_on_view) const
     GripBorder   calc(crop_on_view);
     switch (m_type)
     {
-        case ResizeTop:
-        case ResizeBottom:
-        case ResizeLeft:
-        case ResizeRight:
+        case Top:
+        case Bottom:
+        case Left:
+        case Right:
         {
             CRect   rc = calc.CalcSideRect(m_type);
             ::FillRect(hdc, rc, paint);
         }
         break;
 
-        case ResizeTopLeft:
-        case ResizeTopRight:
-        case ResizeBottomLeft:
-        case ResizeBottomRight:
+        case TopLeft:
+        case TopRight:
+        case BottomLeft:
+        case BottomRight:
         {
             auto [r1, r2] = calc.CalcCornerRect(m_type);
             ::FillRect(hdc, r1, paint);
@@ -156,14 +156,14 @@ CRect GripHandle::GetHitZone(const CRect& rc) const
     CPoint   bl{ rc.left, rc.bottom }, br{ rc.BottomRight() };
     switch (m_type)
     {
-        case ResizeTop: return SideHitRect(tl, tr, false);
-        case ResizeBottom: return SideHitRect(bl, br, false);
-        case ResizeLeft: return SideHitRect(tl, bl, true);
-        case ResizeRight: return SideHitRect(tr, br, true);
-        case ResizeTopLeft: return CornerHitRect(tl);
-        case ResizeTopRight: return CornerHitRect(tr);
-        case ResizeBottomLeft: return CornerHitRect(bl);
-        case ResizeBottomRight: return CornerHitRect(br);
+        case Top: return SideHitRect(tl, tr, false);
+        case Bottom: return SideHitRect(bl, br, false);
+        case Left: return SideHitRect(tl, bl, true);
+        case Right: return SideHitRect(tr, br, true);
+        case TopLeft: return CornerHitRect(tl);
+        case TopRight: return CornerHitRect(tr);
+        case BottomLeft: return CornerHitRect(bl);
+        case BottomRight: return CornerHitRect(br);
     }
     return {};
 }

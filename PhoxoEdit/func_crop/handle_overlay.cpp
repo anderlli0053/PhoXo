@@ -8,17 +8,17 @@ HCURSOR GripCursorByType(GripType type)
     using enum GripType;
     switch (type)
     {
-        case ResizeTopLeft:
-        case ResizeBottomRight:
+        case TopLeft:
+        case BottomRight:
             return ::LoadCursor(NULL, IDC_SIZENWSE);
-        case ResizeTopRight:
-        case ResizeBottomLeft:
+        case TopRight:
+        case BottomLeft:
             return ::LoadCursor(NULL, IDC_SIZENESW);
-        case ResizeTop:
-        case ResizeBottom:
+        case Top:
+        case Bottom:
             return ::LoadCursor(NULL, IDC_SIZENS);
-        case ResizeLeft:
-        case ResizeRight:
+        case Left:
+        case Right:
             return ::LoadCursor(NULL, IDC_SIZEWE);
         case Move:
             return ::LoadCursor(NULL, IDC_SIZEALL);
@@ -30,14 +30,14 @@ HandleOverlay::HandleOverlay()
 {
     using enum GripType;
     m_grip_handles.reserve(8);
-    m_grip_handles.emplace_back(ResizeTopLeft);
-    m_grip_handles.emplace_back(ResizeTop);
-    m_grip_handles.emplace_back(ResizeTopRight);
-    m_grip_handles.emplace_back(ResizeLeft);
-    m_grip_handles.emplace_back(ResizeRight);
-    m_grip_handles.emplace_back(ResizeBottomLeft);
-    m_grip_handles.emplace_back(ResizeBottom);
-    m_grip_handles.emplace_back(ResizeBottomRight);
+    m_grip_handles.emplace_back(TopLeft);
+    m_grip_handles.emplace_back(Top);
+    m_grip_handles.emplace_back(TopRight);
+    m_grip_handles.emplace_back(Left);
+    m_grip_handles.emplace_back(Right);
+    m_grip_handles.emplace_back(BottomLeft);
+    m_grip_handles.emplace_back(Bottom);
+    m_grip_handles.emplace_back(BottomRight);
 }
 
 GripType HandleOverlay::HitTest(CPoint pt_on_view, const CRect& crop_on_view) const

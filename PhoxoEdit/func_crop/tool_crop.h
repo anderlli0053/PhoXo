@@ -3,7 +3,6 @@
 #include "mask_overlay.h"
 #include "handle_overlay.h"
 #include "move_strategy.h"
-#include "crop_aspect_ratio.h"
 
 class ToolCrop : public ToolBase
 {
@@ -13,7 +12,6 @@ private:
     std::optional<crop::MoveStrategy>   m_move_strategy;
 
 public:
-    static inline bool   s_is_cropping = false;
     static inline CRect   s_crop_on_canvas;
     static inline CropShape   s_crop_shape = CropShape::Rectangle;
     static inline crop::CropAspectRatio   s_aspect_ratio;

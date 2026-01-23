@@ -203,6 +203,7 @@
     <None Include="res\crop_4_3.svg" />
     <None Include="res\crop_9_16.svg" />
     <None Include="res\crop_apply.svg" />
+    <None Include="res\crop_cancel.svg" />
     <None Include="res\crop_free.svg" />
     <None Include="res\crop_link.svg" />
     <None Include="res\crop_original.svg" />

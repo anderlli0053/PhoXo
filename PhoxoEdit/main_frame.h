@@ -29,6 +29,4 @@ private:
     afx_msg LRESULT OnDPIChanged(WPARAM, LPARAM);
     DECLARE_MESSAGE_MAP()
     DECLARE_DYNCREATE(CMainFrame)
-
-    friend class CMainFrameUtils;
 };

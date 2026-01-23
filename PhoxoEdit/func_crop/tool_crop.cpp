@@ -22,11 +22,6 @@ namespace
         GPointF   br = ctx.CanvasToView(ToolCrop::s_crop_on_canvas.BottomRight());
         return { (int)floor(tl.X), (int)floor(tl.Y), (int)floor(br.X), (int)floor(br.Y) };
     }
-
-    bool IsCropping()
-    {
-        return !ToolCrop::s_crop_on_canvas.IsRectEmpty();
-    }
 }
 
 ToolCrop::ToolCrop()
@@ -68,7 +63,7 @@ void ToolCrop::OnLButtonDown(const ViewportContext& ctx, UINT nFlags, CPoint poi
     if (type == GripType::None)
         return;
 
-    m_move_strategy.emplace(type, ctx.ViewToCanvas(point), s_crop_on_canvas);
+    m_move_strategy.emplace(type, ctx.ViewToCanvas(point), s_crop_on_canvas, ctx.m_canvas.OriginalSize());
 }
 
 void ToolCrop::OnLButtonUp(const ViewportContext& ctx, UINT nFlags, CPoint point)
@@ -80,7 +75,7 @@ void ToolCrop::OnMouseMove(const ViewportContext& ctx, UINT, CPoint point)
 {
     if (m_move_strategy)
     {
-        s_crop_on_canvas = m_move_strategy->HandleMouseMove(ctx.ViewToCanvas(point), ctx.m_canvas);
+        s_crop_on_canvas = m_move_strategy->HandleMouseMove(ctx.ViewToCanvas(point), s_aspect_ratio);
         theRuntime.InvalidateView();
         IEventObserverBase::FireEvent(AppEvent::CropRectChanged);
     }

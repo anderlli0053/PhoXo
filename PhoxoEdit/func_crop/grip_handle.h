@@ -1,18 +1,19 @@
 #pragma once
+#include "crop_aspect_ratio.h"
 
 namespace crop
 {
     enum class GripType
     {
         None,
-        ResizeTopLeft,
-        ResizeTop,
-        ResizeTopRight,
-        ResizeLeft,
-        ResizeRight,
-        ResizeBottomLeft,
-        ResizeBottom,
-        ResizeBottomRight,
+        TopLeft,
+        Top,
+        TopRight,
+        Left,
+        Right,
+        BottomLeft,
+        Bottom,
+        BottomRight,
         Move,   // 点击中心，移动整个裁剪框
     };
 

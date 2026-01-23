@@ -296,6 +296,7 @@
     <None Include="res\rotate_cw.svg">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="res\crop_cancel.svg" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\PhoxoEditDoc.ico">

@@ -29,7 +29,7 @@ private:
     void OnObserveEvent(ObservedEvent& event) override;
     void OnEventCanvasReloaded();
 
-    afx_msg void OnSizeEditKillFocus();
+    afx_msg void OnWidthEditKillFocus();
     afx_msg void OnEnableIfCanvasValid(CCmdUI* pCmdUI);
     afx_msg void OnPostUpdateKeepAspect();
     afx_msg void OnRatioButton(UINT id);
