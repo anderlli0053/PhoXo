@@ -177,6 +177,7 @@
     <ClCompile Include="func_crop\panel\rotate_page.cpp" />
     <ClCompile Include="func_crop\panel\shape_page.cpp" />
     <ClCompile Include="func_crop\panel\wnd_panel_crop.cpp" />
+    <ClCompile Include="func_crop\panel\wnd_panel_crop_size_edit.cpp" />
     <ClCompile Include="func_crop\tool_crop.cpp" />
     <ClCompile Include="main_doc.cpp" />
     <ClCompile Include="main_frame.cpp" />

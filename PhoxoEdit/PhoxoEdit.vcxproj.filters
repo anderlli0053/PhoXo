@@ -220,6 +220,9 @@
     <ClCompile Include="canvas\viewport_context.cpp">
       <Filter>Source Files\canvas</Filter>
     </ClCompile>
+    <ClCompile Include="func_crop\panel\wnd_panel_crop_size_edit.cpp">
+      <Filter>Source Files\func_crop\panel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="PhoxoEdit.rc">

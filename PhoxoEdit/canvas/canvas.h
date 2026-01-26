@@ -26,7 +26,7 @@ public:
     explicit Canvas(CSize canvas_size);
 
     int ContentVersion() const { return m_content_version; }
-    CSize OriginalSize() const { return m_canvas_size; }
+    CSize Size() const { return m_canvas_size; }
     CSize ZoomedSize() const;
 
     // zoom ฯเนุ

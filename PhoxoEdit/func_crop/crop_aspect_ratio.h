@@ -25,8 +25,11 @@ namespace crop
 
         void Lock(int width, int height)
         {
-            m_width = width;
-            m_height = height;
+            if (width > 0 && height > 0)
+            {
+                m_width = width;
+                m_height = height;
+            }
             assert(IsLocked());
         }
 

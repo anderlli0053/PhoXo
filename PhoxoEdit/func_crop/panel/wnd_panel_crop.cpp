@@ -63,7 +63,7 @@ BEGIN_MESSAGE_MAP(WndPanelCrop, CBCGPDialogBar)
     ON_COMMAND(ID_CANCEL_CROP, OnCancelCrop)
     ON_COMMAND(ID_POST_UPDATE_KEEP_ASPECT, OnPostUpdateKeepAspect)
     ON_EN_KILLFOCUS(IDC_CROP_WIDTH, OnWidthEditKillFocus)
-    //ON_EN_KILLFOCUS(IDC_CROP_HEIGHT, OnSizeEditKillFocus)
+    ON_EN_KILLFOCUS(IDC_CROP_HEIGHT, OnHeightEditKillFocus)
     ON_UPDATE_COMMAND_UI(ID_KEEP_ASPECT, OnEnableIfCanvasValid)
     ON_UPDATE_COMMAND_UI(IDC_CROP_WIDTH, OnEnableIfCanvasValid)
     ON_UPDATE_COMMAND_UI(IDC_CROP_HEIGHT, OnEnableIfCanvasValid)
@@ -117,34 +117,6 @@ BCGImageButton& WndPanelCrop::AddImageButton(int id)
     return *it->second;
 }
 
-void WndPanelCrop::InitSizeEdit()
-{
-    for (auto ctrl : { &m_width_edit, &m_height_edit })
-    {
-        ctrl->SetLimitText(6);
-        ctrl->SetVerticalAlignment(TA_CENTER);
-    }
-    ResetSizeEdit();
-}
-
-void WndPanelCrop::ResetSizeEdit()
-{
-    if (CSize sz = ToolCrop::s_crop_on_canvas.Size(); sz.cx && sz.cy)
-    {
-        m_width_edit.SetWindowText(FCString::From(sz.cx));
-        m_height_edit.SetWindowText(FCString::From(sz.cy));
-    }
-    else
-    {
-        LanguageTextGroup   text(PanelCropText(0));
-        for (auto ctrl : { &m_width_edit, &m_height_edit })
-        {
-            ctrl->SetWindowText(L"");
-            ctrl->SetPrompt(text.PopFront());
-        }
-    }
-}
-
 void WndPanelCrop::UpdateKeepAspectButton()
 {
     LanguageTextGroup   stat(PanelCropText(5));
@@ -173,7 +145,7 @@ void WndPanelCrop::OnObserveEvent(ObservedEvent& event)
 {
     if (event.m_type == (int)AppEvent::CropRectChanged)
     {
-        ResetSizeEdit();
+        UpdateSizeEdit();
     }
     else if (event.m_type == (int)AppEvent::CanvasReloaded)
     {
@@ -183,7 +155,7 @@ void WndPanelCrop::OnObserveEvent(ObservedEvent& event)
 
 void WndPanelCrop::OnEventCanvasReloaded()
 {
-    ResetSizeEdit();
+    UpdateSizeEdit();
 
     m_ratio_index = 0;
     m_keep_aspect = FALSE;
@@ -196,29 +168,6 @@ void WndPanelCrop::OnPostUpdateKeepAspect()
     UpdateKeepAspectButton();
 }
 
-void WndPanelCrop::OnWidthEditKillFocus()
-{
-    CRect   rc = ToolCrop::s_crop_on_canvas;
-    CString   str;
-    m_width_edit.GetWindowText(str);
-    if (int width = StrToInt(str))
-    {
-        if (auto ratio = ToolCrop::s_aspect_ratio; ratio.IsLocked())
-        {
-            //int newheight = width / ratio.Value();
-
-        }
-        else
-        {
-            rc.right = rc.left + width;
-            ToolCrop::SetCropOnCanvas(rc);
-
-        }
-    }
-
-    //ToolCrop::ApplyCropAspectRatio(w, h);
-}
-
 void WndPanelCrop::OnEnableIfCanvasValid(CCmdUI* pCmdUI)
 {
     pCmdUI->Enable(theRuntime.GetCurrentCanvas() != NULL);
@@ -226,6 +175,10 @@ void WndPanelCrop::OnEnableIfCanvasValid(CCmdUI* pCmdUI)
 
 void WndPanelCrop::OnRatioButton(UINT id)
 {
+    auto   canvas = theRuntime.GetCurrentCanvas();
+    if (!canvas)
+        return;
+
     UpdateData();
     m_keep_aspect = (id != ID_CROP_FREE);
     UpdateKeepAspectButton();
@@ -234,12 +187,7 @@ void WndPanelCrop::OnRatioButton(UINT id)
     CSize   sz;
     switch (id)
     {
-        case ID_CROP_ORIGINAL:
-            if (auto canvas = theRuntime.GetCurrentCanvas())
-            {
-                sz = canvas->OriginalSize();
-            }
-            break;
+        case ID_CROP_ORIGINAL: sz = canvas->Size(); break;
         case ID_CROP_1_1: sz = { 1, 1 }; break;
         case ID_CROP_16_9: sz = { 16, 9 }; break;
         case ID_CROP_3_2: sz = { 3, 2 }; break;
@@ -255,11 +203,19 @@ void WndPanelCrop::OnKeepAspect()
 {
     UpdateData();
     if (!m_keep_aspect)
+    {
         m_ratio_index = 0; // free
-    UpdateData(FALSE);
-
-    if (!m_keep_aspect)
         ToolCrop::s_aspect_ratio.Unlock();
+    }
+    else
+    {
+        // lock current ratio
+        CString   width, height;
+        m_width_edit.GetWindowText(width);
+        m_height_edit.GetWindowText(height);
+        ToolCrop::s_aspect_ratio.Lock(StrToInt(width), StrToInt(height));
+    }
+    UpdateData(FALSE);
 
     PostMessage(WM_COMMAND, ID_POST_UPDATE_KEEP_ASPECT); // 在这里更新tip会闪烁，post后处理
 }
@@ -267,4 +223,10 @@ void WndPanelCrop::OnKeepAspect()
 void WndPanelCrop::OnCancelCrop()
 {
     ToolCrop::SetCropOnCanvas(CRect());
+
+    m_ratio_index = 0;
+    m_keep_aspect = FALSE;
+    ToolCrop::s_aspect_ratio.Unlock();
+    UpdateData(FALSE);
+    UpdateKeepAspectButton();
 }

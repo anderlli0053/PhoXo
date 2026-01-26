@@ -12,7 +12,7 @@ namespace
         CSize   margin{ DPICalculator::Cast(10), DPICalculator::Cast(10) };
         CRect   rc = FCWnd::GetClientRect(view);
         rc.DeflateRect(margin);
-        float   ratio = phoxo::Utils::CalcFitZoomRatio(rc.Size(), canvas.OriginalSize());
+        float   ratio = phoxo::Utils::CalcFitZoomRatio(rc.Size(), canvas.Size());
         view.UpdateZoomRatio(ratio, ZoomChangedBy::Other);
     }
 
@@ -31,7 +31,12 @@ ToolCrop::ToolCrop()
 
 void ToolCrop::SetCropOnCanvas(const CRect& rc)
 {
-    s_crop_on_canvas = rc;
+    if (auto canvas = theRuntime.GetCurrentCanvas())
+    {
+        s_crop_on_canvas.IntersectRect(CRect({}, canvas->Size()), rc);
+    }
+
+    // rc 可能无效，但仍会触发刷新/事件以便 UI 恢复显示
     theRuntime.InvalidateView();
     IEventObserverBase::FireEvent(AppEvent::CropRectChanged);
 }
@@ -41,9 +46,7 @@ void ToolCrop::ApplyCropAspectRatio(int width, int height)
     if (auto canvas = theRuntime.GetCurrentCanvas(); canvas && width && height)
     {
         s_aspect_ratio.Lock(width, height);
-        s_crop_on_canvas = s_aspect_ratio.FitCanvas(canvas->OriginalSize());
-        theRuntime.InvalidateView();
-        IEventObserverBase::FireEvent(AppEvent::CropRectChanged);
+        SetCropOnCanvas(s_aspect_ratio.FitCanvas(canvas->Size()));
     }
 }
 
@@ -63,7 +66,7 @@ void ToolCrop::OnLButtonDown(const ViewportContext& ctx, UINT nFlags, CPoint poi
     if (type == GripType::None)
         return;
 
-    m_move_strategy.emplace(type, ctx.ViewToCanvas(point), s_crop_on_canvas, ctx.m_canvas.OriginalSize());
+    m_move_strategy.emplace(type, ctx.ViewToCanvas(point), s_crop_on_canvas, ctx.m_canvas.Size());
 }
 
 void ToolCrop::OnLButtonUp(const ViewportContext& ctx, UINT nFlags, CPoint point)
@@ -75,9 +78,7 @@ void ToolCrop::OnMouseMove(const ViewportContext& ctx, UINT, CPoint point)
 {
     if (m_move_strategy)
     {
-        s_crop_on_canvas = m_move_strategy->HandleMouseMove(ctx.ViewToCanvas(point), s_aspect_ratio);
-        theRuntime.InvalidateView();
-        IEventObserverBase::FireEvent(AppEvent::CropRectChanged);
+        SetCropOnCanvas(m_move_strategy->HandleMouseMove(ctx.ViewToCanvas(point), s_aspect_ratio));
     }
     else
     {
@@ -122,7 +123,7 @@ void ToolCrop::ResetForNewImage()
     if (auto canvas = theRuntime.GetCurrentCanvas())
     {
         ZoomForCropMode(*canvas);
-        s_crop_on_canvas = CRect({}, canvas->OriginalSize());
+        s_crop_on_canvas = CRect({}, canvas->Size());
         IEventObserverBase::FireEvent(AppEvent::CanvasReloaded, canvas);
     }
 }

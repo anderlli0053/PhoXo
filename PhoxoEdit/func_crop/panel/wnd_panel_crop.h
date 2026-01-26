@@ -19,17 +19,21 @@ public:
     void Create(CWnd* parent);
 
 private:
+    BOOL PreTranslateMessage(MSG* pMsg) override;
+
     BCGImageButton& AddImageButton(int id);
 
     void InitSizeEdit();
-    void ResetSizeEdit();
+    void UpdateSizeEdit();
     void UpdateKeepAspectButton();
+    void ApplyCropSizeFromSingleEdit(HWND edit_ctrl);
 
     void DoDataExchange(CDataExchange* pDX) override;
     void OnObserveEvent(ObservedEvent& event) override;
     void OnEventCanvasReloaded();
 
     afx_msg void OnWidthEditKillFocus();
+    afx_msg void OnHeightEditKillFocus();
     afx_msg void OnEnableIfCanvasValid(CCmdUI* pCmdUI);
     afx_msg void OnPostUpdateKeepAspect();
     afx_msg void OnRatioButton(UINT id);
