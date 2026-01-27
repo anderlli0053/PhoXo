@@ -179,9 +179,28 @@ void WndPanelCrop::OnEnableIfCropValid(CCmdUI* pCmdUI)
     pCmdUI->Enable(theRuntime.GetCurrentCanvas() && ToolCrop::HasCropRect());
 }
 
+namespace
+{
+    void ApplyRatioForID(UINT id, CSize canvas_size)
+    {
+        CSize   sz;
+        switch (id)
+        {
+            case ID_CROP_ORIGINAL: sz = canvas_size; break;
+            case ID_CROP_1_1: sz = { 1, 1 }; break;
+            case ID_CROP_16_9: sz = { 16, 9 }; break;
+            case ID_CROP_3_2: sz = { 3, 2 }; break;
+            case ID_CROP_4_3: sz = { 4, 3 }; break;
+            case ID_CROP_9_16: sz = { 9, 16 }; break;
+            case ID_CROP_2_3: sz = { 2, 3 }; break;
+        }
+        ToolCrop::ApplyCropAspectRatio(sz.cx, sz.cy);
+    }
+}
+
 void WndPanelCrop::OnRatioButton(UINT id)
 {
-    if (m_ratio_index == (int)(id - ID_CROP_FREE))
+    if ((m_ratio_index == (int)(id - ID_CROP_FREE)) && ToolCrop::HasCropRect())
         return; // no change
 
     auto   canvas = theRuntime.GetCurrentCanvas();
@@ -190,28 +209,21 @@ void WndPanelCrop::OnRatioButton(UINT id)
 
     UpdateData();
     m_lock_aspect = (id != ID_CROP_FREE);
-    UpdateKeepAspectButton();
+    if (!m_lock_aspect)
+        ToolCrop::s_aspect_ratio.Unlock();
     UpdateData(FALSE);
+    UpdateKeepAspectButton();
 
     if (id == ID_CROP_FREE)
     {
-        ToolCrop::s_aspect_ratio.Unlock();
+        if (!ToolCrop::HasCropRect())
+        {
+            ToolCrop::SetCropOnCanvas(CRect({}, canvas->Size()));
+        }
         return;
     }
 
-    CSize   sz;
-    switch (id)
-    {
-        case ID_CROP_ORIGINAL: sz = canvas->Size(); break;
-        case ID_CROP_1_1: sz = { 1, 1 }; break;
-        case ID_CROP_16_9: sz = { 16, 9 }; break;
-        case ID_CROP_3_2: sz = { 3, 2 }; break;
-        case ID_CROP_4_3: sz = { 4, 3 }; break;
-        case ID_CROP_9_16: sz = { 9, 16 }; break;
-        case ID_CROP_2_3: sz = { 2, 3 }; break;
-    }
-
-    ToolCrop::ApplyCropAspectRatio(sz.cx, sz.cy);
+    ApplyRatioForID(id, canvas->Size());
 }
 
 void WndPanelCrop::OnKeepAspect()
@@ -219,13 +231,17 @@ void WndPanelCrop::OnKeepAspect()
     UpdateData();
     if (!m_lock_aspect)
     {
-        m_ratio_index = 0; // free
+        if (m_ratio_index >= 1) // exclude -1, 0
+            m_ratio_index = 0;
         ToolCrop::s_aspect_ratio.Unlock();
     }
     else
     {
-        if (CRect rc = ToolCrop::s_crop_on_canvas; !rc.IsRectEmpty())
+        if (ToolCrop::HasCropRect())
+        {
+            CRect   rc = ToolCrop::s_crop_on_canvas;
             ToolCrop::s_aspect_ratio.Lock(rc.Width(), rc.Height()); // lock current ratio
+        }
     }
     UpdateData(FALSE);
 
@@ -235,9 +251,4 @@ void WndPanelCrop::OnKeepAspect()
 void WndPanelCrop::OnCancelCrop()
 {
     ToolCrop::SetCropOnCanvas(CRect());
-    ToolCrop::s_aspect_ratio.Unlock();
-    m_ratio_index = 0;
-    m_lock_aspect = FALSE;
-    UpdateData(FALSE);
-    UpdateKeepAspectButton();
 }

@@ -74,6 +74,9 @@ void WndPanelCrop::ApplyCropSizeFromSingleEdit(HWND edit_ctrl)
                 if (HandleOversize(width, height, canvas_size))
                     return;
             }
+
+            if (rc.Height() == 0)
+                rc.bottom = rc.top + width; // 没有选区设置正方形
         }
     }
     else
@@ -88,6 +91,9 @@ void WndPanelCrop::ApplyCropSizeFromSingleEdit(HWND edit_ctrl)
                 if (HandleOversize(width, height, canvas_size))
                     return;
             }
+
+            if (rc.Width() == 0)
+                rc.right = rc.left + height;
         }
     }
 

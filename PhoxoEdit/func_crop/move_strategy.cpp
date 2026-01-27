@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "move_strategy.h"
-#include "tool_crop.h"
 
 // lock ratio时：
 // 调整一个grip，它的对角总是保持不变，比如调整top-left，则bottom-right始终固定。调整top，则bottom固定（这时候你需要再指定一个边left or right固定）
@@ -14,8 +13,8 @@ int MoveStrategy::ClampEdge(double v, GripType edge) const
     if (edge == Top)     return std::clamp((long)v, 0L, m_begin.bottom - 1);
     if (edge == Bottom)  return std::clamp((long)v, m_begin.top + 1, m_canvas_size.cy);
     if (edge == Left)    return std::clamp((long)v, 0L, m_begin.right - 1);
-    if (edge == Right)   return std::clamp((long)v, m_begin.left + 1, m_canvas_size.cx);
-    return 0;
+    assert(edge == Right);
+    return std::clamp((long)v, m_begin.left + 1, m_canvas_size.cx);
 }
 
 void MoveStrategy::MoveSingleEdge(CRect& rc, GPointF delta, GripType edge) const
@@ -142,9 +141,12 @@ CRect MoveStrategy::ResizeCornerUnlocked(GPointF delta) const
     return {};
 }
 
-CRect MoveStrategy::HandleMouseMove(GPointF curr, const CropAspectRatio& ratio)
+CRect MoveStrategy::HandleMouseMove(GPointF cur, const CropAspectRatio& ratio)
 {
-    const GPointF   delta = curr - m_anchor;
+    if (m_action == Action::Create)
+        return CreateCrop(cur, ratio);
+
+    const GPointF   delta = cur - m_anchor;
 
     // Move whole crop
     if (m_type == Move)
@@ -162,6 +164,40 @@ CRect MoveStrategy::HandleMouseMove(GPointF curr, const CropAspectRatio& ratio)
         return ResizeCornerLocked(delta, ratio);
     else
         return ResizeCornerUnlocked(delta);
+}
+
+namespace
+{
+    auto DetermineCorner(GPointF cur, GPointF anchor)
+    {
+        if (cur.X < anchor.X && cur.Y < anchor.Y)
+            return std::make_pair(GripType::TopLeft, CSize(-1, -1));
+
+        if (cur.X >= anchor.X && cur.Y < anchor.Y)
+            return std::make_pair(GripType::TopRight, CSize(1, -1));
+
+        if (cur.X < anchor.X && cur.Y >= anchor.Y)
+            return std::make_pair(GripType::BottomLeft, CSize(-1, 1));
+
+        // cur.X >= anchor.X && cur.Y >= anchor.Y
+        return std::make_pair(GripType::BottomRight, CSize(1, 1));
+    }
+}
+
+CRect MoveStrategy::CreateCrop(GPointF cur, const CropAspectRatio& ratio)
+{
+    auto [corner, size] = DetermineCorner(cur, m_anchor);
+
+    // 初始化 begin，使其等效于拖拽一个 1x1 的 rect
+    m_type = corner;
+    m_begin = { CPoint((int)m_anchor.X, (int)m_anchor.Y), size };
+    m_begin.NormalizeRect();
+    FCWnd::MoveRectInside(m_begin, m_canvas_size);
+
+    m_action = Action::Modify;
+    CRect   rc = HandleMouseMove(cur, ratio);
+    m_action = Action::Create;
+    return rc;
 }
 
 _PHOXO_NAMESPACE_END

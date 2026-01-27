@@ -66,11 +66,20 @@ HCURSOR ToolCrop::GetToolCursor(const ViewportContext& ctx)
 
 void ToolCrop::OnLButtonDown(const ViewportContext& ctx, UINT nFlags, CPoint point)
 {
-    auto   type = m_handle_overlay.HitTest(point, CropOnView(ctx));
-    if (type == GripType::None)
-        return;
+    if (!HasCropRect() || (nFlags & MK_CONTROL))
+    {
+        // create new crop rect
+        m_move_strategy.emplace(GripType::None, ctx.ViewToCanvas(point), CRect(), ctx.m_canvas.Size());
+    }
+    else
+    {
+        auto   type = m_handle_overlay.HitTest(point, CropOnView(ctx));
+        if (type == GripType::None)
+            return;
 
-    m_move_strategy.emplace(type, ctx.ViewToCanvas(point), s_crop_on_canvas, ctx.m_canvas.Size());
+        // modify existing crop rect
+        m_move_strategy.emplace(type, ctx.ViewToCanvas(point), s_crop_on_canvas, ctx.m_canvas.Size());
+    }
 }
 
 void ToolCrop::OnLButtonUp(const ViewportContext& ctx, UINT nFlags, CPoint point)
@@ -121,7 +130,7 @@ void ToolCrop::OnCanvasReloaded()
 
 void ToolCrop::ResetForNewImage()
 {
-    s_crop_on_canvas = CRect();
+    s_crop_on_canvas = {};
     s_crop_shape = CropShape::Rectangle;
     s_aspect_ratio.Unlock();
 
