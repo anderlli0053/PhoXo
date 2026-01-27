@@ -20,6 +20,7 @@ public:
 
     ToolCrop();
 
+    static bool HasCropRect() { return !s_crop_on_canvas.IsRectEmpty(); }
     static void SetCropOnCanvas(const CRect& rc);
     static void ApplyCropAspectRatio(int width, int height);
 

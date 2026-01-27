@@ -37,10 +37,10 @@ void WndPanelCrop::InitSizeEdit()
 
 void WndPanelCrop::UpdateSizeEdit()
 {
-    if (CSize sz = ToolCrop::s_crop_on_canvas.Size(); sz.cx && sz.cy)
+    if (CRect rc = ToolCrop::s_crop_on_canvas; !rc.IsRectEmpty())
     {
-        m_width_edit.SetWindowText(FCString::From(sz.cx));
-        m_height_edit.SetWindowText(FCString::From(sz.cy));
+        m_width_edit.SetWindowText(FCString::From(rc.Width()));
+        m_height_edit.SetWindowText(FCString::From(rc.Height()));
     }
     else
     {

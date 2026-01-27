@@ -6,10 +6,10 @@ class WndPanelCrop : public CBCGPDialogBar,
 {
 private:
     int   m_ratio_index = 0;
-    std::map<int, unique_ptr<BCGImageButton>>   m_image_buttons;
+    int   m_lock_aspect = FALSE;
 
-    int   m_keep_aspect = FALSE;
     CBCGPEdit   m_width_edit, m_height_edit;
+    std::map<int, unique_ptr<BCGImageButton>>   m_image_buttons;
 
     // 初始shape panel隐藏，点击按钮后展开
     crop::PageExpander   m_shape_panel;
@@ -34,6 +34,7 @@ private:
 
     afx_msg void OnWidthEditKillFocus();
     afx_msg void OnHeightEditKillFocus();
+    afx_msg void OnEnableIfCropValid(CCmdUI* pCmdUI);
     afx_msg void OnEnableIfCanvasValid(CCmdUI* pCmdUI);
     afx_msg void OnPostUpdateKeepAspect();
     afx_msg void OnRatioButton(UINT id);

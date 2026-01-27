@@ -31,9 +31,13 @@ ToolCrop::ToolCrop()
 
 void ToolCrop::SetCropOnCanvas(const CRect& rc)
 {
-    if (auto canvas = theRuntime.GetCurrentCanvas())
+    if (auto canvas = theRuntime.GetCurrentCanvas(); canvas && !rc.IsRectEmpty())
     {
         s_crop_on_canvas.IntersectRect(CRect({}, canvas->Size()), rc);
+    }
+    else
+    {
+        s_crop_on_canvas = {};
     }
 
     // rc 可能无效，但仍会触发刷新/事件以便 UI 恢复显示
@@ -97,7 +101,7 @@ void ToolCrop::OnCaptureChanged()
 
 void ToolCrop::OnDrawToolOverlay(HDC hdc, const ViewportContext& ctx)
 {
-    if (s_crop_on_canvas.IsRectEmpty())
+    if (!ToolCrop::HasCropRect())
         return;
 
     MaskOverlay::DrawParams   params{
@@ -119,6 +123,7 @@ void ToolCrop::ResetForNewImage()
 {
     s_crop_on_canvas = CRect();
     s_crop_shape = CropShape::Rectangle;
+    s_aspect_ratio.Unlock();
 
     if (auto canvas = theRuntime.GetCurrentCanvas())
     {
